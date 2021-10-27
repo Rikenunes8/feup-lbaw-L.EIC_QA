@@ -1,7 +1,7 @@
 # LBAW 2021/2022
 
 ## Tema 5 - Q&A
-Fórum Dúvidas L.EIC
+Fórum L.EIC
 
 ## Grupo T08G05 (85)
 | Name             | Number    | E-Mail               |
