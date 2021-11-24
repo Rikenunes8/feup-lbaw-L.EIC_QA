@@ -34,13 +34,15 @@ CREATE TABLE "utilizador" (
     pontuacao     INTEGER DEFAULT 0,
     bloqueado     BOOLEAN DEFAULT FALSE,
     ano_ingresso  INTEGER,
-    TYPE tipo_estado NOT NULL,
+    TYPE tipo_utilizador NOT NULL,
 
-    CONSTRAINT nome_NN CHECK ((tipo_estado == 'Administrador' AND nome NULL) OR (tipo_estado != 'Administrador')),
-    CONSTRAINT pontuacao_NN CHECK ((tipo_estado == 'Administrador' AND pontuacao NULL) OR (tipo_estado != 'Administrador')),
-    CONSTRAINT pontuacao_pos CHECK (pontuacao >= 0),
-    CONSTRAINT ano_ingresso_pos CHECK (ano_ingresso > 0),
-    CONSTRAINT ano_ingresso_NN CHECK ((tipo_estado == 'Aluno' AND ano_ingresso NOT NULL) OR (tipo_estado != 'Aluno'))
+    CONSTRAINT nome_NN         CHECK ((tipo_utilizador='Administrador' AND nome IS NULL) OR (tipo_utilizador<>'Administrador' AND nome IS NOT NULL)),
+    CONSTRAINT foto_perfil_NN  CHECK ((tipo_utilizador='Administrador' AND foto_perfil IS NULL) OR (tipo_estado<>'Administrador')),
+    CONSTRAINT sobre_NN        CHECK ((tipo_utilizador='Administrador' AND sobre IS NULL) OR (tipo_estado<>'Administrador')),
+    CONSTRAINT data_nasc_NN    CHECK ((tipo_utilizador='Administrador' AND data_nascimento IS NULL) OR (tipo_estado<>'Administrador')),
+    CONSTRAINT bloqueado_NN    CHECK ((tipo_utilizador='Administrador' AND bloqueado IS NULL) OR (tipo_utilizador<>'Administrador' AND bloqueado IS NOT NULL)),
+    CONSTRAINT pontuacao_NN    CHECK ((tipo_utilizador='Administrador' AND pontuacao IS NULL) OR (tipo_utilizador<>'Administrador' AND pontuacao IS NOT NULL AND pontuacao >= 0)),
+    CONSTRAINT ano_ingresso_NN CHECK ((tipo_utilizador<>'Aluno' AND ano_ingresso IS NULL) OR (tipo_utilizador='Aluno' AND ano_ingresso IS NOT NULL AND ano_ingresso > 0))
 );
 
 create table "uc" (
@@ -64,23 +66,23 @@ create table "segue_uc" (
 
 CREATE TABLE "intervencao" (
     id              SERIAL PRIMARY KEY,
-    data            DATE NOT NULL DEFAULT now(),
+    id_autor        INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE,
     texto           TEXT NOT NULL,
+    data            DATE NOT NULL DEFAULT now(),
     pontuacao       INTEGER NOT NULL DEFAULT 0,
-    autor           INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE,
     titulo          TEXT
     categoria       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
     id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
     TYPE tipo_intervencao NOT NULL,
 
     CONSTRAINT data_menor_agora   CHECK (data <= now()),
-    CONSTRAINT id_intervencao_NN  CHECK ((tipo_intervencao != 'questao' AND id_intervencao NOT NULL) OR (tipo_intervencao == 'questao')),
-    CONSTRAINT titulo_categ_NN    CHECK ((tipo_intervencao == 'questao' AND titulo NOT NULL AND categoria NOT NULL) OR (tipo_intervencao != 'questao'))
+    CONSTRAINT titulo_categ_NN    CHECK ((tipo_intervencao ='questao' AND titulo IS NOT NULL AND categoria IS NOT NULL) OR (tipo_intervencao<>'questao' AND titulo IS NULL AND categoria IS NULL)),
+    CONSTRAINT id_intervencao_NN  CHECK ((tipo_intervencao<>'questao' AND id_intervencao IS NOT NULL) OR (tipo_intervencao='questao' AND id_intervencao IS NULL))
 );
 
 CREATE TABLE "votacao" (
     id_utilizador   INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE,
-    id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE  ON UPDATE CASCADE,
+    id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
     voto            BOOLEAN NOT NULL,
     PRIMARY KEY (id_utilizador, id_intervencao)
 );
@@ -92,6 +94,11 @@ CREATE TABLE "validacao" (
 );
 
 
+CREATE TABLE "razao_bloqueio" (
+    id      SERIAL PRIMARY KEY,
+    razao   TEXT NOT NULL CONSTRAINT razao_uk UNIQUE
+);
+
 CREATE TABLE "notificacao" (
     id              SERIAL PRIMARY KEY,
     data            DATE NOT NULL DEFAULT now(),
@@ -102,14 +109,9 @@ CREATE TABLE "notificacao" (
     TYPE tipo_notificacao NOT NULL,
 
     CONSTRAINT data_menor_agora CHECK (data <= now()),
-    CONSTRAINT razao_estado_NN  CHECK ((tipo_notificacao == 'estado_conta' AND id_razao NOT NULL AND tipo_estado NOT NULL) OR (tipo_notificacao != 'estado_conta')),
-    CONSTRAINT validacao_NN     CHECK ((tipo_notificacao == 'validacao' AND tipo_validacao NOT NULL) OR (tipo_notificacao != 'validacao')),
-    CONSTRAINT intervencao_NN   CHECK ((tipo_notificacao != 'estado_conta' AND id_intervencao NOT NULL) OR (tipo_notificacao == 'estado_conta'))
-);
-
-CREATE TABLE "razao" (
-    id      SERIAL PRIMARY KEY,
-    razao   TEXT NOT NULL CONSTRAINT razao_uk UNIQUE
+    CONSTRAINT razao_estado_NN  CHECK ((tipo_notificacao='estado_conta' AND id_razao IS NOT NULL AND tipo_estado IS NOT NULL) OR (tipo_notificacao<>'estado_conta' AND id_razao IS NULL AND tipo_estado IS NULL)),
+    CONSTRAINT intervencao_NN   CHECK ((tipo_notificacao<>'estado_conta' AND id_intervencao IS NOT NULL) OR (tipo_notificacao='estado_conta' AND id_intervencao IS NULL)),
+    CONSTRAINT validacao_NN     CHECK ((tipo_notificacao='validacao' AND tipo_validacao IS NOT NULL) OR (tipo_notificacao<>'validacao' AND tipo_validacao IS NULL))
 );
 
 CREATE TABLE "recebe" (
