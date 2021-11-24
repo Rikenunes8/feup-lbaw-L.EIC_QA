@@ -51,14 +51,14 @@ create table "uc" (
 );
 
 create table "docente_uc" (
-    id_docente  INTEGER REFERENCES utilizador (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    id_uc       INTEGER REFERENCES uc (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    id_docente  INTEGER REFERENCES utilizador ON DELETE CASCADE ON UPDATE CASCADE,
+    id_uc       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id_docente, id_uc)
 );
 
 create table "segue_uc" (
-    id_aluno    INTEGER REFERENCES utilizador (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    id_uc       INTEGER REFERENCES uc (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    id_aluno    INTEGER REFERENCES utilizador ON DELETE CASCADE ON UPDATE CASCADE,
+    id_uc       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id_aluno, id_uc)
 );
 
@@ -67,10 +67,10 @@ CREATE TABLE "intervencao" (
     data            DATE NOT NULL DEFAULT now(),
     texto           TEXT NOT NULL,
     pontuacao       INTEGER NOT NULL DEFAULT 0,
-    autor           INTEGER REFERENCES utilizador (id) ON DELETE SET NULL ON UPDATE CASCADE,
+    autor           INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE,
     titulo          TEXT
-    categoria       INTEGER REFERENCES uc (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    id_intervencao  INTEGER REFERENCES intervencao (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    categoria       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
+    id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
     TYPE tipo_intervencao NOT NULL,
 
     CONSTRAINT data_menor_agora   CHECK (data <= now()),
@@ -79,24 +79,24 @@ CREATE TABLE "intervencao" (
 );
 
 CREATE TABLE "votacao" (
-    id_utilizador   INTEGER REFERENCES utilizador (id) ON DELETE SET NULL ON UPDATE CASCADE,
-    id_intervencao  INTEGER REFERENCES intervencao (id) ON DELETE CASCADE  ON UPDATE CASCADE,
+    id_utilizador   INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE,
+    id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE  ON UPDATE CASCADE,
     voto            BOOLEAN NOT NULL,
     PRIMARY KEY (id_utilizador, id_intervencao)
 );
 
 CREATE TABLE "validacao" (
-    id_resposta INTEGER PRIMARY KEY REFERENCES intervencao (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    id_docente  INTEGER REFERENCES utilizador (id) ON DELETE SET NULL ON UPDATE CASCADE, 
+    id_resposta INTEGER PRIMARY KEY REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
+    id_docente  INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE, 
     valida      BOOLEAN NOT NULL
 );
 
 
 CREATE TABLE "notificacao" (
-    id SERIAL PRIMARY KEY,
-    data DATE NOT NULL DEFAULT now(),
-    id_razao INTEGER REFERENCES razao (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    id_intervencao INTEGER REFERENCES intervencao (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    id              SERIAL PRIMARY KEY,
+    data            DATE NOT NULL DEFAULT now(),
+    id_razao        INTEGER REFERENCES razao ON DELETE RESTRICT ON UPDATE CASCADE,
+    id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
     TYPE tipo_estado,
     TYPE tipo_validacao,
     TYPE tipo_notificacao NOT NULL,
@@ -113,8 +113,8 @@ CREATE TABLE "razao" (
 );
 
 CREATE TABLE "recebe" (
-    id_notificacao  INTEGER REFERENCES notificacao (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    id_utilizador   INTEGER REFERENCES utilizador (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    id_notificacao  INTEGER REFERENCES notificacao ON DELETE CASCADE ON UPDATE CASCADE,
+    id_utilizador   INTEGER REFERENCES utilizador ON DELETE CASCADE ON UPDATE CASCADE,
     lida            BOOLEAN NOT NULL,
     PRIMARY KEY (id_notificacao, id_utilizador)
 );
