@@ -45,20 +45,20 @@ CREATE TABLE "utilizador" (
     CONSTRAINT ano_ingresso_NN CHECK ((tipo<>'Aluno' AND ano_ingresso IS NULL) OR (tipo='Aluno' AND ano_ingresso IS NOT NULL AND ano_ingresso > 0))
 );
 
-create table "uc" (
+CREATE TABLE "uc" (
     id        SERIAL PRIMARY KEY,
     nome      TEXT NOT NULL CONSTRAINT nome_uk UNIQUE,
     sigla     TEXT NOT NULL CONSTRAINT sigla_uk UNIQUE,
     descricao TEXT NOT NULL
 );
 
-create table "docente_uc" (
+CREATE TABLE "docente_uc" (
     id_docente  INTEGER REFERENCES utilizador ON DELETE CASCADE ON UPDATE CASCADE,
     id_uc       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id_docente, id_uc)
 );
 
-create table "segue_uc" (
+CREATE TABLE "segue_uc" (
     id_aluno    INTEGER REFERENCES utilizador ON DELETE CASCADE ON UPDATE CASCADE,
     id_uc       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id_aluno, id_uc)
@@ -120,3 +120,69 @@ CREATE TABLE "recebe_not" (
     lida            BOOLEAN NOT NULL,
     PRIMARY KEY (id_notificacao, id_utilizador)
 );
+
+
+-----------------------------------------
+-- Indexes
+-----------------------------------------
+
+CREATE INDEX intervencao_superior ON intervencao USING hash (id_intervencao);
+
+CREATE INDEX autor_intervencao ON intervencao USING hash (id_autor);
+
+CREATE INDEX data_notificacao ON notificacao USING btree (data);
+
+-- FTS Index
+
+ALTER TABLE intervencao ADD COLUMN tsvectors TSVECTOR;
+
+CREATE FUNCTION intervencao_procura() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        NEW.tsvectors = (
+            setweight(to_tsvector('portuguese', NEW.titulo), 'A') ||
+            setweight(to_tsvector('portuguese', NEW.texto), 'B')
+        );
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF (NEW.titulo <> OLD.titulo OR NEW.texto <> OLD.texto) THEN
+            NEW.tsvectors = (
+                setweight(to_tsvector('portuguese', NEW.titulo), 'A') ||
+                setweight(to_tsvector('portuguese', NEW.texto), 'B')
+            );
+        END IF;
+    END IF;
+    RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER intervencao_procura
+BEFORE INSERT OR UPDATE ON intervencao
+FOR EACH ROW
+EXECUTE PROCEDURE intervencao_procura();
+
+CREATE INDEX procura_idx ON intervencao USING GIN (tsvectors);
+
+
+-----------------------------------------
+-- TRIGGERS and UDFs
+-----------------------------------------
+
+CREATE FUNCTION proibir_votar_propria_intervencao() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.id_utilizador = (SELECT id_autor FROM intervencao WHERE NEW.id_intervencao=id) THEN
+        RAISE EXCEPTION 'Um utilizador não pode votar nas suas próprias intervenções';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER proibir_votar_propria_intervencao
+BEFORE INSERT ON votacao
+FOR EACH ROW
+EXECUTE PROCEDURE proibir_votar_propria_intervencao();
+
+
+
