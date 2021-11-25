@@ -114,7 +114,7 @@ CREATE TABLE "notificacao" (
     CONSTRAINT validacao_NN     CHECK ((tipo_notificacao='validacao' AND tipo_validacao IS NOT NULL) OR (tipo_notificacao<>'validacao' AND tipo_validacao IS NULL))
 );
 
-CREATE TABLE "recebe" (
+CREATE TABLE "recebe_not" (
     id_notificacao  INTEGER REFERENCES notificacao ON DELETE CASCADE ON UPDATE CASCADE,
     id_utilizador   INTEGER REFERENCES utilizador ON DELETE CASCADE ON UPDATE CASCADE,
     lida            BOOLEAN NOT NULL,
