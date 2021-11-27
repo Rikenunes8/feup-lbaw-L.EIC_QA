@@ -186,10 +186,60 @@ FOR EACH ROW
 EXECUTE PROCEDURE proibir_votar_propria_intervencao();
 
 -- TRIGGER02
+CREATE FUNCTION data_maior_intervencao_superior() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.data <= (SELECT data FROM intervencao WHERE NEW.id_intervencao=id) THEN
+        RAISE EXCEPTION 'Uma resposta/comentário não pode ter data inferior à sua respetiva intervenção de ordem superior';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER data_maior_intervencao_superior
+BEFORE INSERT OR UPDATE ON intervencao
+FOR EACH ROW
+EXECUTE PROCEDURE data_maior_intervencao_superior();
 
 -- TRIGGER03
+CREATE FUNCTION incr_pontuacao() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.voto=TRUE THEN
+    UPDATE intervencao SET pontuacao=pontuacao+1 WHERE id=NEW.id_intervencao;
+    ELSE
+    UPDATE intervencao SET pontuacao=pontuacao-1 WHERE id=NEW.id_intervencao;
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER incr_pontuacao
+AFTER INSERT ON votacao
+FOR EACH ROW
+EXECUTE PROCEDURE incr_pontuacao();
 
 -- TRIGGER04
+CREATE FUNCTION update_pontuacao() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.voto=TRUE AND OLD.voto=FALSE THEN
+    UPDATE intervencao SET pontuacao=pontuacao+2 WHERE id=NEW.id_intervencao;
+    ELSEIF NEW.voto=FALSE AND OLD.voto=TRUE THEN
+    UPDATE intervencao SET pontuacao=pontuacao-2 WHERE id=NEW.id_intervencao;
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_pontuacao
+AFTER UPDATE ON votacao
+FOR EACH ROW
+EXECUTE PROCEDURE update_pontuacao();
+
 
 -- TRIGGER05
 CREATE FUNCTION verificar_docente_uc() RETURNS TRIGGER AS
