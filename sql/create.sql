@@ -168,6 +168,7 @@ CREATE INDEX procura_idx ON intervencao USING GIN (tsvectors);
 -- TRIGGERS and UDFs
 -----------------------------------------
 
+-- TRIGGER01
 CREATE FUNCTION proibir_votar_propria_intervencao() RETURNS TRIGGER AS
 $BODY$
 BEGIN
@@ -184,5 +185,95 @@ BEFORE INSERT ON votacao
 FOR EACH ROW
 EXECUTE PROCEDURE proibir_votar_propria_intervencao();
 
+-- TRIGGER02
 
+-- TRIGGER03
+
+-- TRIGGER04
+
+-- TRIGGER05
+CREATE FUNCTION verificar_docente_uc() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF 'Docente' <> (SELECT tipo FROM utilizador WHERE id=NEW.id_docente) THEN
+        RAISE EXCEPTION 'Só podem ser associados a uma uc utilizadores do tipo docente';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verificar_docente_uc
+BEFORE INSERT ON docente_uc
+FOR EACH ROW
+EXECUTE PROCEDURE verificar_docente_uc();
+
+-- TRIGGER06
+CREATE FUNCTION verificar_segue_uc() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF 'Aluno' <> (SELECT tipo FROM utilizador WHERE id=NEW.id_aluno) THEN
+        RAISE EXCEPTION 'Só utilizadores do tipo aluno é que podem seguir uma uc';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verificar_segue_uc
+BEFORE INSERT ON segue_uc
+FOR EACH ROW
+EXECUTE PROCEDURE verificar_segue_uc();
+
+-- TRIGGER07
+CREATE FUNCTION verificar_autor_intervencao() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF 'Administrador' = (SELECT tipo FROM utilizador WHERE id=NEW.id_autor) THEN
+        RAISE EXCEPTION 'Administradores não podem ser autores de intervenções';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verificar_autor_intervencao
+BEFORE INSERT ON intervencao
+FOR EACH ROW
+EXECUTE PROCEDURE verificar_autor_intervencao();
+
+-- TRIGGER08
+CREATE FUNCTION verificar_votacao_intervencao() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF 'Administrador' = (SELECT tipo FROM utilizador WHERE id=NEW.id_utilizador) THEN
+        RAISE EXCEPTION 'Administradores não podem votar em nenhuma intervenção';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verificar_votacao_intervencao
+BEFORE INSERT ON votacao
+FOR EACH ROW
+EXECUTE PROCEDURE verificar_votacao_intervencao();
+
+-- TRIGGER09
+
+-- TRIGGER10
+
+-- TRIGGER11
+
+-- TRIGGER12
+
+-- TRIGGER13
+
+-- TRIGGER14
+
+-- TRIGGER15
+
+-- TRIGGER16
+
+-- TRIGGER17
 
