@@ -264,10 +264,80 @@ EXECUTE PROCEDURE verificar_votacao_intervencao();
 -- TRIGGER10
 
 -- TRIGGER11
+CREATE FUNCTION gerar_notificacao_questao() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+utilizador BIGINT;
+notificacaoId BIGINT;
+BEGIN
+    IF NEW.tipo = 'questao' THEN
+        INSERT INTO notificacao(tipo, id_intervencao) VALUES ('questao', NEW.id) RETURNING id INTO notificacaoId;
+        
+        FOR utilizador IN (SELECT id_aluno FROM segue_uc WHERE id_uc=NEW.categoria) LOOP 
+            INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, utilizador, FALSE);
+        END LOOP;
+
+        FOR utilizador IN (SELECT id_docente FROM docente_uc WHERE id_uc=NEW.categoria) LOOP 
+            INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, utilizador, FALSE);
+        END LOOP;
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER gerar_notificacao_questao
+AFTER INSERT ON intervencao
+FOR EACH ROW
+EXECUTE PROCEDURE gerar_notificacao_questao();
 
 -- TRIGGER12
+CREATE FUNCTION gerar_notificacao_resposta() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+autor BIGINT;
+notificacaoId BIGINT;
+BEGIN
+    IF NEW.tipo = 'resposta' THEN
+        INSERT INTO notificacao(tipo, id_intervencao) VALUES ('resposta', NEW.id) RETURNING id INTO notificacaoId;
+        
+        FOR autor IN (SELECT id_autor FROM intervencao WHERE id=NEW.id_intervencao) LOOP
+            INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, autor, FALSE);
+        END LOOP;
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER gerar_notificacao_resposta
+AFTER INSERT ON intervencao
+FOR EACH ROW
+EXECUTE PROCEDURE gerar_notificacao_resposta();
 
 -- TRIGGER13
+CREATE FUNCTION gerar_notificacao_comentario() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+autor BIGINT;
+notificacaoId BIGINT;
+BEGIN
+    IF NEW.tipo = 'comentario' THEN
+        INSERT INTO notificacao(tipo, id_intervencao) VALUES ('comentario', NEW.id) RETURNING id INTO notificacaoId;
+        
+        FOR autor IN (SELECT id_autor FROM intervencao WHERE id=NEW.id_intervencao) LOOP
+            INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, autor, FALSE);
+        END LOOP;
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER gerar_notificacao_comentario
+AFTER INSERT ON intervencao
+FOR EACH ROW
+EXECUTE PROCEDURE gerar_notificacao_comentario();
 
 -- TRIGGER14
 
@@ -277,3 +347,22 @@ EXECUTE PROCEDURE verificar_votacao_intervencao();
 
 -- TRIGGER17
 
+
+-----------------------------------------
+-- TRANSACTIONS
+-----------------------------------------
+
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE READ ONLY;
+
+SELECT COUNT(*)
+FROM intervencao
+WHERE tipo='questao';
+
+SELECT titulo, categoria, pontuacao, data, (SELECT COUNT(*) FROM validacao
+                                            WHERE id_resposta IN (SELECT id FROM intervencao WHERE id_intervencao=I.id) AND valida = TRUE)
+FROM intervencao AS I
+WHERE tipo='questao';
+
+END TRANSACTION;
