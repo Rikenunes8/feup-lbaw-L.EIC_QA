@@ -310,9 +310,12 @@ EXECUTE PROCEDURE verificar_votacao_intervencao();
 -- TRIGGER09
 CREATE FUNCTION verificar_validacao_intervencao() RETURNS TRIGGER AS
 $BODY$
-BEGIN
+BEGIN 
     IF 'resposta' <> (SELECT tipo FROM intervencao WHERE id=NEW.id_resposta) THEN
         RAISE EXCEPTION 'Só podem ser validadas intervenções do tipo resposta';
+    END IF;
+    IF NEW.id_docente NOT IN (SELECT id_docente FROM docente_uc WHERE id_uc IN (SELECT categoria FROM intervencao WHERE id=NEW.id_resposta)) THEN
+        RAISE EXCEPTION 'Apenas docentes da categoria da resposta a podem validar';
     END IF;
     RETURN NEW;
 END
@@ -405,12 +408,104 @@ FOR EACH ROW
 EXECUTE PROCEDURE gerar_notificacao_comentario();
 
 -- TRIGGER15
+CREATE FUNCTION gerar_notificacao_nova_validacao() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+autor BIGINT;
+notificacaoId BIGINT;
+BEGIN
+    IF NEW.valida = TRUE 
+    THEN
+        INSERT INTO notificacao(tipo, id_intervencao, validacao) VALUES ('validacao', NEW.id_resposta, 'aceitacao') RETURNING id INTO notificacaoId;
+    ELSE
+        INSERT INTO notificacao(tipo, id_intervencao, validacao) VALUES ('validacao', NEW.id_resposta, 'rejeicao') RETURNING id INTO notificacaoId;
+    END IF;
+
+    FOR autor IN (SELECT id_autor FROM intervencao WHERE id=NEW.id_resposta) LOOP
+        INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, autor, FALSE);
+    END LOOP;
+
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER gerar_notificacao_nova_validacao
+AFTER INSERT ON validacao
+FOR EACH ROW
+EXECUTE PROCEDURE gerar_notificacao_nova_validacao();
 
 -- TRIGGER16
+CREATE FUNCTION gerar_notificacao_altera_validacao() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+autor BIGINT;
+notificacaoId BIGINT;
+BEGIN
+    IF NEW.valida <> OLD.valida THEN
+        IF NEW.valida = TRUE 
+        THEN
+            INSERT INTO notificacao(tipo, id_intervencao, validacao) VALUES ('validacao', NEW.id_resposta, 'aceitacao') RETURNING id INTO notificacaoId;
+        ELSE
+            INSERT INTO notificacao(tipo, id_intervencao, validacao) VALUES ('validacao', NEW.id_resposta, 'rejeicao') RETURNING id INTO notificacaoId;
+        END IF;
+
+        FOR autor IN (SELECT id_autor FROM intervencao WHERE id=NEW.id_resposta) LOOP
+            INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, autor, FALSE);
+        END LOOP;
+    END IF;
+
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER gerar_notificacao_altera_validacao
+AFTER UPDATE ON validacao
+FOR EACH ROW
+EXECUTE PROCEDURE gerar_notificacao_altera_validacao();
 
 -- TRIGGER17
+CREATE FUNCTION gerar_notificacao_bloqueado_estado_conta() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+notificacaoId BIGINT;
+BEGIN
+    IF NEW.bloqueado <> OLD.bloqueado THEN
+        IF NEW.bloqueado = TRUE 
+        THEN
+            INSERT INTO notificacao(tipo, id_razao, estado) VALUES ('estado_conta', 4, 'bloqueio') RETURNING id INTO notificacaoId;
+        ELSE
+            INSERT INTO notificacao(tipo, id_razao, estado) VALUES ('estado_conta', 4, 'ativacao') RETURNING id INTO notificacaoId;
+        END IF;
+
+        INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, NEW.id, FALSE);
+    END IF;
+
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER gerar_notificacao_bloqueado_estado_conta
+AFTER UPDATE ON utilizador
+FOR EACH ROW
+EXECUTE PROCEDURE gerar_notificacao_bloqueado_estado_conta();
 
 -- TRIGGER18
+CREATE FUNCTION gerar_notificacao_eliminacao_conta() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO notificacao(tipo, id_razao, estado) VALUES ('estado_conta', 4, 'eliminacao');
+    RETURN OLD;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER gerar_notificacao_eliminacao_conta
+AFTER DELETE ON utilizador
+FOR EACH ROW
+EXECUTE PROCEDURE gerar_notificacao_eliminacao_conta();
 
 -----------------------------------------
 -- TRANSACTIONS
