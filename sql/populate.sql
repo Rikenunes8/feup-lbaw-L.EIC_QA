@@ -1,25 +1,46 @@
 -----------------------------------------
+-- TRANSACTIONS
+-----------------------------------------
+
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE READ ONLY;
+
+SELECT COUNT(*)
+FROM intervencao
+WHERE tipo='questao';
+
+SELECT titulo, categoria, pontuacao, data, (SELECT COUNT(*) FROM validacao
+                                            WHERE id_resposta IN 
+                                                (SELECT id FROM intervencao WHERE id_intervencao=I.id) 
+                                                AND valida = TRUE) AS n_respostas_validadas
+FROM intervencao AS I
+WHERE tipo='questao';
+
+END TRANSACTION;
+
+-----------------------------------------
 -- utilizador
 -----------------------------------------
 
 -- Administrador
-INSERT INTO utilizador (id, mail, username, password, tipo, pontuacao, bloqueado, data_registo) VALUES (0, 'jfcunha@fe.up.pt', 'admin', 'admin', 'Administrador', NULL, NULL, '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, pontuacao, bloqueado, data_registo) VALUES (1, 'percurso.academico@fe.up.pt', 'secretaria', 'p-academico', 'Administrador', NULL, NULL, '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, pontuacao, bloqueado, data_registo) VALUES (0, 'jfcunha@fe.up.pt', 'admin', 'admin', 'Administrador', NULL, NULL, '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, pontuacao, bloqueado, data_registo) VALUES (1, 'percurso.academico@fe.up.pt', 'secretaria', 'p-academico', 'Administrador', NULL, NULL, '2021-11-01');
 
 -- Docente
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, sobre, data_registo) VALUES (2, 'mbb@fc.up.pt', 'mbb', 'mbb', 'Docente', 'Manuel Bernardo Martins Barbosa', 'My research interests lie in Cryptography and Information Security and Formal Verification.', '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, sobre, data_registo) VALUES (3, 'jpleal@fc.up.pt', 'jpleal', 'jpleal', 'Docente', 'José Paulo de Vilhena Geraldes Leal', 'Para além de professor, interesso-me por escrever livros pedagógicos.', '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, sobre, data_registo) VALUES (4, 'ssn@fe.up.pt', 'ssn', 'ssn', 'Docente', 'Sérgio Sobral Nunes', 'I am an Assistant Professor at the Department of Informatics Engineering at the Faculty of Engineering of the University of Porto (FEUP), and a Senior Researcher at the Centre for Information Systems and Computer Graphics at INESC TEC.', '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, sobre, data_registo) VALUES (5, 'tbs@fe.up.pt', 'tbs', 'tbs', 'Docente', 'Tiago Boldt Pereira de Sousa', 'Conclui o Mestrado em Mestrado Integrado em Engenharia Informática e Computação em 2011 pela Universidade do Porto Faculdade de Engenharia. Publiquei 5 artigos em revistas especializadas.', '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, sobre, data_registo) VALUES (6, 'amflorid@fc.up.pt', 'amflorid', 'amflorid', 'Docente', 'António Mário da Silva Marcos Florido', 'Sou investigador e membro da direção do Laboratório de Inteligência Artificial e Ciência de Computadores (LIACC) da FCUP.', '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, sobre, data_registo) VALUES (7, 'mricardo@fe.up.pt', 'mricardo', 'mricardo', 'Docente', 'Manuel Alberto Pereira Ricardo', 'Licenciado, Mestre e Doutor (2000) em Engenharia Eletrotécnica e de Computadores, ramo de Telecomunicações, pela Faculdade de Engenharia da Universidade do Porto (FEUP).', '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, sobre, data_registo) VALUES (8, 'pabranda@fc.up.pt', 'pabranda', 'pabranda', 'Docente', 'Pedro Miguel Alves Brandão', 'Fiz o meu doutoramento no Computer Laboratory da Univ. de Cambridge sobre o tema de Body Sensor Networks. Obtive uma bolsa da Fundação para a Ciência e Tecnologia para suporte ao doutoramento.', '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, sobre, data_registo) VALUES (2, 'mbb@fc.up.pt', 'mbb', 'mbb', 'Docente', 'Manuel Bernardo Martins Barbosa', 'My research interests lie in Cryptography and Information Security and Formal Verification.', '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, sobre, data_registo) VALUES (3, 'jpleal@fc.up.pt', 'jpleal', 'jpleal', 'Docente', 'José Paulo de Vilhena Geraldes Leal', 'Para além de professor, interesso-me por escrever livros pedagógicos.', '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, sobre, data_registo) VALUES (4, 'ssn@fe.up.pt', 'ssn', 'ssn', 'Docente', 'Sérgio Sobral Nunes', 'I am an Assistant Professor at the Department of Informatics Engineering at the Faculty of Engineering of the University of Porto (FEUP), and a Senior Researcher at the Centre for Information Systems and Computer Graphics at INESC TEC.', '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, sobre, data_registo) VALUES (5, 'tbs@fe.up.pt', 'tbs', 'tbs', 'Docente', 'Tiago Boldt Pereira de Sousa', 'Conclui o Mestrado em Mestrado Integrado em Engenharia Informática e Computação em 2011 pela Universidade do Porto Faculdade de Engenharia. Publiquei 5 artigos em revistas especializadas.', '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, sobre, data_registo) VALUES (6, 'amflorid@fc.up.pt', 'amflorid', 'amflorid', 'Docente', 'António Mário da Silva Marcos Florido', 'Sou investigador e membro da direção do Laboratório de Inteligência Artificial e Ciência de Computadores (LIACC) da FCUP.', '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, sobre, data_registo) VALUES (7, 'mricardo@fe.up.pt', 'mricardo', 'mricardo', 'Docente', 'Manuel Alberto Pereira Ricardo', 'Licenciado, Mestre e Doutor (2000) em Engenharia Eletrotécnica e de Computadores, ramo de Telecomunicações, pela Faculdade de Engenharia da Universidade do Porto (FEUP).', '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, sobre, data_registo) VALUES (8, 'pabranda@fc.up.pt', 'pabranda', 'pabranda', 'Docente', 'Pedro Miguel Alves Brandão', 'Fiz o meu doutoramento no Computer Laboratory da Univ. de Cambridge sobre o tema de Body Sensor Networks. Obtive uma bolsa da Fundação para a Ciência e Tecnologia para suporte ao doutoramento.', '2021-11-01');
 
 -- Aluno
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo) VALUES ( 9, 'up201805455@fc.up.pt', 'up201805455', 'up201805455', 'Aluno', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo) VALUES (10, 'up201906852@fe.up.pt', 'up201906852', 'up201906852', 'Aluno', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo) VALUES (11, 'up201905427@fe.up.pt', 'up201905427', 'up201905427', 'Aluno', 'Patrícia Oliveira', '2001-03-19 17:00:00', 2019, '2021-11-01');
-INSERT INTO utilizador (id, mail, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo) VALUES (12, 'up201805327@fc.up.pt', 'up201805327', 'up201805327', 'Aluno', 'Tiago Antunes', '2000-06-10 11:00:00', 2018, '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo, pontuacao) VALUES ( 9, 'up201805455@fc.up.pt', 'up201805455', 'up201805455', 'Aluno', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01', 120);
+INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo, pontuacao) VALUES (10, 'up201906852@fe.up.pt', 'up201906852', 'up201906852', 'Aluno', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01', 79);
+INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo, pontuacao) VALUES (11, 'up201905427@fe.up.pt', 'up201905427', 'up201905427', 'Aluno', 'Patrícia Oliveira', '2001-03-19 17:00:00', 2019, '2021-11-01', 0);
+INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo, pontuacao) VALUES (12, 'up201805327@fc.up.pt', 'up201805327', 'up201805327', 'Aluno', 'Tiago Antunes', '2000-06-10 11:00:00', 2018, '2021-11-01', 5);
 
 -----------------------------------------
 -- uc
@@ -40,8 +61,8 @@ INSERT INTO docente_uc (id_docente, id_uc) VALUES (3, 1);
 INSERT INTO docente_uc (id_docente, id_uc) VALUES (4, 2);
 INSERT INTO docente_uc (id_docente, id_uc) VALUES (5, 2);
 INSERT INTO docente_uc (id_docente, id_uc) VALUES (6, 3);
-INSERT INTO docente_uc (id_docente, id_uc) VALUES (7, 8);
-INSERT INTO docente_uc (id_docente, id_uc) VALUES (8, 8);
+INSERT INTO docente_uc (id_docente, id_uc) VALUES (7, 4);
+INSERT INTO docente_uc (id_docente, id_uc) VALUES (8, 4);
 INSERT INTO docente_uc (id_docente, id_uc) VALUES (8, 2);
 
 -----------------------------------------

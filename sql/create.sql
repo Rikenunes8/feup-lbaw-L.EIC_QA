@@ -26,11 +26,11 @@ CREATE TABLE "utilizador" (
     email         TEXT NOT NULL CONSTRAINT email_uk UNIQUE ,
     username      TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
     password      TEXT NOT NULL,
-    data_registo  DATETIME NOT NULL DEFAULT now(),
+    data_registo  TIMESTAMP  NOT NULL DEFAULT now(),
     nome          TEXT,
     foto_perfil   TEXT,
     sobre         TEXT,
-    data_nascimento DATETIME,
+    data_nascimento TIMESTAMP ,
     pontuacao     INTEGER DEFAULT 0,
     bloqueado     BOOLEAN DEFAULT FALSE,
     ano_ingresso  INTEGER,
@@ -68,7 +68,7 @@ CREATE TABLE "intervencao" (
     id              SERIAL PRIMARY KEY,
     id_autor        INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE,
     texto           TEXT NOT NULL,
-    data            DATETIME NOT NULL DEFAULT now(),
+    data            TIMESTAMP  NOT NULL DEFAULT now(),
     pontuacao       INTEGER NOT NULL DEFAULT 0,
     titulo          TEXT,
     categoria       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
@@ -101,7 +101,7 @@ CREATE TABLE "razao_bloqueio" (
 
 CREATE TABLE "notificacao" (
     id              SERIAL PRIMARY KEY,
-    data            DATETIME NOT NULL DEFAULT now(),
+    data            TIMESTAMP  NOT NULL DEFAULT now(),
     id_razao        INTEGER REFERENCES razao_bloqueio ON DELETE RESTRICT ON UPDATE CASCADE,
     id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
     estado tipo_estado,
@@ -238,7 +238,6 @@ AFTER UPDATE ON votacao
 FOR EACH ROW
 EXECUTE PROCEDURE update_pontuacao();
 
-
 -- TRIGGER05
 CREATE FUNCTION verificar_docente_uc() RETURNS TRIGGER AS
 $BODY$
@@ -314,7 +313,9 @@ BEGIN
     IF 'resposta' <> (SELECT tipo FROM intervencao WHERE id=NEW.id_resposta) THEN
         RAISE EXCEPTION 'Só podem ser validadas intervenções do tipo resposta';
     END IF;
-    IF NEW.id_docente NOT IN (SELECT id_docente FROM docente_uc WHERE id_uc IN (SELECT categoria FROM intervencao WHERE id=NEW.id_resposta)) THEN
+    IF NEW.id_docente NOT IN (SELECT DUC.id_docente
+                              FROM (intervencao I1 INNER JOIN intervencao I2 ON I1.id_intervencao = I2.id) INNER JOIN docente_uc DUC ON I2.categoria = DUC.id_uc
+                              WHERE I1.id = NEW.id_resposta) THEN
         RAISE EXCEPTION 'Apenas docentes da categoria da resposta a podem validar';
     END IF;
     RETURN NEW;
@@ -507,23 +508,4 @@ AFTER DELETE ON utilizador
 FOR EACH ROW
 EXECUTE PROCEDURE gerar_notificacao_eliminacao_conta();
 
------------------------------------------
--- TRANSACTIONS
------------------------------------------
 
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE READ ONLY;
-
-SELECT COUNT(*)
-FROM intervencao
-WHERE tipo='questao';
-
-SELECT titulo, categoria, pontuacao, data, (SELECT COUNT(*) FROM validacao
-                                            WHERE id_resposta IN 
-                                                (SELECT id FROM intervencao WHERE id_intervencao=I.id) 
-                                                AND valida = TRUE) AS n_respostas_validadas
-FROM intervencao AS I
-WHERE tipo='questao';
-
-END TRANSACTION;
