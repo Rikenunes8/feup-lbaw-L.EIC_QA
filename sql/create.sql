@@ -121,7 +121,6 @@ CREATE TABLE "recebe_not" (
     PRIMARY KEY (id_notificacao, id_utilizador)
 );
 
-
 -----------------------------------------
 -- Indexes
 -----------------------------------------
@@ -162,7 +161,6 @@ FOR EACH ROW
 EXECUTE PROCEDURE intervencao_procura();
 
 CREATE INDEX procura_idx ON intervencao USING GIN (tsvectors);
-
 
 -----------------------------------------
 -- TRIGGERS and UDFs
@@ -310,10 +308,27 @@ FOR EACH ROW
 EXECUTE PROCEDURE verificar_votacao_intervencao();
 
 -- TRIGGER09
+CREATE FUNCTION verificar_validacao_intervencao() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF 'resposta' <> (SELECT tipo FROM intervencao WHERE id=NEW.id_resposta) THEN
+        RAISE EXCEPTION 'Só podem ser validadas intervenções do tipo resposta';
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verificar_validacao_intervencao
+BEFORE INSERT ON validacao
+FOR EACH ROW
+EXECUTE PROCEDURE verificar_validacao_intervencao();
 
 -- TRIGGER10
 
 -- TRIGGER11
+
+-- TRIGGER12
 CREATE FUNCTION gerar_notificacao_questao() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -341,7 +356,7 @@ AFTER INSERT ON intervencao
 FOR EACH ROW
 EXECUTE PROCEDURE gerar_notificacao_questao();
 
--- TRIGGER12
+-- TRIGGER13
 CREATE FUNCTION gerar_notificacao_resposta() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -365,7 +380,7 @@ AFTER INSERT ON intervencao
 FOR EACH ROW
 EXECUTE PROCEDURE gerar_notificacao_resposta();
 
--- TRIGGER13
+-- TRIGGER14
 CREATE FUNCTION gerar_notificacao_comentario() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -389,14 +404,13 @@ AFTER INSERT ON intervencao
 FOR EACH ROW
 EXECUTE PROCEDURE gerar_notificacao_comentario();
 
--- TRIGGER14
-
 -- TRIGGER15
 
 -- TRIGGER16
 
 -- TRIGGER17
 
+-- TRIGGER18
 
 -----------------------------------------
 -- TRANSACTIONS
@@ -411,7 +425,9 @@ FROM intervencao
 WHERE tipo='questao';
 
 SELECT titulo, categoria, pontuacao, data, (SELECT COUNT(*) FROM validacao
-                                            WHERE id_resposta IN (SELECT id FROM intervencao WHERE id_intervencao=I.id) AND valida = TRUE)
+                                            WHERE id_resposta IN 
+                                                (SELECT id FROM intervencao WHERE id_intervencao=I.id) 
+                                                AND valida = TRUE) AS n_respostas_validadas
 FROM intervencao AS I
 WHERE tipo='questao';
 
