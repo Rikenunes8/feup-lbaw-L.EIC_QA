@@ -204,10 +204,14 @@ EXECUTE PROCEDURE data_maior_intervencao_superior();
 CREATE FUNCTION incr_pontuacao() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.voto=TRUE THEN
-    UPDATE intervencao SET pontuacao=pontuacao+1 WHERE id=NEW.id_intervencao;
+    IF 'comentario'=(SELECT tipo FROM intervencao WHERE id=NEW.id_intervencao) THEN
+      RAISE EXCEPTION 'Um comentario não pode ser votado';
+    ELSEIF NEW.voto=TRUE THEN
+      UPDATE intervencao SET pontuacao=pontuacao+1 WHERE id=NEW.id_intervencao;
+      UPDATE utilizador SET pontuacao=pontuacao+1 WHERE id=(SELECT id_autor FROM intervencao AS I WHERE I.id=NEW.id_intervencao);
     ELSE
-    UPDATE intervencao SET pontuacao=pontuacao-1 WHERE id=NEW.id_intervencao;
+      UPDATE intervencao SET pontuacao=pontuacao-1 WHERE id=NEW.id_intervencao;
+      UPDATE utilizador SET pontuacao=pontuacao-1 WHERE id=(SELECT id_autor FROM intervencao AS I WHERE I.id=NEW.id_intervencao);
     END IF;
     RETURN NEW;
 END
@@ -224,9 +228,11 @@ CREATE FUNCTION update_pontuacao() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF NEW.voto=TRUE AND OLD.voto=FALSE THEN
-    UPDATE intervencao SET pontuacao=pontuacao+2 WHERE id=NEW.id_intervencao;
+      UPDATE intervencao SET pontuacao=pontuacao+2 WHERE id=NEW.id_intervencao;
+      UPDATE utilizador SET pontuacao=pontuacao+2 WHERE id=(SELECT id_autor FROM intervencao AS I WHERE I.id=NEW.id_intervencao);
     ELSEIF NEW.voto=FALSE AND OLD.voto=TRUE THEN
-    UPDATE intervencao SET pontuacao=pontuacao-2 WHERE id=NEW.id_intervencao;
+      UPDATE intervencao SET pontuacao=pontuacao-2 WHERE id=NEW.id_intervencao;
+      UPDATE utilizador SET pontuacao=pontuacao-2 WHERE id=(SELECT id_autor FROM intervencao AS I WHERE I.id=NEW.id_intervencao);
     END IF;
     RETURN NEW;
 END
@@ -234,7 +240,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER update_pontuacao
-AFTER UPDATE ON votacao
+AFTER UPDATE OF voto ON votacao
 FOR EACH ROW
 EXECUTE PROCEDURE update_pontuacao();
 

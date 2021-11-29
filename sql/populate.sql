@@ -82,7 +82,7 @@ INSERT INTO segue_uc (id_aluno, id_uc) VALUES (11, 1);
 -- questao
 INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo, pontuacao) VALUES (0, 10, 'Como fazer um Wireframe?', 'Não sei que aplicação usar. Qual é a melhor e mais fácil de usar?', 2, '2021-11-04 13:00:00', 'questao', 78);
 INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo, pontuacao) VALUES (1, 10, 'Sitemap:pode existir ligação componente-página?', 'É correto ligar uma página diretamente a uma componente de outra página?', 2, '2021-11-03 13:00:00', 'questao', 1);
-INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo, pontuacao) VALUES (2, 10, 'Qual o nome do profeddor de LTW?', 'Não consigo entrar no sigarra e preciso mesmo de saber o nome do professor...', 1, '2021-11-06 13:00:00', 'questao', 0);
+INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo, pontuacao) VALUES (2, 10, 'Qual o nome do professor de LTW?', 'Não consigo entrar no sigarra e preciso mesmo de saber o nome do professor...', 1, '2021-11-06 13:00:00', 'questao', 0);
 
 -- resposta
 INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo, pontuacao) VALUES (3, 9, 'O invision é o melhor embora não permita por textos por cima de caixas brancas. Há também o figma, mas é bastante mais complexo.', 0, '2021-11-05 13:00:00', 'resposta', 110);
