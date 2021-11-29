@@ -37,10 +37,10 @@ INSERT INTO utilizador (id, email, username, password, tipo, nome, sobre, data_r
 INSERT INTO utilizador (id, email, username, password, tipo, nome, sobre, data_registo) VALUES (8, 'pabranda@fc.up.pt', 'pabranda', 'pabranda', 'Docente', 'Pedro Miguel Alves Brandão', 'Fiz o meu doutoramento no Computer Laboratory da Univ. de Cambridge sobre o tema de Body Sensor Networks. Obtive uma bolsa da Fundação para a Ciência e Tecnologia para suporte ao doutoramento.', '2021-11-01');
 
 -- Aluno
-INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo, pontuacao) VALUES ( 9, 'up201805455@fc.up.pt', 'up201805455', 'up201805455', 'Aluno', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01', 120);
-INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo, pontuacao) VALUES (10, 'up201906852@fe.up.pt', 'up201906852', 'up201906852', 'Aluno', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01', 79);
-INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo, pontuacao) VALUES (11, 'up201905427@fe.up.pt', 'up201905427', 'up201905427', 'Aluno', 'Patrícia Oliveira', '2001-03-19 17:00:00', 2019, '2021-11-01', 0);
-INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo, pontuacao) VALUES (12, 'up201805327@fc.up.pt', 'up201805327', 'up201805327', 'Aluno', 'Tiago Antunes', '2000-06-10 11:00:00', 2018, '2021-11-01', 5);
+INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo) VALUES ( 9, 'up201805455@fc.up.pt', 'up201805455', 'up201805455', 'Aluno', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo) VALUES (10, 'up201906852@fe.up.pt', 'up201906852', 'up201906852', 'Aluno', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo) VALUES (11, 'up201905427@fe.up.pt', 'up201905427', 'up201905427', 'Aluno', 'Patrícia Oliveira', '2001-03-19 17:00:00', 2019, '2021-11-01');
+INSERT INTO utilizador (id, email, username, password, tipo, nome, data_nascimento, ano_ingresso, data_registo) VALUES (12, 'up201805327@fc.up.pt', 'up201805327', 'up201805327', 'Aluno', 'Tiago Antunes', '2000-06-10 11:00:00', 2018, '2021-11-01');
 
 -----------------------------------------
 -- uc
@@ -80,15 +80,15 @@ INSERT INTO segue_uc (id_aluno, id_uc) VALUES (11, 1);
 -----------------------------------------
 
 -- questao
-INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo, pontuacao) VALUES (0, 10, 'Como fazer um Wireframe?', 'Não sei que aplicação usar. Qual é a melhor e mais fácil de usar?', 2, '2021-11-04 13:00:00', 'questao', 78);
-INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo, pontuacao) VALUES (1, 10, 'Sitemap:pode existir ligação componente-página?', 'É correto ligar uma página diretamente a uma componente de outra página?', 2, '2021-11-03 13:00:00', 'questao', 1);
-INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo, pontuacao) VALUES (2, 10, 'Qual o nome do professor de LTW?', 'Não consigo entrar no sigarra e preciso mesmo de saber o nome do professor...', 1, '2021-11-06 13:00:00', 'questao', 0);
+INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo) VALUES (0, 10, 'Como fazer um Wireframe?', 'Não sei que aplicação usar. Qual é a melhor e mais fácil de usar?', 2, '2021-11-04 13:00:00', 'questao');
+INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo) VALUES (1, 10, 'Sitemap:pode existir ligação componente-página?', 'É correto ligar uma página diretamente a uma componente de outra página?', 2, '2021-11-03 13:00:00', 'questao');
+INSERT INTO intervencao (id, id_autor, titulo, texto, categoria, data, tipo) VALUES (2, 10, 'Qual o nome do professor de LTW?', 'Não consigo entrar no sigarra e preciso mesmo de saber o nome do professor...', 1, '2021-11-06 13:00:00', 'questao');
 
 -- resposta
-INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo, pontuacao) VALUES (3, 9, 'O invision é o melhor embora não permita por textos por cima de caixas brancas. Há também o figma, mas é bastante mais complexo.', 0, '2021-11-05 13:00:00', 'resposta', 110);
-INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo, pontuacao) VALUES (4, 12, 'Faz no papel e digitaliza, não há nada melhor.', 0, '2021-11-05 13:00:00', 'resposta', 3);
-INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo, pontuacao) VALUES (5, 12, 'José Paulo Leal...', 2, '2021-11-06 13:23:00', 'resposta', 2);
-INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo, pontuacao) VALUES (6, 9, 'Nome: José Paulo de Vilhena Geraldes Leal, Email: jpleal@fc.up.pt', 2, '2021-11-06 13:59:00', 'resposta', 10);
+INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo) VALUES (3, 9, 'O invision é o melhor embora não permita por textos por cima de caixas brancas. Há também o figma, mas é bastante mais complexo.', 0, '2021-11-05 13:00:00', 'resposta');
+INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo) VALUES (4, 12, 'Faz no papel e digitaliza, não há nada melhor.', 0, '2021-11-05 13:00:00', 'resposta');
+INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo) VALUES (5, 12, 'José Paulo Leal...', 2, '2021-11-06 13:23:00', 'resposta');
+INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo) VALUES (6, 9, 'Nome: José Paulo de Vilhena Geraldes Leal, Email: jpleal@fc.up.pt', 2, '2021-11-06 13:59:00', 'resposta');
 
 -- comentario
 INSERT INTO intervencao (id, id_autor, texto, id_intervencao, data, tipo) VALUES (7, 11, 'Outra ferramenta que podes usar é o draw.io', 3, '2021-11-05 14:00:00', 'comentario');
