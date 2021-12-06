@@ -6,7 +6,7 @@ info:
   description: 'Web Resources Specification (A7) for L.EIC Q&A'
 
 servers:
-- url: http://lbaw.fe.up.pt
+- url: http://lbaw.fe.up.pt/lbaw2185/
   description: Production server
 
 #externalDocs:
@@ -14,30 +14,39 @@ servers:
 #  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
 
 tags:
-  - name: 'M01: Authentication and Individual Profile'
-  - name: 'M02: Works'
-  - name: 'M03: Reviews and Wish list'
-  - name: 'M04: Loans'
-  - name: 'M05: User Administration and Static pages'
+  - name: 'M01: Autenticação e Perfil Individual'
+  - name: 'M02: Questões'
+  - name: 'M03: Respostas'
+  - name: 'M04: Comentários'
+  - name: 'M05: Pesquisa de Intervenções'
+  - name: 'M06: Pesquisa de Unidades Curriculares'
+  - name: 'M07: Pesquisa de Utilizadores'
+  - name: 'M08: Notificações'
+  - name: 'M09: Páginas estáticas'
+  - name: 'M10: Páginas de administração'
 
 paths:
+
+  #########################################
+  # M01: Autenticação e Perfil Individual #
+  #########################################
 
   /login:
     get:
       operationId: R101
-      summary: 'R101: Login Form'
-      description: 'Provide login form. Access: PUB'
+      summary: 'R101: Formulário de Autenticação'
+      description: 'Acesso ao formulário de autenticação. Acesso: PUB'
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - 'M01: Autenticação e Perfil Individual'
       responses:
         '200':
-          description: 'Ok. Show log-in UI'
+          description: 'Ok. Mostrar Início de sessão UI'
     post:
       operationId: R102
-      summary: 'R102: Login Action'
-      description: 'Processes the login form submission. Access: PUB'
+      summary: 'R102: Ação de Autenticação'
+      description: 'Acesso à submissão do formulário de autenticação. Acesso: PUB'
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - 'M01: Autenticação e Perfil Individual'
  
       requestBody:
         required: true
@@ -46,7 +55,7 @@ paths:
             schema:
               type: object
               properties:
-                email:          # <!--- form field name
+                email:       # <!--- form field name
                   type: string
                 password:    # <!--- form field name
                   type: string
@@ -56,55 +65,55 @@ paths:
  
       responses:
         '302':
-          description: 'Redirect after processing the login credentials.'
+          description: 'Redirecionar após o processamento das credenciais de autenticação.'
           headers:
             Location:
               schema:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful authentication. Redirect to user profile.'
+                  description: 'Autenticação bem sucedida. Redirecionar para o perfil do utilizador.'
                   value: '/users/{id}'
                 302Error:
-                  description: 'Failed authentication. Redirect to login form.'
+                  description: 'Autenticação falhada. Redirecionar para o formulário de autenticação.'
                   value: '/login'
  
   /logout:
     post:
       operationId: R103
-      summary: 'R103: Logout Action'
-      description: 'Logout the current authenticated used. Access: USR, ADM'
+      summary: 'R103: Ação de Terminar Sessão'
+      description: 'Terminar sessão do utilizador autenticado. Acesso: USR, ADM'
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - 'M01: Autenticação e Perfil Individual'
       responses:
         '302':
-          description: 'Redirect after processing logout.'
+          description: 'Redirecionar após o processo de terminar sessão.'
           headers:
             Location:
               schema:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful logout. Redirect to login form.'
+                  description: 'Terminar sessão bem sucedida. Redirecionar para o formulário de inicio de sessão'
                   value: '/login'
 
   /register:
     get:
       operationId: R104
-      summary: 'R104: Register Form'
-      description: 'Provide new user registration form. Access: PUB'
+      summary: 'R104: Formulário de Registo'
+      description: 'Acesso ao formulário de novo registo. Acesso: PUB'
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - 'M01: Autenticação e Perfil Individual'
       responses:
         '200':
-          description: 'Ok. Show sign-up UI'
+          description: 'Ok. Mostrar Formulário de Registo.'
 
     post:
       operationId: R105
-      summary: 'R105: Register Action'
-      description: 'Processes the new user registration form submission. Access: PUB'
+      summary: 'R105: Ação de Registo'
+      description: 'Processa a submissão de registo do novo utilizador. Acesso: PUB'
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - 'M01: Autenticação e Perfil Individual'
 
       requestBody:
         required: true
@@ -113,39 +122,54 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
                 email:
                   type: string
-                picture:
+                username:
+                  type: string
+                password:
+                  type: string
+                nome:
+                  type: string
+                sobre: 
+                  type: string
+                data_nascimento:
+                  type: string
+                  format: date-time
+                ano_ingresso:
+                  type: integer
+                  minimum: 0
+                foto_perfil:
                   type: string
                   format: binary
               required:
+                - username
                 - email
                 - password
 
       responses:
         '302':
-          description: 'Redirect after processing the new user information.'
+          description: 'Redirecionar após processar a informação do novo utilizador.'
           headers:
             Location:
               schema:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful authentication. Redirect to user profile.'
+                  description: 'Autenticação bem sucedida.Redirecionar para o perfil de utilizador.'
                   value: '/users/{id}'
                 302Failure:
-                  description: 'Failed authentication. Redirect to login form.'
+                  description: 'Autenticação falhada. Redirecionar para o formulário de inicio de sessão.'
                   value: '/login'
+
+  # M01 - recuperação de password                
 
   /users/{id}:
     get:
       operationId: R106
-      summary: 'R106: View user profile'
-      description: 'Show the individual user profile. Access: USR'
+      summary: 'R106: Visualizar perfil de utilizador'
+      description: 'Mostra o perfil do utilizador. Acesso: USR'
       tags:
-        - 'M01: Authentication and Individual Profile'
+        - 'M01: Autenticação e Perfil Individual'
 
       parameters:
         - in: path
@@ -156,10 +180,582 @@ paths:
 
       responses:
         '200':
-          description: 'Ok. Show view profile UI'
- 
+          description: 'Ok. Mostrar a UI do perfil de utilizador'
 
-  /api/works:
+
+  /users/editar/{id}:
+    get:
+      operationId: R108
+      summary: 'R108:  Formulário de Editar Perfil do Utilizador'
+      description: 'Acesso ao formulário de Editar Perfil do Utilizador. Acesso: PRT'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Mostrar Editar Perfil do Utilizador UI'
+    post:
+      operationId: R109
+      summary: 'R109: Ação de Editar Perfil do Utilizador'
+      description: 'Acesso à submissão do formulário de Editar Perfil do Utilizador. Acesso: PRT'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                password: 
+                  type: string  
+                nome: 
+                  type: string
+                sobre:
+                  type: string
+                foto_perfil:
+                  type: string
+                  format: binary
+                
+      response:
+        '302':
+          description: 'Redirecionar após o processamento da edição do Perfil do Utilizador.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Edição com sucesso. Redirecionar para o Perfil do Utilizador.'
+                  value: '/users/{id}'
+                302Error:
+                  description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
+                  value: '/users/editar/{id}'
+
+  #################
+  # M02: Questões #
+  #################  
+  
+  /api/questao/{id}: 
+    get:
+      operationId: R201
+      summary: 'R201: Visualizar detalhes de questão'
+      description: 'Mostra o detalhe de uma questão, dados, repostas e comentários associados. Acesso: USR.'
+      tags:
+        - 'M02: Questões'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Mostrar a UI do detalhes de questão'
+          
+
+  /api/questao/criar:
+    get:
+      operationId: R202
+      summary: 'R202: Formulário de Nova Questão'
+      description: 'Acesso ao formulário de Nova Questão. Acesso: USR'
+      tags:
+        - 'M02: Questões'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Nova Questão UI'
+    post:
+      operationId: R203
+      summary: 'R203: Ação de criação de questão.'
+      description: 'Acesso à submissão do formulário de Nova Questão. Acesso: USR'
+      tags: 
+        - 'M02: Questões'
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                titulo: 
+                  type: string
+                texto:
+                  type: string
+                categoria:
+                  type: string
+                required: 
+                  - titulo
+                  - texto
+                  - categoria
+      response:
+        '302':
+          description: 'Redirecionar após o processamento da criação da Nova Questão.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Criação com sucesso. Redirecionar para o detalhe da questão criada.'
+                  value: 'api/questao/{id}'
+                302Error:
+                  description: 'Criação sem sucesso. Redirecionar para o formulário de criação de Nova Questão.'
+                  value: '/api/questao/criar'
+
+
+  /api/questao/editar/{id}:
+    get:
+      operationId: R204
+      summary: 'R204: Formulário de Editar Questão'
+      description: 'Acesso ao formulário de Editar Questão. Acesso: PRT'
+      tags:
+        - 'M02: Questões'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Mostrar Editar Questão UI'
+    post:
+      operationId: R205
+      summary: 'R205: Ação de Editar Questão'
+      description: 'Acesso à submissão do formulário de Editar Questão. Acesso: PRT'
+      tags:
+        - 'M02: Questões'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                titulo: 
+                  type: string
+                texto:
+                  type: string
+                categoria:
+                  type: string
+                required: 
+                  - titulo
+                  - texto
+                  - categoria
+      response:
+        '302':
+          description: 'Redirecionar após o processamento da edição da questão.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Edição com sucesso. Redirecionar para o detalhe da questão editada.'
+                  value: '/api/questao/{id}'
+                302Error:
+                  description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma questão.'
+                  value: '/api/questao/editar/{id}'
+
+  ##################
+  # M03: Respostas #
+  ##################
+
+  /api/resposta/criar:
+    get:
+      operationId: R301
+      summary: 'R301: Formulário de Nova Resposta'
+      description: 'Acesso ao formulário de Nova Resposta. Acesso: USR'
+      tags:
+        - 'M03: Respostas'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Nova Resposta UI'
+    post:
+      operationId: R302
+      summary: 'R302: Ação de criação de resposta.'
+      description: 'Acesso à submissão do formulário de Nova Resposta. Acesso: USR'
+      tags: 
+        - 'M03: Respostas'
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                texto:
+                  type: string
+                  required: true
+      response:
+        '302':
+          description: 'Redirecionar após o processamento da criação da nova resposta.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Criação com sucesso. Redirecionar para o detalhe da questão que foi respondida.'
+                  value: 'api/questao/{id}'
+                302Error:
+                  description: 'Criação sem sucesso. Redirecionar para o formulário de criação de nova resposta.'
+                  value: '/api/resposta/criar'
+
+
+  
+  /api/resposta/editar:
+   get:
+      operationId: R303
+      summary: 'R303: Formulário de Editar Resposta'
+      description: 'Acesso ao formulário de Editar Resposta. Acesso: PRT'
+      tags:
+        - 'M03: Respostas'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Editar Resposta UI'
+    post:
+      operationId: R304
+      summary: 'R304: Ação de Editar Resposta'
+      description: 'Acesso à submissão do formulário de Editar Resposta. Acesso: PRT'
+      tags:
+        - 'M03: Resposta'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                texto:
+                  type: string
+                  required: true
+      response:
+        '302':
+          description: 'Redirecionar após o processamento da edição da resposta.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Edição com sucesso. Redirecionar para o detalhe da questão respondida'
+                  value: '/api/questão/{id}'
+                302Error:
+                  description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma resposta.'
+                  value: '/api/resposta/editar/{id}'
+
+  ####################
+  # M04: Comentários #
+  ####################
+                  
+  /api/comentario/criar:
+      get:
+      operationId: R401
+      summary: 'R401: Formulário de Novo Comentário'
+      description: 'Acesso ao formulário de Novo Comentário. Acesso: USR'
+      tags:
+        - 'M04: Comentários'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Novo Comentário UI'
+    post:
+      operationId: R402
+      summary: 'R402: Ação de criação de comentário.'
+      description: 'Acesso à submissão do formulário de Novo comentário. Acesso: USR'
+      tags: 
+        - 'M04: Comentários'
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                texto:
+                  type: string
+                  required: true
+      response:
+        '302':
+          description: 'Redirecionar após o processamento da criação do novo comentário.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Criação com sucesso. Redirecionar para o detalhe da questão comentada.'
+                  value: 'api/questao/{id}'
+                302Error:
+                  description: 'Criação sem sucesso. Redirecionar para o formulário de criação de novo comentário.'
+                  value: '/api/comentario/criar'
+
+  
+  
+  /api/comentario/editar:
+     operationId: R403
+      summary: 'R403: Formulário de Editar comentário'
+      description: 'Acesso ao formulário de Editar comentário. Acesso: PRT'
+      tags:
+        - 'M04: Comentários'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Editar Comentário UI'
+    post:
+      operationId: R404
+      summary: 'R404: Ação de Editar Comentário'
+      description: 'Acesso à submissão do formulário de Editar Cometário. Acesso: PRT'
+      tags:
+        - 'M04: Comentários'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                texto:
+                  type: string
+                  required: true
+      response:
+        '302':
+          description: 'Redirecionar após o processamento da edição do comemtário.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Edição com sucesso. Redirecionar para o detalhe da questão comentada'
+                  value: '/api/questão/{id}'
+                302Error:
+                  description: 'Edição sem sucesso. Redirecionar para o formulário da edição de um comentário.'
+                  value: '/api/comentario/editar/{id}'
+
+  #################################
+  # M05: Pesquisa de Intervenções #
+  #################################
+
+    /api/questao:
+    get:
+      operationId: R501
+      summary: 'R501: Pesquisar Intervenções API.'
+      description: 'Procura por intervenções e retorna o resultado como JSON. Acesso: USR.'
+  
+      tags: 
+        - 'M05: Pesquisa de Intervenções'
+
+      parameters:
+        - in: query
+          name: keyword
+          description: Palavra chave a ser usada para pesquisa full-text
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: uc
+          description: Unidade curricular a ser usada para pesquisa 
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+
+  ##########################################
+  # M06: Pesquisa de Unidades Curriculares #
+  ##########################################
+
+    /api/uc:
+    get:
+      operationId: R601
+      summary: 'R601: Pesquisar Unidades Curriculares API.'
+      description: 'Procura de unidades curriculares e retorna o resultado como JSON. Acesso: USR.'
+  
+      tags: 
+        - 'M06: Pesquisa de Unidades Curriculares'
+
+      parameters:
+        - in: query
+          name: uc
+          description: Unidade curricular a ser usada para pesquisa 
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+
+  #################################
+  # M07: Pesquisa de Utilizadores #
+  #################################
+
+    /api/users:
+    get:
+      operationId: R701
+      summary: 'R701: Pesquisar Utilizadores API.'
+      description: 'Procura utilizadores e retorna o resultado como JSON. Acesso: USR.'
+  
+      tags: 
+        - 'M07: Pesquisa de Utilizadores'
+
+      parameters:
+        - in: query
+          name: user
+          description: Palavra chave a ser usada para pesquisa full-text
+          schema:
+            type: string
+          required: false
+   
+  ###########################
+  # M09 - Páginas estáticas #
+  ###########################
+
+  /home:
+    get:
+      operationId: R901
+      summary: 'R901: Página Inicial'
+      description: 'Acesso à Página Inicial. Acesso: PUB'
+      tags:
+        - 'M09: Páginas estáticas'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página Inicial UI'
+
+    
+  /sobre:
+    get:
+      operationId: R902
+      summary: 'R902: Página Sobre'
+      description: 'Acesso à Página Sobre. Acesso: PUB'
+      tags:
+        - 'M09: Páginas estáticas'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página Sobre UI'
+
+
+  /contactos:
+    get:
+      operationId: R903
+      summary: 'R903: Página Contactos'
+      description: 'Acesso à Página Contactos. Acesso: PUB'
+      tags:
+        - 'M09: Páginas estáticas'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página Contactos UI'
+
+
+  /faq:
+    get:
+      operationId: R904
+      summary: 'R904: Página FAQ'
+      description: 'Acesso à Página FAQ. Acesso: PUB'
+      tags:
+        - 'M09: Páginas estáticas'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página FAQ UI'
+
+  ##################################
+  # M10 - Páginas de administração # 
+  ##################################
+
+  #/api/admin/users -> todos os users ? ()
+
+  /api/admin/denuncias:
+    get:
+      operationId: R1001
+      summary: 'R1001: Catálogo de Denúncias'
+      description: 'Mostra todas denúncias recebidas. Acesso: ADM'
+      tags:
+        - 'M10: Páginas de administração'
+        
+      response:
+        '200':
+          description: 'OK. Mostrar UI com todas as denúncias.'
+    
+    post:
+      operationId: R1002
+      summary: 'R1002: Ação de Alterar Estado de Conta'
+      description: 'Ação de eliminar, bloquear ou reativar uma conta. Acesso: ADM'
+      tags:
+        - 'M10: Páginas de administração'
+        
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:     # id de uma intervenção
+                  type: integer
+                estado: # bloqueio ou eliminação
+                  type: string
+              required:
+                - id
+                - estado
+                
+      response:
+        '200':
+          description: 'Estado da conta alterado com sucesso.'
+  
+  /api/admin/bloquear/{id}:
+    post:
+      operationId: R1017
+      summary: 'R1017: Ação de Alterar Estado de Conta no Perfil'
+      description: 'Ação de eliminar, bloquear ou reativar uma conta a partir do perfil da mesma. Acesso: ADM'
+      tags:
+        - 'M10: Páginas de administração'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:     # id de uma intervenção
+                  type: integer
+                estado: # bloqueio ou eliminação
+                  type: string
+              required:
+                - id
+                - estado
+      response:
+        '200':
+          description: 'Estado da conta alterado com sucesso.'  
+
+
+      
+    
+    
+    
+    
+---exemplo--
+
+/api/works:
     get:
       operationId: R202
       summary: 'R202: Search Works API'
