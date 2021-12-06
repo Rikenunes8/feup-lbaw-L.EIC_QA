@@ -416,7 +416,7 @@ paths:
 
   
   /api/resposta/editar:
-   get:
+    get:
       operationId: R303
       summary: 'R303: Formulário de Editar Resposta'
       description: 'Acesso ao formulário de Editar Resposta. Acesso: PRT'
@@ -462,7 +462,7 @@ paths:
   ####################
                   
   /api/comentario/criar:
-      get:
+    get:
       operationId: R401
       summary: 'R401: Formulário de Novo Comentário'
       description: 'Acesso ao formulário de Novo Comentário. Acesso: USR'
@@ -506,7 +506,8 @@ paths:
   
   
   /api/comentario/editar:
-     operationId: R403
+    get:
+      operationId: R403
       summary: 'R403: Formulário de Editar comentário'
       description: 'Acesso ao formulário de Editar comentário. Acesso: PRT'
       tags:
@@ -550,7 +551,7 @@ paths:
   # M05: Pesquisa de Intervenções #
   #################################
 
-    /api/questao:
+  /api/questao:
     get:
       operationId: R501
       summary: 'R501: Pesquisar Intervenções API.'
@@ -579,7 +580,7 @@ paths:
   # M06: Pesquisa de Unidades Curriculares #
   ##########################################
 
-    /api/uc:
+  /api/uc:
     get:
       operationId: R601
       summary: 'R601: Pesquisar Unidades Curriculares API.'
@@ -602,7 +603,7 @@ paths:
   # M07: Pesquisa de Utilizadores #
   #################################
 
-    /api/users:
+  /api/users:
     get:
       operationId: R701
       summary: 'R701: Pesquisar Utilizadores API.'
@@ -753,7 +754,7 @@ paths:
     
     
     
----exemplo--
+#---exemplo--
 
 /api/works:
     get:
