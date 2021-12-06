@@ -161,7 +161,7 @@ paths:
                   description: 'Autenticação falhada. Redirecionar para o formulário de inicio de sessão.'
                   value: '/login'
 
-  # M01 - recuperação de password                
+  # M01: recuperação de password ? é uma acção por isso nao deve ser incluída??            
 
   /users/{id}:
     get:
@@ -181,7 +181,6 @@ paths:
       responses:
         '200':
           description: 'Ok. Mostrar a UI do perfil de utilizador'
-
 
   /users/editar/{id}:
     get:
@@ -213,16 +212,22 @@ paths:
             schema:
               type: object
               properties:
-                password: 
-                  type: string  
-                nome: 
+                password:
                   type: string
-                sobre:
+                nome:
                   type: string
+                sobre: 
+                  type: string
+                data_nascimento:
+                  type: string
+                  format: date-time
+                ano_ingresso:
+                  type: integer
+                  minimum: 0
                 foto_perfil:
                   type: string
                   format: binary
-                
+                       
       response:
         '302':
           description: 'Redirecionar após o processamento da edição do Perfil do Utilizador.'
@@ -238,11 +243,12 @@ paths:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
                   value: '/users/editar/{id}'
 
+
   #################
   # M02: Questões #
   #################  
   
-  /api/questao/{id}: 
+  /intervencao/questao/{id}: 
     get:
       operationId: R201
       summary: 'R201: Visualizar detalhes de questão'
@@ -261,8 +267,7 @@ paths:
         '200':
           description: 'Ok. Mostrar a UI do detalhes de questão'
           
-
-  /api/questao/criar:
+  /intervencao/questao/criar:
     get:
       operationId: R202
       summary: 'R202: Formulário de Nova Questão'
@@ -292,10 +297,10 @@ paths:
                   type: string
                 categoria:
                   type: string
-                required: 
-                  - titulo
-                  - texto
-                  - categoria
+              required: 
+                - titulo
+                - texto
+                - categoria
       response:
         '302':
           description: 'Redirecionar após o processamento da criação da Nova Questão.'
@@ -306,13 +311,12 @@ paths:
               examples:
                 302Success:
                   description: 'Criação com sucesso. Redirecionar para o detalhe da questão criada.'
-                  value: 'api/questao/{id}'
+                  value: '/intervencao/questao/{id}'
                 302Error:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de Nova Questão.'
-                  value: '/api/questao/criar'
+                  value: '/intervencao/questao/criar'
 
-
-  /api/questao/editar/{id}:
+  /intervencao/questao/editar/{id}:
     get:
       operationId: R204
       summary: 'R204: Formulário de Editar Questão'
@@ -328,6 +332,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Mostrar Editar Questão UI'
+
     post:
       operationId: R205
       summary: 'R205: Ação de Editar Questão'
@@ -348,10 +353,10 @@ paths:
                   type: string
                 categoria:
                   type: string
-                required: 
-                  - titulo
-                  - texto
-                  - categoria
+              required: 
+                - titulo
+                - texto
+                - categoria
       response:
         '302':
           description: 'Redirecionar após o processamento da edição da questão.'
@@ -362,16 +367,19 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão editada.'
-                  value: '/api/questao/{id}'
+                  value: '/intervencao/questao/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma questão.'
-                  value: '/api/questao/editar/{id}'
+                  value: '/intervencao/questao/editar/{id}'
+
+  # M02: votacao e eliminicao e reporte de questões ?? é uma acção por isso nao deve ser incluída??
+
 
   ##################
   # M03: Respostas #
   ##################
 
-  /api/resposta/criar:
+  /intervencao/resposta/criar:
     get:
       operationId: R301
       summary: 'R301: Formulário de Nova Resposta'
@@ -396,8 +404,9 @@ paths:
               type: object
               properties:
                 texto:
-                  type: string
-                  required: true
+                  type: string                
+              required: 
+                - texto
       response:
         '302':
           description: 'Redirecionar após o processamento da criação da nova resposta.'
@@ -408,14 +417,12 @@ paths:
               examples:
                 302Success:
                   description: 'Criação com sucesso. Redirecionar para o detalhe da questão que foi respondida.'
-                  value: 'api/questao/{id}'
+                  value: '/intervencao/questao/{id}'
                 302Error:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de nova resposta.'
-                  value: '/api/resposta/criar'
+                  value: '/intervencao/resposta/criar'
 
-
-  
-  /api/resposta/editar:
+  /intervencao/resposta/editar:
     get:
       operationId: R303
       summary: 'R303: Formulário de Editar Resposta'
@@ -452,16 +459,21 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão respondida'
-                  value: '/api/questão/{id}'
+                  value: '/intervencao/questão/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma resposta.'
-                  value: '/api/resposta/editar/{id}'
+                  value: '/intervencao/resposta/editar/{id}'
+
+
+  # M03: votacao, validacao, eliminicao e reporte de respostas ?? é uma acção por isso nao deve ser incluída??
+  # M03: as respotas são apenas visualizadas como uma componente da pagina de destalhe da questao
+
 
   ####################
   # M04: Comentários #
   ####################
                   
-  /api/comentario/criar:
+  /intervencao/comentario/criar:
     get:
       operationId: R401
       summary: 'R401: Formulário de Novo Comentário'
@@ -498,14 +510,12 @@ paths:
               examples:
                 302Success:
                   description: 'Criação com sucesso. Redirecionar para o detalhe da questão comentada.'
-                  value: 'api/questao/{id}'
+                  value: '/intervencao/questao/{id}'
                 302Error:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de novo comentário.'
-                  value: '/api/comentario/criar'
-
+                  value: '/intervencao/comentario/criar'
   
-  
-  /api/comentario/editar:
+  /intervencao/comentario/editar:
     get:
       operationId: R403
       summary: 'R403: Formulário de Editar comentário'
@@ -531,7 +541,7 @@ paths:
               properties:
                 texto:
                   type: string
-                  required: true
+                required: true
       response:
         '302':
           description: 'Redirecionar após o processamento da edição do comemtário.'
@@ -542,16 +552,20 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão comentada'
-                  value: '/api/questão/{id}'
+                  value: '/intervencao/questão/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição de um comentário.'
-                  value: '/api/comentario/editar/{id}'
+                  value: '/intervencao/comentario/editar/{id}'
+
+  # M04: eliminicao e reporte de respostas ?? é uma acção por isso nao deve ser incluída??
+  # M04: os comentarios são apenas visualizados como uma componente da pagina de destalhe da questao
+
 
   #################################
   # M05: Pesquisa de Intervenções #
   #################################
 
-  /api/questao:
+  /intervencao/questao:
     get:
       operationId: R501
       summary: 'R501: Pesquisar Intervenções API.'
@@ -576,11 +590,12 @@ paths:
               type: string
           required: false
 
+
   ##########################################
   # M06: Pesquisa de Unidades Curriculares #
   ##########################################
 
-  /api/uc:
+  /ucs:
     get:
       operationId: R601
       summary: 'R601: Pesquisar Unidades Curriculares API.'
@@ -591,35 +606,68 @@ paths:
 
       parameters:
         - in: query
-          name: uc
-          description: Unidade curricular a ser usada para pesquisa 
+          name: nome
+          description: Palavra chave a ser usada para pesquisa pelo nome da uc
           schema:
-            type: array
-            items:
-              type: string
+            type: string
           required: false
+        - in: query
+          name: sigla
+          description: Palavra chave a ser usada para pesquisa pela sigla da uc 
+          schema:
+            type: string
+          required: false
+
 
   #################################
   # M07: Pesquisa de Utilizadores #
   #################################
 
-  /api/users:
+  /users:
     get:
       operationId: R701
       summary: 'R701: Pesquisar Utilizadores API.'
       description: 'Procura utilizadores e retorna o resultado como JSON. Acesso: USR.'
-  
       tags: 
         - 'M07: Pesquisa de Utilizadores'
 
       parameters:
         - in: query
-          name: user
+          name: nome
           description: Palavra chave a ser usada para pesquisa full-text
           schema:
             type: string
           required: false
    
+
+  #####################
+  # M08: Notificações #
+  #####################
+
+  /users/{id}/notificacoes:
+    get: 
+      operationId: R801
+      summary: 'R801: UI de Notitificações do Utilizador.'
+      description: 'Mostra as Notificações de um Utilizador. Acesso: PRT.'
+      tags: 
+        - 'M08: Notificações'
+
+      parameters:
+        - in: path
+          name: id
+          description: Identificador do Utilizador
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Mostrar Notitificações do Utilizador UI'
+
+  # marcar como lidas é ação?? nao deve estar aqui como resource
+  # eliminacao é uma ação - nao deve estar incluido??
+
+
   ###########################
   # M09 - Páginas estáticas #
   ###########################
@@ -635,7 +683,6 @@ paths:
         '200':
           description: 'Ok. Mostrar Página Inicial UI'
 
-    
   /sobre:
     get:
       operationId: R902
@@ -646,7 +693,6 @@ paths:
       responses:
         '200':
           description: 'Ok. Mostrar Página Sobre UI'
-
 
   /contactos:
     get:
@@ -659,7 +705,6 @@ paths:
         '200':
           description: 'Ok. Mostrar Página Contactos UI'
 
-
   /faq:
     get:
       operationId: R904
@@ -671,13 +716,15 @@ paths:
         '200':
           description: 'Ok. Mostrar Página FAQ UI'
 
+
   ##################################
   # M10 - Páginas de administração # 
   ##################################
 
-  #/api/admin/users -> todos os users ? ()
+  #/admin/contas -> todos os users ? ()
+  #/admin/ucs -> gerir e associar a docentes
 
-  /api/admin/denuncias:
+  /admin/denuncias:
     get:
       operationId: R1001
       summary: 'R1001: Catálogo de Denúncias'
@@ -688,37 +735,12 @@ paths:
       response:
         '200':
           description: 'OK. Mostrar UI com todas as denúncias.'
-    
-    post:
-      operationId: R1002
-      summary: 'R1002: Ação de Alterar Estado de Conta'
-      description: 'Ação de eliminar, bloquear ou reativar uma conta. Acesso: ADM'
-      tags:
-        - 'M10: Páginas de administração'
-        
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                id:     # id de uma intervenção
-                  type: integer
-                estado: # bloqueio ou eliminação
-                  type: string
-              required:
-                - id
-                - estado
-                
-      response:
-        '200':
-          description: 'Estado da conta alterado com sucesso.'
   
-  /api/admin/bloquear/{id}:
+  
+  /admin/bloquear/{id}:
     post:
       operationId: R1017
-      summary: 'R1017: Ação de Alterar Estado de Conta no Perfil'
+      summary: 'R1017: Ação de Alterar Estado de Conta'
       description: 'Ação de eliminar, bloquear ou reativar uma conta a partir do perfil da mesma. Acesso: ADM'
       tags:
         - 'M10: Páginas de administração'
@@ -756,7 +778,7 @@ paths:
     
 #---exemplo--
 
-/api/works:
+  /api/works:
     get:
       operationId: R202
       summary: 'R202: Search Works API'
