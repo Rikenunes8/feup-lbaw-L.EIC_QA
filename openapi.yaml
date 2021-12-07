@@ -97,7 +97,7 @@ paths:
                   description: 'Terminar sessão bem sucedida. Redirecionar para o formulário de inicio de sessão'
                   value: '/login'
 
-  /register:
+  /registar:
     get:
       operationId: R104
       summary: 'R104: Formulário de Registo'
@@ -155,13 +155,14 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Autenticação bem sucedida.Redirecionar para o perfil de utilizador.'
+                  description: 'Autenticação bem sucedida. Redirecionar para o perfil de utilizador.'
                   value: '/users/{id}'
                 302Failure:
-                  description: 'Autenticação falhada. Redirecionar para o formulário de inicio de sessão.'
-                  value: '/login'
+                  description: 'Autenticação falhada. Redirecionar para o formulário de Registo.'
+                  value: '/registar'
 
-  # M01: recuperação de password ? é uma acção por isso nao deve ser incluída??            
+  # M01: recuperação de password  
+  /recuperar-password:          
 
   /users/{id}:
     get:
@@ -182,7 +183,7 @@ paths:
         '200':
           description: 'Ok. Mostrar a UI do perfil de utilizador'
 
-  /users/editar/{id}:
+  /users/{id}/editar:
     get:
       operationId: R108
       summary: 'R108:  Formulário de Editar Perfil do Utilizador'
@@ -248,11 +249,12 @@ paths:
   # M02: Questões #
   #################  
   
-  /intervencao/questao/{id}: 
+  /questao/{id}: 
     get:
       operationId: R201
       summary: 'R201: Visualizar detalhes de questão'
-      description: 'Mostra o detalhe de uma questão, dados, repostas e comentários associados. Acesso: USR.'
+      description: 'Mostra o detalhe de uma questão, dados, repostas e comentários associados. Acesso: USR.
+                    Permite as seguintes funcionalidades: criar nova questão, votar numa intervenção, ....'
       tags:
         - 'M02: Questões'
         
@@ -267,7 +269,7 @@ paths:
         '200':
           description: 'Ok. Mostrar a UI do detalhes de questão'
           
-  /intervencao/questao/criar:
+  /questao/criar:
     get:
       operationId: R202
       summary: 'R202: Formulário de Nova Questão'
@@ -311,12 +313,12 @@ paths:
               examples:
                 302Success:
                   description: 'Criação com sucesso. Redirecionar para o detalhe da questão criada.'
-                  value: '/intervencao/questao/{id}'
+                  value: '/questao/{id}'
                 302Error:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de Nova Questão.'
-                  value: '/intervencao/questao/criar'
+                  value: '/questao/criar'
 
-  /intervencao/questao/editar/{id}:
+  /questao/{id}/editar:
     get:
       operationId: R204
       summary: 'R204: Formulário de Editar Questão'
@@ -367,19 +369,29 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão editada.'
-                  value: '/intervencao/questao/{id}'
+                  value: '/questao/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma questão.'
-                  value: '/intervencao/questao/editar/{id}'
+                  value: '/questao/{id}/editar'
+
 
   # M02: votacao e eliminicao e reporte de questões ?? é uma acção por isso nao deve ser incluída??
+  /questao/{id}/votar: 
 
+  /questao/{id}/eliminar:
+
+  /questao/{id}/reportar:
+
+  # user stories -> experiencia para dar aos utilizadores -> para acoes precisamos de coisas que 
+  # o que acontece no end point 
+  # homepage -> experiencia do utilizador : o que tem disponível ai -> endpoint por exemplo para onde os formularios 
+  # esta pagina vai fazer isto e permite tal. acoes nao na descrisao da pagina mas endpoints onde se realizam a ação 
 
   ##################
   # M03: Respostas #
   ##################
 
-  /intervencao/resposta/criar:
+  /resposta/criar:
     get:
       operationId: R301
       summary: 'R301: Formulário de Nova Resposta'
@@ -417,12 +429,12 @@ paths:
               examples:
                 302Success:
                   description: 'Criação com sucesso. Redirecionar para o detalhe da questão que foi respondida.'
-                  value: '/intervencao/questao/{id}'
+                  value: '/questao/{id}'
                 302Error:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de nova resposta.'
-                  value: '/intervencao/resposta/criar'
+                  value: '/resposta/criar'
 
-  /intervencao/resposta/editar:
+  /resposta/{id}/editar:
     get:
       operationId: R303
       summary: 'R303: Formulário de Editar Resposta'
@@ -438,6 +450,11 @@ paths:
       description: 'Acesso à submissão do formulário de Editar Resposta. Acesso: PRT'
       tags:
         - 'M03: Resposta'
+
+      parameters:
+        - in: path
+          name: id
+          ...
 
       requestBody:
         required: true
@@ -459,21 +476,29 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão respondida'
-                  value: '/intervencao/questão/{id}'
+                  value: '/questão/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma resposta.'
-                  value: '/intervencao/resposta/editar/{id}'
+                  value: '/resposta/{id}/editar'
 
 
   # M03: votacao, validacao, eliminicao e reporte de respostas ?? é uma acção por isso nao deve ser incluída??
-  # M03: as respotas são apenas visualizadas como uma componente da pagina de destalhe da questao
+  /resposta/{id}/votar: 
+
+  /resposta/{id}/eliminar:
+
+  /resposta/{id}/reportar:
+
+  /resposta/{id}/validar:
+
+  # M03: as respotas são apenas visualizadas como uma componente da pagina de destalhe da questao -- falta isto... :c
 
 
   ####################
   # M04: Comentários #
   ####################
                   
-  /intervencao/comentario/criar:
+  /comentario/criar:
     get:
       operationId: R401
       summary: 'R401: Formulário de Novo Comentário'
@@ -510,12 +535,12 @@ paths:
               examples:
                 302Success:
                   description: 'Criação com sucesso. Redirecionar para o detalhe da questão comentada.'
-                  value: '/intervencao/questao/{id}'
+                  value: '/questao/{id}'
                 302Error:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de novo comentário.'
-                  value: '/intervencao/comentario/criar'
+                  value: '/comentario/criar'
   
-  /intervencao/comentario/editar:
+  /comentario/{id}/editar:
     get:
       operationId: R403
       summary: 'R403: Formulário de Editar comentário'
@@ -552,20 +577,24 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão comentada'
-                  value: '/intervencao/questão/{id}'
+                  value: '/questão/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição de um comentário.'
-                  value: '/intervencao/comentario/editar/{id}'
+                  value: '/comentario/{id}/editar'
 
-  # M04: eliminicao e reporte de respostas ?? é uma acção por isso nao deve ser incluída??
-  # M04: os comentarios são apenas visualizados como uma componente da pagina de destalhe da questao
+  # M04: eliminicao e reporte de comentarios ?? é uma acção por isso nao deve ser incluída??
+  /comentario/{id}/eliminar:
+
+  /comentario/{id}/reportar:
+
+  # M04: os comentarios são apenas visualizados como uma componente da pagina de destalhe da questao...
 
 
   #################################
   # M05: Pesquisa de Intervenções #
   #################################
-
-  /intervencao/questao:
+  
+  /questao:
     get:
       operationId: R501
       summary: 'R501: Pesquisar Intervenções API.'
@@ -667,6 +696,10 @@ paths:
   # marcar como lidas é ação?? nao deve estar aqui como resource
   # eliminacao é uma ação - nao deve estar incluido??
 
+  /users/{id}/notificacao/{not}/eliminar:
+
+  /users/{id}/notificacao/{not}/ler:
+
 
   ###########################
   # M09 - Páginas estáticas #
@@ -721,8 +754,9 @@ paths:
   # M10 - Páginas de administração # 
   ##################################
 
-  #/admin/contas -> todos os users ? ()
-  #/admin/ucs -> gerir e associar a docentes
+  /admin/contas: # -> todos os users ? ()
+  
+  /admin/ucs: # -> gerir e associar a docentes
 
   /admin/denuncias:
     get:
