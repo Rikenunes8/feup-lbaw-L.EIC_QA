@@ -214,6 +214,12 @@ paths:
       description: 'Acesso ao formulário de configuração de nova passowrd. Acesso: PRT' # Qual seria o acesso? PRT não parece fazer sentido porque a pessoa não está logada acho eu
       tags:
         - 'M01: Autenticação e Perfil Individual'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: 'Ok. Mostrar Formulário de Configuração de Nova Password.'
@@ -224,7 +230,14 @@ paths:
       description: 'Processa a submissão de nova password de um utilizador. Acesso: PRT' # Idem
       tags:
         - 'M01: Autenticação e Perfil Individual'
-
+      
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      
       requestBody:
         required: true
         content:
@@ -236,6 +249,7 @@ paths:
                   type: string
               required:
                 - password
+      
       responses:
         '302':
           description: 'Redirecionar após processar se a nova password introduzida é válida.'
@@ -254,8 +268,8 @@ paths:
 
   /users/{id}:
     get:
-      operationId: R106
-      summary: 'R106: Visualizar perfil de utilizador'
+      operationId: R110
+      summary: 'R110: Visualizar perfil de utilizador'
       description: 'Mostra o perfil do utilizador. Acesso: USR'
       tags:
         - 'M01: Autenticação e Perfil Individual'
@@ -273,8 +287,8 @@ paths:
 
   /users/{id}/editar:
     get:
-      operationId: R108
-      summary: 'R108:  Formulário de Editar Perfil do Utilizador'
+      operationId: R111
+      summary: 'R11:  Formulário de Editar Perfil do Utilizador'
       description: 'Acesso ao formulário de Editar Perfil do Utilizador. Acesso: PRT'
       tags:
         - 'M01: Autenticação e Perfil Individual'
@@ -288,8 +302,8 @@ paths:
         '200':
           description: 'Ok. Mostrar Editar Perfil do Utilizador UI'
     post:
-      operationId: R109
-      summary: 'R109: Ação de Editar Perfil do Utilizador'
+      operationId: R112
+      summary: 'R112: Ação de Editar Perfil do Utilizador'
       description: 'Acesso à submissão do formulário de Editar Perfil do Utilizador. Acesso: PRT'
       tags:
         - 'M01: Autenticação e Perfil Individual'
@@ -429,7 +443,12 @@ paths:
       description: 'Acesso à submissão do formulário de Editar Questão. Acesso: PRT'
       tags:
         - 'M02: Questões'
-
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -464,7 +483,40 @@ paths:
 
 
   # M02: votacao e eliminicao e reporte de questões ?? é uma acção por isso nao deve ser incluída??
-  /questao/{id}/votar: 
+  /questao/{id}/votar:
+    post:
+      operationId: R206
+      summary: 'R206: Ação de votar numa questão.'
+      description: 'Ação de votar numa questão, acessível a qualquer utilizador autenticado exceto ao próprio autor. Acesso: USR - PRT' # Como se diz isto?
+      tags: 
+        - 'M02: Questões'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer   
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: boolean # Voto positivo ou negativo
+              required: true  
+      response:
+        '302':
+          description: 'Redirecionar após o processamento do voto.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Votação com sucesso. Redirecionar para o detalhe da questão que foi votada.'
+                  value: '/questao/{id}'
+                302Error:
+                  description: 'Votação sem sucesso. Redirecionar para o detalhe da questão que foi votada.'
+                  value: '/questao/{id}'
 
   /questao/{id}/eliminar:
 
@@ -492,7 +544,7 @@ paths:
     post:
       operationId: R302
       summary: 'R302: Ação de criação de resposta.'
-      description: 'Acesso à submissão do formulário de Nova Resposta. Acesso: USR'
+      description: 'Ação de submissão do formulário de Nova Resposta. Acesso: USR'
       tags: 
         - 'M03: Respostas'
       
@@ -529,6 +581,12 @@ paths:
       description: 'Acesso ao formulário de Editar Resposta. Acesso: PRT'
       tags:
         - 'M03: Respostas'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: 'Ok. Mostrar Editar Resposta UI'
@@ -542,7 +600,9 @@ paths:
       parameters:
         - in: path
           name: id
-          ...
+          required: true
+          schema:
+            type: integer
 
       requestBody:
         required: true
@@ -571,7 +631,43 @@ paths:
 
 
   # M03: votacao, validacao, eliminicao e reporte de respostas ?? é uma acção por isso nao deve ser incluída??
-  /resposta/{id}/votar: 
+  /resposta/{id}/votar:
+    post:
+      operationId: R304
+      summary: 'R304: Ação de votar num comentário.'
+      description: 'Ação de votar num comentário, acessível a qualquer utilizador autenticado exceto ao próprio autor. Acesso: USR - PRT' # Como se diz isto?
+      tags: 
+        - 'M03: Respostas'
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer    
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: boolean # Voto positivo ou negativo
+              required: true  
+      
+      response:
+        '302':
+          description: 'Redirecionar após o processamento do voto.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Votação com sucesso. Redirecionar para o detalhe da questão correspondente à resposta que foi votada.'
+                  value: '/questao/{id}'
+                302Error:
+                  description: 'Votação sem sucesso. Redirecionar para o detalhe da questão correspondente à resposta que foi votada.'
+                  value: '/questao/{id}'
 
   /resposta/{id}/eliminar:
 
