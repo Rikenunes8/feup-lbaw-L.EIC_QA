@@ -547,6 +547,32 @@ paths:
                   value: '/questao/{id}'
 
   /questao/{id}/reportar:
+    post:
+      operationId: R208
+      summary: 'R208: Ação de Reportar uma Questão.'
+      description: 'Ação de reportar uma questão. Acesso: USR'
+      tags: 
+        - 'M02: Questões'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer   
+      response:
+        '302':
+          description: 'Redirecionar após a denúncia de uma questão.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão reportada.'
+                  value: '/questao/{id}'
+                302Error:
+                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão reportada.'
+                  value: '/questao/{id}'
 
   # user stories -> experiencia para dar aos utilizadores -> para acoes precisamos de coisas que 
   # o que acontece no end point 
@@ -689,10 +715,10 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Votação com sucesso. Redirecionar para o detalhe da questão correspondente à resposta que foi votada.'
+                  description: 'Votação com sucesso. Redirecionar para o detalhe da questão correspondente à resposta votada.'
                   value: '/questao/{id}'
                 302Error:
-                  description: 'Votação sem sucesso. Redirecionar para o detalhe da questão correspondente à resposta que foi votada.'
+                  description: 'Votação sem sucesso. Redirecionar para o detalhe da questão correspondente à resposta votada.'
                   value: '/questao/{id}'
 
   /resposta/{id}/eliminar:
@@ -724,6 +750,32 @@ paths:
                   value: '/questao/{id}'
 
   /resposta/{id}/reportar:
+    post:
+      operationId: R307
+      summary: 'R307: Ação de Reportar uma Resposta.'
+      description: 'Ação de reportar uma repsposta. Acesso: USR'
+      tags: 
+        - 'M03: Respostas'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer   
+      response:
+        '302':
+          description: 'Redirecionar após a denúncia de uma resposta.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correspondente à resposta reportada.'
+                  value: '/questao/{id}'
+                302Error:
+                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correspondente à resposta reportada.'
+                  value: '/questao/{id}'
 
   /resposta/{id}/validar:
 
@@ -841,13 +893,39 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correpsondente à resposta que seria eliminada.'
+                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correspondente ao comentário que seria eliminada.'
                   value: '/questao/{id}'
                 302Error:
-                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correpsondente à resposta que seria eliminada.'
+                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correspondente ao comentário que seria eliminada.'
                   value: '/questao/{id}'
 
   /comentario/{id}/reportar:
+    post:
+      operationId: R406
+      summary: 'R406: Ação de Reportar um Comentário.'
+      description: 'Ação de reportar um comentário. Acesso: USR'
+      tags: 
+        - 'M04: Comentários'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer   
+      response:
+        '302':
+          description: 'Redirecionar após a denúncia de um comentário.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correspondente ao comentário reportado.'
+                  value: '/questao/{id}'
+                302Error:
+                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correspondente ao comentário reportado.'
+                  value: '/questao/{id}'
 
   # M04: os comentarios são apenas visualizados como uma componente da pagina de destalhe da questao...
 
