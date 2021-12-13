@@ -264,7 +264,7 @@ paths:
                 302Failure:
                   description: 'Recuperação de Password falhada. Redirecionar para o formulário de Configuração de Nova Password.'
                   value: '/user/{id}/nova-password'
-# -----------------------
+
 
   /users/{id}:
     get:
@@ -486,7 +486,7 @@ paths:
   /questao/{id}/votar:
     post:
       operationId: R206
-      summary: 'R206: Ação de votar numa questão.'
+      summary: 'R206: Ação de Votar numa Questão.'
       description: 'Ação de votar numa questão, acessível a qualquer utilizador autenticado exceto ao próprio autor. Acesso: USR - PRT' # Como se diz isto?
       tags: 
         - 'M02: Questões'
@@ -519,6 +519,32 @@ paths:
                   value: '/questao/{id}'
 
   /questao/{id}/eliminar:
+    post:
+      operationId: R207
+      summary: 'R207: Ação de Eliminar uma Questão.'
+      description: 'Ação de eliminar uma questão. Acesso: PRT, ADM'
+      tags: 
+        - 'M02: Questões'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer   
+      response:
+        '302':
+          description: 'Redirecionar após a eliminação da questão.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Eliminação com sucesso. Redirecionar para a página inicial.'
+                  value: '/home'
+                302Error:
+                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão que seria eliminada.'
+                  value: '/questao/{id}'
 
   /questao/{id}/reportar:
 
@@ -633,8 +659,8 @@ paths:
   # M03: votacao, validacao, eliminicao e reporte de respostas ?? é uma acção por isso nao deve ser incluída??
   /resposta/{id}/votar:
     post:
-      operationId: R304
-      summary: 'R304: Ação de votar num comentário.'
+      operationId: R305
+      summary: 'R305: Ação de votar num comentário.'
       description: 'Ação de votar num comentário, acessível a qualquer utilizador autenticado exceto ao próprio autor. Acesso: USR - PRT' # Como se diz isto?
       tags: 
         - 'M03: Respostas'
@@ -670,6 +696,32 @@ paths:
                   value: '/questao/{id}'
 
   /resposta/{id}/eliminar:
+    post:
+      operationId: R306
+      summary: 'R306: Ação de Eliminar uma Resposta.'
+      description: 'Ação de eliminar uma resposta. Acesso: PRT, ADM'
+      tags: 
+        - 'M03: Respostas'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer   
+      response:
+        '302':
+          description: 'Redirecionar após a eliminação da resposta.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correpsondente à resposta que seria eliminada.'
+                  value: '/questao/{id}'
+                302Error:
+                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correpsondente à resposta que seria eliminada.'
+                  value: '/questao/{id}'
 
   /resposta/{id}/reportar:
 
@@ -768,6 +820,32 @@ paths:
 
   # M04: eliminicao e reporte de comentarios ?? é uma acção por isso nao deve ser incluída??
   /comentario/{id}/eliminar:
+    post:
+      operationId: R405
+      summary: 'R405: Ação de Eliminar um Comentário.'
+      description: 'Ação de eliminar um comentário. Acesso: PRT, ADM'
+      tags: 
+        - 'M04: Comentários'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer   
+      response:
+        '302':
+          description: 'Redirecionar após a eliminação da resposta.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correpsondente à resposta que seria eliminada.'
+                  value: '/questao/{id}'
+                302Error:
+                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correpsondente à resposta que seria eliminada.'
+                  value: '/questao/{id}'
 
   /comentario/{id}/reportar:
 
