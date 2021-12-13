@@ -346,6 +346,42 @@ paths:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
                   value: '/users/{id}/editar'
 
+  /users/{id}/seguir/{uc}:
+    post:
+      operationId: R113
+      summary: 'R113: Ação de Seguir uma Unidade Curricular'
+      description: 'Ação de fazer um aluno seguir uma unidade curricular. Acesso: PRT'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: uc
+          schema:
+            type: integer
+          required: true
+
+      response:
+        '302':
+          description: 'Redirecionar após o processamento de seguir uma UC.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Ação com sucesso. Redirecionar para a página de Unidades Curriculares.'
+                  value: '/ucs'
+                302Error:
+                  description: 'Edição sem sucesso. Redirecionar para a página de Unidades Curriculares.'
+                  value: '/ucs'
+
+
 
   #################
   # M02: Questões #
@@ -642,6 +678,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Mostrar Editar Resposta UI'
+          
     post:
       operationId: R304
       summary: 'R304: Ação de Editar Resposta'
