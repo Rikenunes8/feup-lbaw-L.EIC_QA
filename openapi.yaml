@@ -162,7 +162,95 @@ paths:
                   value: '/registar'
 
   # M01: recuperação de password  
-  /recuperar-password:          
+  /recuperar-password:
+    get:
+      operationId: R106
+      summary: 'R106: Formulário de Recuperação de Password'
+      description: 'Acesso ao formulário de recuperação de passowrd. Acesso: PUB'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Formulário de Recuperação de Password.'
+    
+    post:
+      operationId: R107
+      summary: 'R107: Ação de Recuperação de Password'
+      description: 'Processa a submissão de recuperação de password de um utilizador. Acesso: PUB'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+      responses:
+        '302':
+          description: 'Redirecionar após processar se o email introduzido está presente no sistema.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Email presente no sistema. Redirecionar para .'
+                  value: '' # Para onde vai?????????????????
+                302Failure:
+                  description: 'Email ausente do sistema. Redirecionar para o formulário de Registo.'
+                  value: '/registar'
+  
+  # Isto faz sentido? Normalmente a página de recuperar password é só para escolher o email para onde vão mandar o link para recuperar a password e só a partir desse link é que se altera a password
+  /user/{id}/nova-password:
+    get:
+      operationId: R108
+      summary: 'R108: Formulário de Configuração de Nova Password'
+      description: 'Acesso ao formulário de configuração de nova passowrd. Acesso: PRT' # Qual seria o acesso? PRT não parece fazer sentido porque a pessoa não está logada acho eu
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Formulário de Configuração de Nova Password.'
+    
+    post:
+      operationId: R109
+      summary: 'R109: Ação de Configuração de Nova Password'
+      description: 'Processa a submissão de nova password de um utilizador. Acesso: PRT' # Idem
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+              required:
+                - password
+      responses:
+        '302':
+          description: 'Redirecionar após processar se a nova password introduzida é válida.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Recuperação de Password bem sucedida. Redirecionar para o perfil de utilizador.'
+                  value:  '/users/{id}'
+                302Failure:
+                  description: 'Recuperação de Password falhada. Redirecionar para o formulário de Configuração de Nova Password.'
+                  value: '/user/{id}/nova-password'
+# -----------------------
 
   /users/{id}:
     get:
@@ -242,7 +330,7 @@ paths:
                   value: '/users/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
-                  value: '/users/editar/{id}'
+                  value: '/users/{id}/editar'
 
 
   #################
