@@ -6,7 +6,7 @@ This README describes how to setup the development environment for LBAW 2021/22.
 These instructions address the development with a local environment, i.e. on the machine (that can be a VM) **without using a Docker container for PHP or Laravel**.
 Containers are used for PostgreSQL and pgAdmin, though.
 
-The template was prepared to run on Linux 20.04LTS, but it should be fairly easy to follow and adapt for other operating systems.
+The template was prepared to run on Ubuntu 21.10, but it should be fairly easy to follow and adapt for other operating systems.
 
 - [LBAW's framework](#lbaws-framework)
   - [Introduction](#introduction)
@@ -46,9 +46,9 @@ You should have your own repository and a copy of the demo repository in the sam
 Then, copy the contents of the demo repository to your own.
 
 ```bash
-# Clone the group repository (lbaw21gg), if not yet available locally
-# Notice that you need to substitute gg by your group's number
-git clone https://git.fe.up.pt/lbaw/lbaw21/lbaw21gg.git
+# Clone the group repository (lbaw21XX), if not yet available locally
+# Notice that you need to substitute XX by your group's number
+git clone https://git.fe.up.pt/lbaw/lbaw21/lbaw21XX.git
 
 # clone the LBAW's project skeleton
 git clone https://git.fe.up.pt/lbaw/template-laravel.git
@@ -59,7 +59,7 @@ rm -rf template-laravel/.git
 mv template-laravel/README.md template-laravel/README_lbaw.md
 
 # go to your repository
-cd lbaw21gg
+cd lbaw21XX
 
 # make sure you are using the master branch
 git checkout master
@@ -255,58 +255,68 @@ Laravel configurations are acquired from environment variables. They can be avai
 If you change the configuration, you might need to run the following command to discard a compiled version of the configuration from Laravel's cache:
 
 ```bash
+php artisan route:clear
 php artisan cache:clear
 php artisan config:clear
 ```
 
 ## Publishing your image
 
-You should keep your git master branch always functional and frequently build and deploy your code.
-To do so, you will create a _Docker image_ for your project and publish it at [Docker Hub](https://hub.docker.com/). LBAW's production machine will frequently pull all these images and make them available at http://lbaw21gg.lbaw.fe.up.pt/.
+You should keep your git master branch always functional and frequently build and deploy your code as a Docker image. LBAW's production machine will frequently pull all these images and make them available at http://lbaw21XX.lbaw.fe.up.pt/.
 
-BTW, this demo repository is available at http://demo.lbaw.fe.up.pt/.
-To view it make sure you are inside FEUP's network or are using the VPN.
-
-First thing you need to do is create a [Docker Hub](https://hub.docker.com/) account and get your username from it.
-Once you have a username, let your Docker know who you are by executing:
+**Always ensure your `.env` file is configured with your group's `db.fe.up.pt` credentials before building your docker image, by updating the DB section:**
 
 ```bash
-docker login
+DB_CONNECTION=pgsql
+DB_HOST=db.fe.up.pt
+DB_PORT=5432
+DB_SCHEMA=lbaw21XX
+DB_DATABASE=lbaw21XX
+DB_USERNAME=lbaw21XX
+DB_PASSWORD=password
 ```
 
-Once your Docker is able to communicate with the Docker Hub using your credentials, configure the __upload_image.sh__ script with your username and the image name.
+This demo repository is available at http://template-laravel.lbaw.fe.up.pt/. To view it make sure you are inside FEUP's network or are using the VPN.
+
+Images must be published to Gitlab's Container Registry, available from the side menu option `Packages & Registries > Container Registry`.
+
+The first thing you need to do is login against this registry with your docker. In your command line use the following command, and authenticate with your instituitional credentials, and inside FEUP's VPN/network:
+
+```bash
+docker login git.fe.up.pt:5050
+```
+
+Once your Docker is authenticated, configure the `upload_image.sh` script with your image name.
 Example configuration:
 
 ```bash
-DOCKER_USERNAME=johndoe # Replace by your Docker Hub username
-IMAGE_NAME=lbaw21gg     # Replace by your LBAW group name
+IMAGE_NAME=git.fe.up.pt:5050/lbaw/lbaw2122/lbaw21XX # Replace with your group's image name
 ```
 
-Afterwards, you can build and upload the docker image by executing that script from the project root:
+You can now build and upload the docker image by executing that script from the project root folder:
 
 ```bash
 ./upload_image.sh
 ```
 
-You can test locally the image, just published in the Docker Hub, by running:
+There should be only one image per group. All team members should be able to update the image at any time, after they login with the Gitlab's registry.
+
+You can test locally the image by running:
 
 ```
-docker run -it -p 8000:80 -e DB_DATABASE="lbaw21gg" -e DB_USERNAME="lbaw21gg" -e DB_PASSWORD="PASSWORD" <DOCKER_USERNAME>/lbaw21gg
+docker run -it -p 8000:80 --name=lbaw21XX -e DB_DATABASE="lbaw21XX" -e DB_SCHEMA="lbaw21XX" -e DB_USERNAME="lbaw21XX" -e DB_PASSWORD="PASSWORD" git.fe.up.pt:5050/lbaw/lbaw2122/lbaw21XX # Replace with your group's image name
 ```
 
 The above command exposes your application on http://localhost:8000.
 The `-e` argument creates environment variables inside the container, used to provide Laravel with the required database configurations.
 
-Your database configuration will be provided as an environment variable to your container on start. You do not need to specify it on you env file. Any specification there will be replaced when the docker image starts.
+Your database configuration will be provided as an environment variable to your container on start. You do not need to specify it on your env file. Any specification there will be replaced when the docker image starts.
 
-Finally, note that there should be only one image per group.
-One team member should create the image initially and add his team to the **public** repository at Docker Hub.
-You should provide your teacher the details for accessing your Docker image, namely, the Docker username and repository (*DOCKER_USERNAME/lbaw21gg*), in case it was changed.
 
 While running your container, you can use another terminal to run a shell inside the container by executing:
 
 ```bash
-docker run -it lbaw21gg/lbaw21gg bash
+docker exec -it lbaw21XX bash
 ```
 
 Inside the container you may, for example, see the content of the Web server logs by executing:
@@ -316,4 +326,5 @@ root@2804d54698c0:/# tail -f /var/log/nginx/error.log    # follow the errors
 root@2804d54698c0:/# tail -f /var/log/nginx/access.log   # follow the accesses
 ```
 
+You can stop the container with `ctrl+c` on the terminal running it, or with `docker stop lbaw21XX` on another terminal.
 -- LBAW, 2021
