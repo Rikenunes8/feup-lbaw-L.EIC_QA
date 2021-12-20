@@ -7,147 +7,142 @@ SET search_path TO lbaw2185;
 -- Types
 -----------------------------------------
 
-CREATE TYPE "tipo_utilizador" AS ENUM ('Administrador', 'Docente', 'Aluno');
+CREATE TYPE "type_user" AS ENUM ('Admin', 'Teacher', 'Student');
 
-CREATE TYPE "tipo_intervencao" AS ENUM ('questao', 'resposta', 'comentario');
+CREATE TYPE "type_intervention" AS ENUM ('question', 'answer', 'comment');
 
-CREATE TYPE "tipo_notificacao" AS ENUM ('questao', 'resposta', 'comentario', 'validacao', 'denuncia', 'estado_conta');
+CREATE TYPE "type_notification" AS ENUM ('question', 'answer', 'comment', 'validation', 'report', 'account_status');
 
-CREATE TYPE "tipo_estado" AS ENUM ('ativacao', 'bloqueio', 'eliminacao');
+CREATE TYPE "type_status" AS ENUM ('active', 'block', 'delete');
 
-CREATE TYPE "tipo_validacao" AS ENUM ('aceitacao', 'rejeicao');
+CREATE TYPE "type_validation" AS ENUM ('acceptance', 'rejection');
 
 -----------------------------------------
 -- Tables
 -----------------------------------------
 
-CREATE TABLE "utilizador" (
-    id            SERIAL PRIMARY KEY,
-    email         TEXT NOT NULL CONSTRAINT email_uk UNIQUE ,
-    username      TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
-    password      TEXT NOT NULL,
-    data_registo  TIMESTAMP  NOT NULL DEFAULT now(),
-    nome          TEXT,
-    foto_perfil   TEXT,
-    sobre         TEXT,
-    data_nascimento TIMESTAMP ,
-    pontuacao     INTEGER DEFAULT 0,
-    bloqueado     BOOLEAN DEFAULT FALSE,
-    ano_ingresso  INTEGER,
-    tipo tipo_utilizador NOT NULL,
+CREATE TABLE "user" (
+    id             SERIAL PRIMARY KEY,
+    mail           TEXT NOT NULL CONSTRAINT mail_uk UNIQUE ,
+    username       TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
+    password       TEXT NOT NULL,
+    registry_date  TIMESTAMP  NOT NULL DEFAULT now(),
+    name           TEXT,
+    profile_photo  TEXT,
+    about          TEXT,
+    birthdate      TIMESTAMP ,
+    score          INTEGER DEFAULT 0,
+    blocked        BOOLEAN DEFAULT FALSE,
+    block_reason   TEXT,
+    entry_year     INTEGER,
+    type type_user NOT NULL,
 
-    CONSTRAINT nome_NN         CHECK ((tipo='Administrador' AND nome IS NULL) OR (tipo<>'Administrador' AND nome IS NOT NULL)),
-    CONSTRAINT foto_perfil_NN  CHECK ((tipo='Administrador' AND foto_perfil IS NULL) OR (tipo<>'Administrador')),
-    CONSTRAINT sobre_NN        CHECK ((tipo='Administrador' AND sobre IS NULL) OR (tipo<>'Administrador')),
-    CONSTRAINT data_nasc_NN    CHECK ((tipo='Administrador' AND data_nascimento IS NULL) OR (tipo<>'Administrador')),
-    CONSTRAINT bloqueado_NN    CHECK ((tipo='Administrador' AND bloqueado IS NULL) OR (tipo<>'Administrador' AND bloqueado IS NOT NULL)),
-    CONSTRAINT pontuacao_NN    CHECK ((tipo='Administrador' AND pontuacao IS NULL) OR (tipo<>'Administrador' AND pontuacao IS NOT NULL)),
-    CONSTRAINT ano_ingresso_NN CHECK ((tipo<>'Aluno' AND ano_ingresso IS NULL) OR (tipo='Aluno' AND ano_ingresso IS NOT NULL AND ano_ingresso > 0))
+    CONSTRAINT name_NN          CHECK ((type='Admin' AND name IS NULL) OR (type<>'Admin' AND name IS NOT NULL)),
+    CONSTRAINT profile_photo_NN CHECK ((type='Admin' AND profile_photo IS NULL) OR (type<>'Admin')),
+    CONSTRAINT about_NN         CHECK ((type='Admin' AND about IS NULL) OR (type<>'Admin')),
+    CONSTRAINT birthdate_NN     CHECK ((type='Admin' AND birthdate IS NULL) OR (type<>'Admin')),
+    CONSTRAINT blocked_NN       CHECK ((type='Admin' AND blocked IS NULL) OR (type<>'Admin' AND blocked IS NOT NULL)),
+    CONSTRAINT score_NN         CHECK ((type='Admin' AND score IS NULL) OR (type<>'Admin' AND score IS NOT NULL)),
+    CONSTRAINT entry_year_NN    CHECK ((type<>'Student' AND entry_year IS NULL) OR (type='Student' AND entry_year IS NOT NULL AND entry_year > 0)),
+    CONSTRAINT block_reason_NN  CHECK (((blocked IS NULL OR NOT blocked) AND block_reason IS NULL) OR (blocked AND block_reason IS NOT NULL))
 );
 
 CREATE TABLE "uc" (
-    id        SERIAL PRIMARY KEY,
-    nome      TEXT NOT NULL CONSTRAINT nome_uk UNIQUE,
-    sigla     TEXT NOT NULL CONSTRAINT sigla_uk UNIQUE,
-    descricao TEXT NOT NULL
+    id          SERIAL PRIMARY KEY,
+    name        TEXT NOT NULL CONSTRAINT name_uk UNIQUE,
+    code        TEXT NOT NULL CONSTRAINT code_uk UNIQUE,
+    description TEXT NOT NULL
 );
 
-CREATE TABLE "docente_uc" (
-    id_docente  INTEGER REFERENCES utilizador ON DELETE CASCADE ON UPDATE CASCADE,
-    id_uc       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
-    PRIMARY KEY (id_docente, id_uc)
+CREATE TABLE "teacher_uc" (
+    id_teacher  INTEGER REFERENCES "user" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_uc       INTEGER REFERENCES "uc" ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY (id_teacher, id_uc)
 );
 
-CREATE TABLE "segue_uc" (
-    id_aluno    INTEGER REFERENCES utilizador ON DELETE CASCADE ON UPDATE CASCADE,
-    id_uc       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
-    PRIMARY KEY (id_aluno, id_uc)
+CREATE TABLE "follow_uc" (
+    id_student  INTEGER REFERENCES "user" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_uc       INTEGER REFERENCES "uc" ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY (id_student, id_uc)
 );
 
-CREATE TABLE "intervencao" (
+CREATE TABLE "intervention" (
     id              SERIAL PRIMARY KEY,
-    id_autor        INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE,
-    texto           TEXT NOT NULL,
-    data            TIMESTAMP  NOT NULL DEFAULT now(),
-    pontuacao       INTEGER NOT NULL DEFAULT 0,
-    titulo          TEXT,
-    categoria       INTEGER REFERENCES uc ON DELETE CASCADE ON UPDATE CASCADE,
-    id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
-    tipo tipo_intervencao NOT NULL,
+    id_author       INTEGER REFERENCES "user" ON DELETE SET NULL ON UPDATE CASCADE,
+    text            TEXT NOT NULL,
+    date            TIMESTAMP NOT NULL DEFAULT now(),
+    votes           INTEGER NOT NULL DEFAULT 0,
+    title           TEXT,
+    category        INTEGER REFERENCES "uc" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_intervention INTEGER REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
+    type type_intervention NOT NULL,
 
-    CONSTRAINT data_menor_agora   CHECK (data <= now()),
-    CONSTRAINT titulo_categ_NN    CHECK ((tipo ='questao' AND titulo IS NOT NULL AND categoria IS NOT NULL) OR (tipo<>'questao' AND titulo IS NULL AND categoria IS NULL)),
-    CONSTRAINT id_intervencao_NN  CHECK ((tipo<>'questao' AND id_intervencao IS NOT NULL) OR (tipo='questao' AND id_intervencao IS NULL))
+    CONSTRAINT date_smaller_now   CHECK (date <= now()),
+    CONSTRAINT title_categ_NN     CHECK ((type ='question' AND title IS NOT NULL AND category IS NOT NULL) OR (type<>'question' AND title IS NULL AND category IS NULL)),
+    CONSTRAINT id_intervention_NN CHECK ((type<>'question' AND id_intervention IS NOT NULL) OR (type='question' AND id_intervention IS NULL))
 );
 
-CREATE TABLE "votacao" (
-    id_utilizador   INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE,
-    id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
-    voto            BOOLEAN NOT NULL,
-    PRIMARY KEY (id_utilizador, id_intervencao)
+CREATE TABLE "voting" (
+    id_user         INTEGER REFERENCES "user" ON DELETE SET NULL ON UPDATE CASCADE,
+    id_intervention INTEGER REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
+    vote            BOOLEAN NOT NULL,
+    PRIMARY KEY (id_user, id_intervention)
 );
 
-CREATE TABLE "validacao" (
-    id_resposta INTEGER PRIMARY KEY REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
-    id_docente  INTEGER REFERENCES utilizador ON DELETE SET NULL ON UPDATE CASCADE, 
-    valida      BOOLEAN NOT NULL
+CREATE TABLE "validation" (
+    id_answer   INTEGER PRIMARY KEY REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_teacher  INTEGER REFERENCES "user" ON DELETE SET NULL ON UPDATE CASCADE, 
+    valid       BOOLEAN NOT NULL
 );
 
-
-CREATE TABLE "razao_bloqueio" (
-    id      SERIAL PRIMARY KEY,
-    razao   TEXT NOT NULL CONSTRAINT razao_uk UNIQUE
-);
-
-CREATE TABLE "notificacao" (
+CREATE TABLE "notification" (
     id              SERIAL PRIMARY KEY,
-    data            TIMESTAMP  NOT NULL DEFAULT now(),
-    id_razao        INTEGER REFERENCES razao_bloqueio ON DELETE RESTRICT ON UPDATE CASCADE,
-    id_intervencao  INTEGER REFERENCES intervencao ON DELETE CASCADE ON UPDATE CASCADE,
-    estado tipo_estado,
-    validacao tipo_validacao,
-    tipo tipo_notificacao NOT NULL,
+    date            TIMESTAMP  NOT NULL DEFAULT now(),
+    id_intervention INTEGER REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
+    status     type_status,
+    validation type_validation,
+    type       type_notification NOT NULL,
 
-    CONSTRAINT data_menor_agora CHECK (data <= now()),
-    CONSTRAINT razao_estado_NN  CHECK ((tipo='estado_conta' AND id_razao IS NOT NULL AND estado IS NOT NULL) OR (tipo<>'estado_conta' AND id_razao IS NULL AND estado IS NULL)),
-    CONSTRAINT intervencao_NN   CHECK ((tipo<>'estado_conta' AND id_intervencao IS NOT NULL) OR (tipo='estado_conta' AND id_intervencao IS NULL)),
-    CONSTRAINT validacao_NN     CHECK ((tipo='validacao' AND validacao IS NOT NULL) OR (tipo<>'validacao' AND validacao IS NULL))
+    CONSTRAINT date_smaller_now CHECK (date <= now()),
+    CONSTRAINT razao_estado_NN  CHECK ((type='account_status' AND status IS NOT NULL) OR (type<>'account_status' AND status IS NULL)),
+    CONSTRAINT intervention_NN  CHECK ((type<>'account_status' AND id_intervention IS NOT NULL) OR (type='account_status' AND id_intervention IS NULL)),
+    CONSTRAINT validation_NN    CHECK ((type='validation' AND validation IS NOT NULL) OR (type<>'validation' AND validation IS NULL))
 );
 
-CREATE TABLE "recebe_not" (
-    id_notificacao  INTEGER REFERENCES notificacao ON DELETE CASCADE ON UPDATE CASCADE,
-    id_utilizador   INTEGER REFERENCES utilizador ON DELETE CASCADE ON UPDATE CASCADE,
-    lida            BOOLEAN NOT NULL,
-    PRIMARY KEY (id_notificacao, id_utilizador)
+CREATE TABLE "receive_not" (
+    id_notification INTEGER REFERENCES "notification" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_user         INTEGER REFERENCES "user" ON DELETE CASCADE ON UPDATE CASCADE,
+    read            BOOLEAN NOT NULL,
+    PRIMARY KEY (id_notification, id_user)
 );
 
 -----------------------------------------
 -- Indexes
 -----------------------------------------
 
-CREATE INDEX intervencao_superior ON intervencao USING hash (id_intervencao);
+CREATE INDEX intervention_superior ON "intervention" USING hash (id_intervention);
 
-CREATE INDEX autor_intervencao ON intervencao USING hash (id_autor);
+CREATE INDEX author_intervention ON "intervention" USING hash (id_author);
 
-CREATE INDEX data_notificacao ON notificacao USING btree (data);
+CREATE INDEX date_notification ON "notification" USING btree (date);
 
 -- FTS Index
 
-ALTER TABLE intervencao ADD COLUMN tsvectors TSVECTOR;
+ALTER TABLE intervention ADD COLUMN tsvectors TSVECTOR;
 
-CREATE FUNCTION intervencao_procura() RETURNS TRIGGER AS $$
+CREATE FUNCTION intervention_search() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         NEW.tsvectors = (
-            setweight(to_tsvector('portuguese', NEW.titulo), 'A') ||
-            setweight(to_tsvector('portuguese', NEW.texto), 'B')
+            setweight(to_tsvector('portuguese', NEW.title), 'A') ||
+            setweight(to_tsvector('portuguese', NEW.text), 'B')
         );
     END IF;
     IF TG_OP = 'UPDATE' THEN
-        IF (NEW.titulo <> OLD.titulo OR NEW.texto <> OLD.texto) THEN
+        IF (NEW.title <> OLD.title OR NEW.text <> OLD.text) THEN
             NEW.tsvectors = (
-                setweight(to_tsvector('portuguese', NEW.titulo), 'A') ||
-                setweight(to_tsvector('portuguese', NEW.texto), 'B')
+                setweight(to_tsvector('portuguese', NEW.title), 'A') ||
+                setweight(to_tsvector('portuguese', NEW.text), 'B')
             );
         END IF;
     END IF;
@@ -155,220 +150,220 @@ BEGIN
 END $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER intervencao_procura
-BEFORE INSERT OR UPDATE ON intervencao
+CREATE TRIGGER intervention_search
+BEFORE INSERT OR UPDATE ON intervention
 FOR EACH ROW
-EXECUTE PROCEDURE intervencao_procura();
+EXECUTE PROCEDURE intervention_search();
 
-CREATE INDEX procura_idx ON intervencao USING GIN (tsvectors);
+CREATE INDEX search_idx ON intervention USING GIN (tsvectors);
 
 -----------------------------------------
 -- TRIGGERS and UDFs
 -----------------------------------------
 
 -- TRIGGER01
-CREATE FUNCTION proibir_votar_propria_intervencao() RETURNS TRIGGER AS
+CREATE FUNCTION forbid_vote_own_intervention() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.id_utilizador = (SELECT id_autor FROM intervencao WHERE NEW.id_intervencao=id) THEN
-        RAISE EXCEPTION 'Um utilizador não pode votar nas suas próprias intervenções';
+    IF NEW.id_user = (SELECT id_author FROM "intervention" WHERE NEW.id_intervention=id) THEN
+        RAISE EXCEPTION 'A user cannot vote on their own interventions';
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER proibir_votar_propria_intervencao
-BEFORE INSERT ON votacao
+CREATE TRIGGER forbid_vote_own_intervention
+BEFORE INSERT ON "voting"
 FOR EACH ROW
-EXECUTE PROCEDURE proibir_votar_propria_intervencao();
+EXECUTE PROCEDURE forbid_vote_own_intervention();
 
 -- TRIGGER02
-CREATE FUNCTION data_maior_intervencao_superior() RETURNS TRIGGER AS
+CREATE FUNCTION date_bigger_intervention_superior() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.data <= (SELECT data FROM intervencao WHERE NEW.id_intervencao=id) THEN
-        RAISE EXCEPTION 'Uma resposta/comentário não pode ter data inferior à sua respetiva intervenção de ordem superior';
+    IF NEW.date <= (SELECT date FROM "intervention" WHERE NEW.id_intervention=id) THEN
+        RAISE EXCEPTION 'An answer/comment cannot have a date lower than its respective intervention of an higher order';
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER data_maior_intervencao_superior
-BEFORE INSERT OR UPDATE ON intervencao
+CREATE TRIGGER date_bigger_intervention_superior
+BEFORE INSERT OR UPDATE ON "intervention"
 FOR EACH ROW
-EXECUTE PROCEDURE data_maior_intervencao_superior();
+EXECUTE PROCEDURE date_bigger_intervention_superior();
 
 -- TRIGGER03
-CREATE FUNCTION incr_pontuacao() RETURNS TRIGGER AS
+CREATE FUNCTION incr_votes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF 'comentario'=(SELECT tipo FROM intervencao WHERE id=NEW.id_intervencao) THEN
-      RAISE EXCEPTION 'Um comentario não pode ser votado';
-    ELSEIF NEW.voto=TRUE THEN
-      UPDATE intervencao SET pontuacao=pontuacao+1 WHERE id=NEW.id_intervencao;
-      UPDATE utilizador SET pontuacao=pontuacao+1 WHERE id=(SELECT id_autor FROM intervencao AS I WHERE I.id=NEW.id_intervencao);
+    IF 'comment'=(SELECT type FROM "intervention" WHERE id=NEW.id_intervention) THEN
+      RAISE EXCEPTION 'A comment cannot be voted on';
+    ELSEIF NEW.vote=TRUE THEN
+      UPDATE "intervention" SET votes=votes+1 WHERE id=NEW.id_intervention;
+      UPDATE "user" SET score=score+1 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
     ELSE
-      UPDATE intervencao SET pontuacao=pontuacao-1 WHERE id=NEW.id_intervencao;
-      UPDATE utilizador SET pontuacao=pontuacao-1 WHERE id=(SELECT id_autor FROM intervencao AS I WHERE I.id=NEW.id_intervencao);
+      UPDATE "intervention" SET votes=votes-1 WHERE id=NEW.id_intervention;
+      UPDATE "user" SET score=score-1 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER incr_pontuacao
-AFTER INSERT ON votacao
+CREATE TRIGGER incr_votes
+AFTER INSERT ON "voting"
 FOR EACH ROW
-EXECUTE PROCEDURE incr_pontuacao();
+EXECUTE PROCEDURE incr_votes();
 
 -- TRIGGER04
-CREATE FUNCTION update_pontuacao() RETURNS TRIGGER AS
+CREATE FUNCTION update_votes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.voto=TRUE AND OLD.voto=FALSE THEN
-      UPDATE intervencao SET pontuacao=pontuacao+2 WHERE id=NEW.id_intervencao;
-      UPDATE utilizador SET pontuacao=pontuacao+2 WHERE id=(SELECT id_autor FROM intervencao AS I WHERE I.id=NEW.id_intervencao);
-    ELSEIF NEW.voto=FALSE AND OLD.voto=TRUE THEN
-      UPDATE intervencao SET pontuacao=pontuacao-2 WHERE id=NEW.id_intervencao;
-      UPDATE utilizador SET pontuacao=pontuacao-2 WHERE id=(SELECT id_autor FROM intervencao AS I WHERE I.id=NEW.id_intervencao);
+    IF NEW.vote=TRUE AND OLD.vote=FALSE THEN
+      UPDATE "intervention" SET votes=votes+2 WHERE id=NEW.id_intervention;
+      UPDATE "user" SET score=score+2 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
+    ELSEIF NEW.vote=FALSE AND OLD.vote=TRUE THEN
+      UPDATE "intervention" SET votes=votes-2 WHERE id=NEW.id_intervention;
+      UPDATE "user" SET score=score-2 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER update_pontuacao
-AFTER UPDATE OF voto ON votacao
+CREATE TRIGGER update_votes
+AFTER UPDATE OF vote ON "voting"
 FOR EACH ROW
-EXECUTE PROCEDURE update_pontuacao();
+EXECUTE PROCEDURE update_votes();
 
 -- TRIGGER05
-CREATE FUNCTION verificar_docente_uc() RETURNS TRIGGER AS
+CREATE FUNCTION check_teacher_uc() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF 'Docente' <> (SELECT tipo FROM utilizador WHERE id=NEW.id_docente) THEN
-        RAISE EXCEPTION 'Só podem ser associados a uma uc utilizadores do tipo docente';
+    IF 'Teacher' <> (SELECT type FROM "user" WHERE id=NEW.id_teacher) THEN
+        RAISE EXCEPTION 'Only users of the type Teacher can be associated with a uc';
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER verificar_docente_uc
-BEFORE INSERT ON docente_uc
+CREATE TRIGGER check_teacher_uc
+BEFORE INSERT ON "teacher_uc"
 FOR EACH ROW
-EXECUTE PROCEDURE verificar_docente_uc();
+EXECUTE PROCEDURE check_teacher_uc();
 
 -- TRIGGER06
-CREATE FUNCTION verificar_segue_uc() RETURNS TRIGGER AS
+CREATE FUNCTION check_follow_uc() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF 'Aluno' <> (SELECT tipo FROM utilizador WHERE id=NEW.id_aluno) THEN
-        RAISE EXCEPTION 'Só utilizadores do tipo aluno é que podem seguir uma uc';
+    IF 'Student' <> (SELECT type FROM "user" WHERE id=NEW.id_student) THEN
+        RAISE EXCEPTION 'Only users of the type Student can follow a uc';
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER verificar_segue_uc
-BEFORE INSERT ON segue_uc
+CREATE TRIGGER check_follow_uc
+BEFORE INSERT ON "follow_uc"
 FOR EACH ROW
-EXECUTE PROCEDURE verificar_segue_uc();
+EXECUTE PROCEDURE check_follow_uc();
 
 -- TRIGGER07
-CREATE FUNCTION verificar_autor_intervencao() RETURNS TRIGGER AS
+CREATE FUNCTION check_author_intervention() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF 'Administrador' = (SELECT tipo FROM utilizador WHERE id=NEW.id_autor) THEN
-        RAISE EXCEPTION 'Administradores não podem ser autores de intervenções';
+    IF 'Admin' = (SELECT type FROM "user" WHERE id=NEW.id_author) THEN
+        RAISE EXCEPTION 'Administrators cannot be authors of interventions';
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER verificar_autor_intervencao
-BEFORE INSERT ON intervencao
+CREATE TRIGGER check_author_intervention
+BEFORE INSERT ON "intervention"
 FOR EACH ROW
-EXECUTE PROCEDURE verificar_autor_intervencao();
+EXECUTE PROCEDURE check_author_intervention();
 
 -- TRIGGER08
-CREATE FUNCTION verificar_votacao_intervencao() RETURNS TRIGGER AS
+CREATE FUNCTION check_vote_intervention() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF 'Administrador' = (SELECT tipo FROM utilizador WHERE id=NEW.id_utilizador) THEN
-        RAISE EXCEPTION 'Administradores não podem votar em nenhuma intervenção';
+    IF 'Admin' = (SELECT type FROM "user" WHERE id=NEW.id_user) THEN
+        RAISE EXCEPTION 'Administrators cannot vote on any intervention';
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER verificar_votacao_intervencao
-BEFORE INSERT ON votacao
+CREATE TRIGGER check_vote_intervention
+BEFORE INSERT ON "voting"
 FOR EACH ROW
-EXECUTE PROCEDURE verificar_votacao_intervencao();
+EXECUTE PROCEDURE check_vote_intervention();
 
 -- TRIGGER09
-CREATE FUNCTION verificar_validacao_intervencao() RETURNS TRIGGER AS
+CREATE FUNCTION check_validation_intervention() RETURNS TRIGGER AS
 $BODY$
 BEGIN 
-    IF 'resposta' <> (SELECT tipo FROM intervencao WHERE id=NEW.id_resposta) THEN
-        RAISE EXCEPTION 'Só podem ser validadas intervenções do tipo resposta';
+    IF 'answer' <> (SELECT type FROM "intervention" WHERE id=NEW.id_answer) THEN
+        RAISE EXCEPTION 'Only response type interventions can be validated';
     END IF;
-    IF NEW.id_docente NOT IN (SELECT DUC.id_docente
-                              FROM (intervencao I1 INNER JOIN intervencao I2 ON I1.id_intervencao = I2.id) INNER JOIN docente_uc DUC ON I2.categoria = DUC.id_uc
-                              WHERE I1.id = NEW.id_resposta) THEN
-        RAISE EXCEPTION 'Apenas docentes da categoria da resposta a podem validar';
+    IF NEW.id_teacher NOT IN (SELECT DUC.id_teacher
+                              FROM ("intervention" I1 INNER JOIN "intervention" I2 ON I1.id_intervention = I2.id) INNER JOIN "teacher_uc" DUC ON I2.category = DUC.id_uc
+                              WHERE I1.id = NEW.id_answer) THEN
+        RAISE EXCEPTION 'Only teachers of the answer category can validate it';
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER verificar_validacao_intervencao
-BEFORE INSERT ON validacao
+CREATE TRIGGER check_validation_intervention
+BEFORE INSERT ON "validation"
 FOR EACH ROW
-EXECUTE PROCEDURE verificar_validacao_intervencao();
+EXECUTE PROCEDURE check_validation_intervention();
 
 -- TRIGGER10
-CREATE FUNCTION verificar_associacao_intervencoes() RETURNS TRIGGER AS
+CREATE FUNCTION check_association_interventions() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.tipo = 'resposta' AND 'questao' <> (SELECT tipo FROM intervencao WHERE id=NEW.id_intervencao) THEN
-        RAISE EXCEPTION 'Uma intervenção do tipo "resposta" tem de estar obrigatoriamente associada a uma intervenção do tipo "questao"';
-    ELSEIF NEW.tipo = 'comentario' AND 'resposta' <> (SELECT tipo FROM intervencao WHERE id=NEW.id_intervencao) THEN
-        RAISE EXCEPTION 'Uma intervenção do tipo "comentario" tem de estar obrigatoriamente associada a uma intervenção do tipo "resposta"';
+    IF NEW.type = 'answer' AND 'question' <> (SELECT type FROM "intervention" WHERE id=NEW.id_intervention) THEN
+        RAISE EXCEPTION 'An intervention of the type "answer" must be associated with an intervention of the type "question"';
+    ELSEIF NEW.type = 'comment' AND 'answer' <> (SELECT type FROM "intervention" WHERE id=NEW.id_intervention) THEN
+        RAISE EXCEPTION 'An intervention of the type "comment" must be associated with an intervention of the type "answer"';
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER verificar_associacao_intervencoes
-BEFORE INSERT ON intervencao
+CREATE TRIGGER check_association_interventions
+BEFORE INSERT ON "intervention"
 FOR EACH ROW
-EXECUTE PROCEDURE verificar_associacao_intervencoes();
+EXECUTE PROCEDURE check_association_interventions();
 
 -- TRIGGER11
-CREATE FUNCTION gerar_notificacao_questao() RETURNS TRIGGER AS
+CREATE FUNCTION generate_notification_question() RETURNS TRIGGER AS
 $BODY$
 DECLARE
-utilizador BIGINT;
-notificacaoId BIGINT;
+userId BIGINT;
+notificationId BIGINT;
 BEGIN
-    IF NEW.tipo = 'questao' THEN
-        INSERT INTO notificacao(tipo, id_intervencao) VALUES ('questao', NEW.id) RETURNING id INTO notificacaoId;
+    IF NEW.type = 'question' THEN
+        INSERT INTO "notification"(type, id_intervention) VALUES ('question', NEW.id) RETURNING id INTO notificationId;
         
-        FOR utilizador IN (SELECT id_aluno FROM segue_uc WHERE id_uc=NEW.categoria) LOOP 
-            INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, utilizador, FALSE);
+        FOR userId IN (SELECT id_student FROM "follow_uc" WHERE id_uc=NEW.category) LOOP 
+            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, userId, FALSE);
         END LOOP;
 
-        FOR utilizador IN (SELECT id_docente FROM docente_uc WHERE id_uc=NEW.categoria) LOOP 
-            INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, utilizador, FALSE);
+        FOR userId IN (SELECT id_teacher FROM "teacher_uc" WHERE id_uc=NEW.category) LOOP 
+            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, userId, FALSE);
         END LOOP;
     END IF;
     RETURN NEW;
@@ -376,23 +371,23 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER gerar_notificacao_questao
-AFTER INSERT ON intervencao
+CREATE TRIGGER generate_notification_question
+AFTER INSERT ON "intervention"
 FOR EACH ROW
-EXECUTE PROCEDURE gerar_notificacao_questao();
+EXECUTE PROCEDURE generate_notification_question();
 
 -- TRIGGER12
-CREATE FUNCTION gerar_notificacao_resposta() RETURNS TRIGGER AS
+CREATE FUNCTION generate_notification_answer() RETURNS TRIGGER AS
 $BODY$
 DECLARE
-autor BIGINT;
-notificacaoId BIGINT;
+author BIGINT;
+notificationId BIGINT;
 BEGIN
-    IF NEW.tipo = 'resposta' THEN
-        INSERT INTO notificacao(tipo, id_intervencao) VALUES ('resposta', NEW.id) RETURNING id INTO notificacaoId;
+    IF NEW.type = 'answer' THEN
+        INSERT INTO "notification"(type, id_intervention) VALUES ('answer', NEW.id) RETURNING id INTO notificationId;
         
-        FOR autor IN (SELECT id_autor FROM intervencao WHERE id=NEW.id_intervencao) LOOP
-            INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, autor, FALSE);
+        FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_intervention) LOOP
+            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
         END LOOP;
     END IF;
     RETURN NEW;
@@ -400,23 +395,23 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER gerar_notificacao_resposta
-AFTER INSERT ON intervencao
+CREATE TRIGGER generate_notification_answer
+AFTER INSERT ON "intervention"
 FOR EACH ROW
-EXECUTE PROCEDURE gerar_notificacao_resposta();
+EXECUTE PROCEDURE generate_notification_answer();
 
 -- TRIGGER13
-CREATE FUNCTION gerar_notificacao_comentario() RETURNS TRIGGER AS
+CREATE FUNCTION generate_notification_comment() RETURNS TRIGGER AS
 $BODY$
 DECLARE
-autor BIGINT;
-notificacaoId BIGINT;
+author BIGINT;
+notificationId BIGINT;
 BEGIN
-    IF NEW.tipo = 'comentario' THEN
-        INSERT INTO notificacao(tipo, id_intervencao) VALUES ('comentario', NEW.id) RETURNING id INTO notificacaoId;
+    IF NEW.type = 'comment' THEN
+        INSERT INTO notification(type, id_intervention) VALUES ('comment', NEW.id) RETURNING id INTO notificationId;
         
-        FOR autor IN (SELECT id_autor FROM intervencao WHERE id=NEW.id_intervencao) LOOP
-            INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, autor, FALSE);
+        FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_intervention) LOOP
+            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
         END LOOP;
     END IF;
     RETURN NEW;
@@ -424,26 +419,26 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER gerar_notificacao_comentario
-AFTER INSERT ON intervencao
+CREATE TRIGGER generate_notification_comment
+AFTER INSERT ON "intervention"
 FOR EACH ROW
-EXECUTE PROCEDURE gerar_notificacao_comentario();
+EXECUTE PROCEDURE generate_notification_comment();
 
 -- TRIGGER14
-CREATE FUNCTION gerar_notificacao_validacao() RETURNS TRIGGER AS
+CREATE FUNCTION generate_notification_validation() RETURNS TRIGGER AS
 $BODY$
 DECLARE
-autor BIGINT;
-notificacaoId BIGINT;
+author BIGINT;
+notificationId BIGINT;
 BEGIN
-    IF NEW.valida = TRUE THEN
-        INSERT INTO notificacao(tipo, id_intervencao, validacao) VALUES ('validacao', NEW.id_resposta, 'aceitacao') RETURNING id INTO notificacaoId;
+    IF NEW.valid = TRUE THEN
+        INSERT INTO "notification"(type, id_intervention, validation) VALUES ('validation', NEW.id_answer, 'acceptance') RETURNING id INTO notificationId;
     ELSE
-        INSERT INTO notificacao(tipo, id_intervencao, validacao) VALUES ('validacao', NEW.id_resposta, 'rejeicao') RETURNING id INTO notificacaoId;
+        INSERT INTO "notification"(type, id_intervention, validation) VALUES ('validation', NEW.id_answer, 'rejection') RETURNING id INTO notificationId;
     END IF;
 
-    FOR autor IN (SELECT id_autor FROM intervencao WHERE id=NEW.id_resposta) LOOP
-        INSERT INTO recebe_not(id_notificacao, id_utilizador, lida) VALUES (notificacaoId, autor, FALSE);
+    FOR author IN (SELECT id_author FROM intervention WHERE id=NEW.id_answer) LOOP
+        INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
     END LOOP;
 
     RETURN NEW;
@@ -451,8 +446,8 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER gerar_notificacao_validacao
-AFTER INSERT OR UPDATE OF valida ON validacao
+CREATE TRIGGER generate_notification_validation
+AFTER INSERT OR UPDATE OF valid ON "validation"
 FOR EACH ROW
-EXECUTE PROCEDURE gerar_notificacao_validacao();
+EXECUTE PROCEDURE generate_notification_validation();
 
