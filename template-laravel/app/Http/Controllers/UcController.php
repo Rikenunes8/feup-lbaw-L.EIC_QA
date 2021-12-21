@@ -8,78 +8,95 @@ use Illuminate\Http\Request;
 class UcController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return Response
      */
-    public function index()
+    public function show($id)
     {
-        //
+        $uc = Uc::find($id);
+        $this->authorize('show', $uc);
+        return view(); // TODO: this view doesn't exists yet
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function create()
+    public function showCreate()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Uc  $uc
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Uc $uc)
-    {
-        //
+        $this->authorize('create');
+        return view(); // TODO: this view doesn't exists yet
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Uc  $uc
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return Response
      */
-    public function edit(Uc $uc)
+    public function showEdit($id)
     {
-        //
+        $uc = Uc::find($id);
+        $this->authorize('update', $uc);
+        return view(); // TODO: this view doesn't exists yet
+    }
+
+    /**
+     * Create a resource in storage.
+     *
+     * @param  Request  $request
+     * @return Uc The uc created.
+     */
+    public function create(Request $request)
+    {
+        $uc = new Uc();
+        $this->authorize('create');
+
+        $uc->name = $request->input('name');
+        $uc->code = $request->input('code');
+        $uc->description = $request->input('description');
+        $uc->save();
+
+        return $uc;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Uc  $uc
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Uc The uc updated.
      */
-    public function update(Request $request, Uc $uc)
+    public function update(Request $request, $id)
     {
-        //
+        $uc = Uc::find($id);
+        $this->authorize('update', $uc);
+
+        $uc->name = $request->input('name');
+        $uc->code = $request->input('code');
+        $uc->description = $request->input('description');
+        $uc->save(); // TODO: Is this right?
+
+        return $uc;
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Uc  $uc
-     * @return \Illuminate\Http\Response
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Uc The uc deleted.
      */
-    public function destroy(Uc $uc)
+    public function delete(Request $request, $id)
     {
-        //
+        $uc =  Uc::find($id);
+        $this->authorize('delete', $uc);
+        
+        $uc->delete();
+
+        return $uc;
     }
 }
