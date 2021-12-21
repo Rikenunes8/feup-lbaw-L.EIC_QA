@@ -28,7 +28,7 @@ CREATE TABLE "user" (
     password       TEXT NOT NULL,
     registry_date  TIMESTAMP  NOT NULL DEFAULT now(),
     name           TEXT,
-    profile_photo  TEXT,
+    photo          TEXT,
     about          TEXT,
     birthdate      TIMESTAMP ,
     score          INTEGER DEFAULT 0,
@@ -38,13 +38,13 @@ CREATE TABLE "user" (
     type type_user NOT NULL,
 
     CONSTRAINT name_NN          CHECK ((type='Admin' AND name IS NULL) OR (type<>'Admin' AND name IS NOT NULL)),
-    CONSTRAINT profile_photo_NN CHECK ((type='Admin' AND profile_photo IS NULL) OR (type<>'Admin')),
+    CONSTRAINT photo_NN         CHECK ((type='Admin' AND photo IS NULL) OR (type<>'Admin')),
     CONSTRAINT about_NN         CHECK ((type='Admin' AND about IS NULL) OR (type<>'Admin')),
     CONSTRAINT birthdate_NN     CHECK ((type='Admin' AND birthdate IS NULL) OR (type<>'Admin')),
     CONSTRAINT blocked_NN       CHECK ((type='Admin' AND blocked IS NULL) OR (type<>'Admin' AND blocked IS NOT NULL)),
     CONSTRAINT score_NN         CHECK ((type='Admin' AND score IS NULL) OR (type<>'Admin' AND score IS NOT NULL)),
-    CONSTRAINT entry_year_NN    CHECK ((type<>'Student' AND entry_year IS NULL) OR (type='Student' AND entry_year IS NOT NULL AND entry_year > 0)),
     CONSTRAINT block_reason_NN  CHECK (((blocked IS NULL OR NOT blocked) AND block_reason IS NULL) OR (blocked AND block_reason IS NOT NULL))
+    CONSTRAINT entry_year_NN    CHECK ((type<>'Student' AND entry_year IS NULL) OR (type='Student' AND entry_year IS NOT NULL AND entry_year > 0)),
 );
 
 CREATE TABLE "uc" (
@@ -104,8 +104,8 @@ CREATE TABLE "notification" (
     type       type_notification NOT NULL,
 
     CONSTRAINT date_smaller_now CHECK (date <= now()),
-    CONSTRAINT razao_estado_NN  CHECK ((type='account_status' AND status IS NOT NULL) OR (type<>'account_status' AND status IS NULL)),
     CONSTRAINT intervention_NN  CHECK ((type<>'account_status' AND id_intervention IS NOT NULL) OR (type='account_status' AND id_intervention IS NULL)),
+    CONSTRAINT status_NN        CHECK ((type='account_status' AND status IS NOT NULL) OR (type<>'account_status' AND status IS NULL)),
     CONSTRAINT validation_NN    CHECK ((type='validation' AND validation IS NOT NULL) OR (type<>'validation' AND validation IS NULL))
 );
 
