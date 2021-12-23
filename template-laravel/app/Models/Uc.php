@@ -24,14 +24,14 @@ class Uc extends Model
   /**
    * The users responsible for this uc. Only teachers.
    */
-  public function responsible() {
+  public function teachers() {
     return $this->belongsToMany('App\Models\User', 'teacher_uc', 'id_uc', 'id_teacher');
   }
 
   /**
    * The users who follow this uc. Only students.
    */
-  public function follows() {
+  public function followers() {
     return $this->belongsToMany('App\Models\User', 'follow_uc', 'id_uc', 'id_student');
   }
 }

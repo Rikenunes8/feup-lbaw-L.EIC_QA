@@ -44,15 +44,7 @@ class User extends Authenticatable
      * The interventions this user is author of.
      */
     public function interventions() {
-      return $this->belongsTo('App\Models\Intervention');
-    }
-
-    /**
-     * The votes this user is associated with.
-     */
-    public function votes() {
-        return $this->belongsToMany('App\Models\Intervention', 'voting', 'id_user', 'id_intervention')
-                    ->withPivot('vote');
+      return $this->hasMany('App\Models\Intervention', 'id_author');
     }
 
     /**
@@ -65,37 +57,53 @@ class User extends Authenticatable
     /**
      * The ucs this user is responsible for. Only for teachers.
      */
-    public function responsible() {
+    public function teaches() {
       return $this->belongsToMany('App\Models\Uc', 'teacher_uc', 'id_teacher', 'id_uc');
+    }
+
+    /**
+     * The votes this user is associated with.
+     */
+    public function votes() {
+      return $this->belongsToMany('App\Models\Intervention', 'voting', 'id_user', 'id_intervention')
+                  ->withPivot('vote');
     }
 
     /**
     * The interventions validated by this user. Only for teachers.
     */
-    public function validation() {
+    public function validates() {
       return $this->belongsToMany('App\Models\Intervention', 'validation', 'id_teacher', 'id_answer')
                   ->withPivot('valid');
     }
+
+    // Notifications
     
 
     /**
      * Filter query by Admin type.
      */
+    /*
     public function scopeAdmins($query) {
         return $query->whereType('Admin')->get();
     }
+    */
  
     /**
      * Filter query by Teacher type.
      */
+    /*
     public function scopeTeachers($query) {
         return $query->whereType('Teacher')->get();
     }
+    */
     
     /**
      * Filter query by Student type.
      */
+    /*
     public function scopeStudents($query) {
         return $query->whereType('Student')->get();
     }
+    */
 }

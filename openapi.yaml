@@ -79,7 +79,7 @@ paths:
                   value: '/login'
  
   /logout:
-    post:
+    get:
       operationId: R103
       summary: 'R103: Ação de Terminar Sessão'
       description: 'Terminar sessão do utilizador autenticado. Acesso: USR, ADM'
@@ -97,7 +97,7 @@ paths:
                   description: 'Terminar sessão bem sucedida. Redirecionar para o formulário de inicio de sessão'
                   value: '/login'
 
-  /registar:
+  /register:
     get:
       operationId: R104
       summary: 'R104: Formulário de Registo'
@@ -285,7 +285,7 @@ paths:
         '200':
           description: 'Ok. Mostrar a UI do perfil de utilizador'
 
-  /users/{id}/editar:
+  /users/{id}/edit:
     get:
       operationId: R111
       summary: 'R11:  Formulário de Editar Perfil do Utilizador'
@@ -346,7 +346,7 @@ paths:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
                   value: '/users/{id}/editar'
 
-  /users/{id}/seguir/{uc}:
+  /api/users/{id}/follow/{uc}:
     post:
       operationId: R113
       summary: 'R113: Ação de Seguir uma Unidade Curricular'
@@ -387,7 +387,7 @@ paths:
   # M02: Questões #
   #################  
   
-  /questao/{id}: 
+  /questions/{id}: 
     get:
       operationId: R201
       summary: 'R201: Visualizar detalhes de questão'
@@ -407,7 +407,7 @@ paths:
         '200':
           description: 'Ok. Mostrar a UI do detalhes de questão'
           
-  /questao/criar:
+  /questions/create:
     get:
       operationId: R202
       summary: 'R202: Formulário de Nova Questão'
@@ -417,7 +417,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Mostrar Nova Questão UI'
-    post:
+    put:
       operationId: R203
       summary: 'R203: Ação de criação de questão.'
       description: 'Acesso à submissão do formulário de Nova Questão. Acesso: USR'
@@ -456,7 +456,7 @@ paths:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de Nova Questão.'
                   value: '/questao/criar'
 
-  /questao/{id}/editar:
+  /questions/{id}/edit:
     get:
       operationId: R204
       summary: 'R204: Formulário de Editar Questão'
@@ -519,7 +519,7 @@ paths:
 
 
   # M02: votacao e eliminicao e reporte de questões ?? é uma acção por isso nao deve ser incluída??
-  /questao/{id}/votar:
+  /api/questions/{id}/vote:
     post:
       operationId: R206
       summary: 'R206: Ação de Votar numa Questão.'
@@ -554,8 +554,8 @@ paths:
                   description: 'Votação sem sucesso. Redirecionar para o detalhe da questão que foi votada.'
                   value: '/questao/{id}'
 
-  /questao/{id}/eliminar:
-    post:
+  /questions/{id}/delete:
+    delete:
       operationId: R207
       summary: 'R207: Ação de Eliminar uma Questão.'
       description: 'Ação de eliminar uma questão. Acesso: PRT, ADM'
@@ -582,7 +582,7 @@ paths:
                   description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão que seria eliminada.'
                   value: '/questao/{id}'
 
-  /questao/{id}/reportar:
+  /api/questions/{id}/report:
     post:
       operationId: R208
       summary: 'R208: Ação de Reportar uma Questão.'
@@ -619,7 +619,7 @@ paths:
   # M03: Respostas #
   ##################
 
-  /resposta/criar:
+  /answers/create:
     get:
       operationId: R301
       summary: 'R301: Formulário de Nova Resposta'
@@ -629,7 +629,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Mostrar Nova Resposta UI'
-    post:
+    put:
       operationId: R302
       summary: 'R302: Ação de criação de resposta.'
       description: 'Ação de submissão do formulário de Nova Resposta. Acesso: USR'
@@ -662,7 +662,7 @@ paths:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de nova resposta.'
                   value: '/resposta/criar'
 
-  /resposta/{id}/editar:
+  /answers/{id}/edit:
     get:
       operationId: R303
       summary: 'R303: Formulário de Editar Resposta'
@@ -720,7 +720,7 @@ paths:
 
 
   # M03: votacao, validacao, eliminicao e reporte de respostas ?? é uma acção por isso nao deve ser incluída??
-  /resposta/{id}/votar:
+  /answers/{id}/vote:
     post:
       operationId: R305
       summary: 'R305: Ação de votar num comentário.'
@@ -758,8 +758,8 @@ paths:
                   description: 'Votação sem sucesso. Redirecionar para o detalhe da questão correspondente à resposta votada.'
                   value: '/questao/{id}'
 
-  /resposta/{id}/eliminar:
-    post:
+  /answers/{id}/delete:
+    delete:
       operationId: R306
       summary: 'R306: Ação de Eliminar uma Resposta.'
       description: 'Ação de eliminar uma resposta. Acesso: PRT, ADM'
@@ -786,7 +786,7 @@ paths:
                   description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correpsondente à resposta que seria eliminada.'
                   value: '/questao/{id}'
 
-  /resposta/{id}/reportar:
+  /answers/{id}/report:
     post:
       operationId: R307
       summary: 'R307: Ação de Reportar uma Resposta.'
@@ -814,7 +814,7 @@ paths:
                   description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correspondente à resposta reportada.'
                   value: '/questao/{id}'
 
-  /resposta/{id}/validar:
+  # /api/answers/{id}/validate:
 
   # M03: as respotas são apenas visualizadas como uma componente da pagina de destalhe da questao -- falta isto... :c
 
@@ -823,7 +823,7 @@ paths:
   # M04: Comentários #
   ####################
                   
-  /comentario/criar:
+  /comments/create:
     get:
       operationId: R401
       summary: 'R401: Formulário de Novo Comentário'
@@ -833,7 +833,7 @@ paths:
       responses:
         '200':
           description: 'Ok. Mostrar Novo Comentário UI'
-    post:
+    put:
       operationId: R402
       summary: 'R402: Ação de criação de comentário.'
       description: 'Acesso à submissão do formulário de Novo comentário. Acesso: USR'
@@ -865,7 +865,7 @@ paths:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de novo comentário.'
                   value: '/comentario/criar'
   
-  /comentario/{id}/editar:
+  /comments/{id}/edit:
     get:
       operationId: R403
       summary: 'R403: Formulário de Editar comentário'
@@ -908,8 +908,8 @@ paths:
                   value: '/comentario/{id}/editar'
 
   # M04: eliminicao e reporte de comentarios ?? é uma acção por isso nao deve ser incluída??
-  /comentario/{id}/eliminar:
-    post:
+  /comments/{id}/delete:
+    delete:
       operationId: R405
       summary: 'R405: Ação de Eliminar um Comentário.'
       description: 'Ação de eliminar um comentário. Acesso: PRT, ADM'
@@ -936,7 +936,7 @@ paths:
                   description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correspondente ao comentário que seria eliminada.'
                   value: '/questao/{id}'
 
-  /comentario/{id}/reportar:
+  /api/comments/{id}/report:
     post:
       operationId: R406
       summary: 'R406: Ação de Reportar um Comentário.'
@@ -971,7 +971,7 @@ paths:
   # M05: Pesquisa de Intervenções #
   #################################
   
-  /questao:
+  /questions:
     get:
       operationId: R501
       summary: 'R501: Pesquisar Intervenções API.'
@@ -1050,7 +1050,7 @@ paths:
   # M08: Notificações #
   #####################
 
-  /users/{id}/notificacoes:
+  /users/{id}/notifications:
     get: 
       operationId: R801
       summary: 'R801: UI de Notitificações do Utilizador.'
@@ -1073,9 +1073,11 @@ paths:
   # marcar como lidas é ação?? nao deve estar aqui como resource
   # eliminacao é uma ação - nao deve estar incluido??
 
-  /users/{id}/notificacao/{not}/eliminar:
+  # /users/{id}/notifications/{not_id}:
 
-  /users/{id}/notificacao/{not}/ler:
+  # /users/{id}/notifications/{not}/delete:
+
+  # /users/{id}/notifications/{not}/read:
 
 
   ###########################
@@ -1131,11 +1133,11 @@ paths:
   # M10 - Páginas de administração # 
   ##################################
 
-  /admin/contas: # -> todos os users ? ()
+  # /admin/users: # -> todos os users ? ()
   
-  /admin/ucs: # -> gerir e associar a docentes
+  # /admin/ucs: # -> gerir e associar a docentes
 
-  /admin/denuncias:
+  /admin/reports:
     get:
       operationId: R1001
       summary: 'R1001: Catálogo de Denúncias'
@@ -1147,8 +1149,9 @@ paths:
         '200':
           description: 'OK. Mostrar UI com todas as denúncias.'
   
-  
-  /admin/bloquear/{id}:
+  # admin/users/{id}/delete
+
+  /admin/users/{id}/block:
     post:
       operationId: R1017
       summary: 'R1017: Ação de Alterar Estado de Conta'

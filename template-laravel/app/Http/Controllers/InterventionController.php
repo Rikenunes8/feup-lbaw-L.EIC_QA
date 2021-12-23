@@ -8,16 +8,29 @@ use Illuminate\Http\Request;
 class InterventionController extends Controller
 {
     /**
-     * Display the specified resource.
+     * Shows all questions.
+     *
+     * @return Response
+     */
+    public function list()
+    {
+        $this->authorize('show', Intervention::class);
+        $questions = Intervention::questions()->orderBy('votes', 'DESC')->get();
+        // $questions = DB::table('intervention')->where('type', 'question')->orderBy('votes')->get();
+        return view('pages.questions', ['questions' => $questions]); // TODO: this view doesn't exists yet
+    }
+
+    /**
+     * Display the specified questions.
      *
      * @param  int  $id
      * @return Response
      */
     public function show($id)
     {
-        $intervention = Intervention::find($id);
-        $this->authorize('show', $intervention);
-        return view(); // TODO: this view doesn't exists yet
+        $question = Intervention::questions()::find($id);
+        $this->authorize('show', $question);
+        return view('pages.question', ['question' => $question]); // TODO: this view doesn't exists yet
     }
 
     /**
@@ -25,23 +38,11 @@ class InterventionController extends Controller
      *
      * @return Response
      */
-    public function showCreate()
+    public function showCreateQuestionForm()
     {
-        $this->authorize('create');
-        return view(); // TODO: this view doesn't exists yet
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function showEdit($id)
-    {
-        $intervention = Intervention::find($id);
-        $this->authorize('update', $intervention);
-        return view(); // TODO: this view doesn't exists yet
+        if (!Auth::check()) return redirect('/login');
+        $this->authorize('create', Intervention::class);
+        return view('pages.questionCreateForm'); // TODO: this view doesn't exists yet
     }
 
     /**
@@ -52,60 +53,33 @@ class InterventionController extends Controller
      */
     public function createQuestion(Request $request)
     {
-        $intervention = new Intervention();
+        if (!Auth::check()) return redirect('/login');
 
-        $this->authorize('create');
+        $question = new Intervention();
+        $this->authorize('create', Intervention::class);
 
-        $intervention->text = $request->input('text');
-        $intervention->title = $request->input('title');
-        $intervention->category = $request->input('category');
-        $intervention->id_author = Auth::user()->id;
-        $intervention->type = 'question';
-        $intervention->save();
+        $question->id_author = Auth::user()->id;
+        $question->title = $request->input('title');
+        $question->text = $request->input('text');
+        $question->category = $request->input('category');
+        $question->type = 'question';
+        $question->save();
 
-        return $intervention;
+        return redirect('qustions/{{ $question->id }}');
     }
+
     /**
-     * Create a resource in storage.
-     * 
-     * @param  Request  $request
-     * @param  int  $parent_id
-     * @return Intervention The answer created.
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
      */
-    public function createAnswer(Request $request, $parent_id)
+    public function showEditQuestionForm($id)
     {
-        $intervention = new Intervention();
-
-        $this->authorize('create');
-
-        $intervention->text = $request->input('text');
-        $intervention->id_author = Auth::user()->id;
-        $intervention->id_intervention = $parent_id;
-        $intervention->type = 'answer';
-        $intervention->save();
-
-        return $intervention;
-    }
-    /**
-     * Create a resource in storage.
-     * 
-     * @param  Request  $request
-     * @param  int  $parent_id
-     * @return Intervention The comment created.
-     */
-    public function createComment(Request $request, $parent_id)
-    {
-        $intervention = new Intervention();
-
-        $this->authorize('create');
-
-        $intervention->text = $request->input('text');
-        $intervention->id_author = Auth::user()->id;
-        $intervention->id_intervention = $parent_id;
-        $intervention->type = 'comment';
-        $intervention->save();
-
-        return $intervention;
+        if (!Auth::check()) return redirect('/login');
+        $intervention = Intervention::find($id);
+        $this->authorize('update', $intervention);
+        return view(); // TODO: this view doesn't exists yet
     }
 
     /**
@@ -115,7 +89,7 @@ class InterventionController extends Controller
      * @param  int  $id
      * @return Intervention The intervention updated.
      */
-    public function update(Request $request, $id)
+    public function updateQuestion(Request $request, $id)
     {
         $intervention =  Intervention::find($id);
         $this->authorize('update', $intervention);
@@ -132,7 +106,7 @@ class InterventionController extends Controller
      * @param  Intervention  $intervention
      * @return Intervention The question deleted.
      */
-    public function delete(Request $request, $id)
+    public function deleteQuestion(Request $request, $id)
     {
         $intervention =  Intervention::find($id);
 
@@ -140,5 +114,180 @@ class InterventionController extends Controller
         $intervention->delete();
 
         return $intervention;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function showCreateAnswerForm()
+    {
+        $this->authorize('create', Intervention::class);
+        return view(); // TODO: this view doesn't exists yet
+    }
+
+    /**
+     * Create a resource in storage.
+     * 
+     * @param  Request  $request
+     * @param  int  $parent_id
+     * @return Intervention The answer created.
+     */
+    public function createAnswer(Request $request, $id)
+    {
+        $intervention = new Intervention();
+
+        $this->authorize('create', $intervention);
+
+        $intervention->text = $request->input('text');
+        $intervention->id_author = Auth::user()->id;
+        $intervention->id_intervention = $parent_id;
+        $intervention->type = 'answer';
+        $intervention->save();
+
+        return $intervention;
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function showEditAnswerForm($id)
+    {
+        $intervention = Intervention::find($id);
+        $this->authorize('update', $intervention);
+        return view(); // TODO: this view doesn't exists yet
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Intervention The intervention updated.
+     */
+    public function updateAnswer(Request $request, $id)
+    {
+        $intervention =  Intervention::find($id);
+        $this->authorize('update', $intervention);
+
+        $intervention->text = $request->input('text');
+        $intervention->update(); // TODO: Is this right?
+
+        return $intervention;
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Intervention  $intervention
+     * @return Intervention The question deleted.
+     */
+    public function deleteAnswer(Request $request, $id)
+    {
+        $intervention =  Intervention::find($id);
+
+        $this->authorize('delete', $intervention);
+        $intervention->delete();
+
+        return $intervention;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function showCreateCommentForm()
+    {
+        $this->authorize('create');
+        return view(); // TODO: this view doesn't exists yet
+    }
+
+    /**
+     * Create a resource in storage.
+     * 
+     * @param  Request  $request
+     * @param  int  $parent_id
+     * @return Intervention The comment created.
+     */
+    public function createComment(Request $request, $parent_id)
+    {
+        $intervention = new Intervention();
+
+        $this->authorize('create', $intervention);
+
+        $intervention->text = $request->input('text');
+        $intervention->id_author = Auth::user()->id;
+        $intervention->id_intervention = $parent_id;
+        $intervention->type = 'comment';
+        $intervention->save();
+
+        return $intervention;
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function showEditCommentForm($id)
+    {
+        $intervention = Intervention::find($id);
+        $this->authorize('update', $intervention);
+        return view(); // TODO: this view doesn't exists yet
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Intervention The intervention updated.
+     */
+    public function updateComment(Request $request, $id)
+    {
+        $intervention =  Intervention::find($id);
+        $this->authorize('update', $intervention);
+
+        $intervention->text = $request->input('text');
+        $intervention->save(); // TODO: Is this right?
+
+        return $intervention;
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Intervention  $intervention
+     * @return Intervention The question deleted.
+     */
+    public function deleteComment(Request $request, $id)
+    {
+        $intervention =  Intervention::find($id);
+
+        $this->authorize('delete', $intervention);
+        $intervention->delete();
+
+        return $intervention;
+    }
+
+    public function report($id)
+    {
+        return true;
+    }
+
+    public function vote($id)
+    {
+        return true;
+    }
+
+    public function validate($id)
+    {
+        return true;
     }
 }

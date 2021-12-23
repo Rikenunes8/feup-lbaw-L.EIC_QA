@@ -69,37 +69,49 @@ Route::get('questions'                , 'InterventionController@list');
 Route::get('questions/{id}'           , 'InterventionController@show');
 Route::get('questions/create'         , 'InterventionController@showCreateQuestionForm');
 Route::put('questions/create'         , 'InterventionController@createQuestion');
-Route::get('questions/{id}/edit'      , 'InterventionController@showUpdateQuestionForm');
+Route::get('questions/{id}/edit'      , 'InterventionController@showEditQuestionForm');
 Route::post('questions/{id}/edit'     , 'InterventionController@updateQuestion');
 Route::delete('questions/{id}/delete' , 'InterventionController@deleteQuestion');
 
 // Interventions - Answers
-Route::get('answers/create'         , 'InterventionController@showCreateAnswerForm');
-Route::put('answers/create'         , 'InterventionController@createAnswer');
-Route::get('answers/{id}/edit'      , 'InterventionController@showUpdateAnswerForm');
+// Necessario mandar na route o id da questao a que responde
+Route::get('questions/{id}/answers/create' , 'InterventionController@showCreateAnswerForm');
+Route::put('questions/{id}/answers/create' , 'InterventionController@createAnswer');
+Route::get('answers/{id}/edit'      , 'InterventionController@showEditAnswerForm');
 Route::post('answers/{id}/edit'     , 'InterventionController@updateAnswer');
 Route::delete('answers/{id}/delete' , 'InterventionController@deleteAnswer');
 
 // Interventions - Comments
-Route::get('comments/create'        , 'InterventionController@showCreateCommentForm');
-Route::put('comments/create'        , 'InterventionController@createComment');
-Route::get('comments/{id}/edit'     , 'InterventionController@showUpdateCommentForm');
+Route::get('answers/{id}/comments/create'        , 'InterventionController@showCreateCommentForm');
+Route::put('answers/{id}/comments/create'        , 'InterventionController@createComment');
+Route::get('comments/{id}/edit'     , 'InterventionController@showEditCommentForm');
 Route::post('comments/{id}/edit'    , 'InterventionController@updateComment');
 Route::delete('comments/{id}/delete', 'InterventionController@deleteComment');
 
 // Users
 Route::get('users'              , 'UserController@list');
 Route::get('users/{id}'         , 'UserController@show');
-Route::get('users/{id}/edit'    , 'UserController@showUpdateForm');
+Route::get('users/{id}/edit'    , 'UserController@showEditForm');
 Route::post('users/{id}/edit'   , 'UserController@update');
 
 // Notifications
+/*
 Route::get('users/{id}/notifications'                   , 'NotificationController@list');
 Route::get('users/{id}/notifications/{not_id}'          , 'NotificationController@show');
 Route::delete('users/{id}/notifications/{not_id}/delete', 'NotificationController@delete');
+*/
 
 // UCs
-Route::get('ucs', 'UcController@list');
+Route::get('ucs'                , 'UcController@list');
+Route::get('ucs/{id}'           , 'UcController@show');
+Route::get('ucs/create'         , 'UcController@showCreateForm');
+Route::put('ucs/create'         , 'UcController@create');
+Route::get('ucs/{id}/edit'      , 'UcController@showEditForm');
+Route::post('ucs/{id}/edit'     , 'UcController@update');
+Route::delete('ucs/{id}/delete' , 'UcController@delete');
+
+Route::put('api/ucs/{uc_id}/teachers/{user_id}/add'       , 'UcController@addTeacher');
+Route::delete('api/ucs/{uc_id}/teachers/{user_id}/delete' , 'UcController@deleteTeacher');
 
 // Search
 Route::get('search', 'InterventionController@list');
@@ -110,6 +122,6 @@ Route::get('admin/users'                , 'AdminController@listUsers');
 Route::post('admin/users/{id}/block'    , 'AdminController@blockUser');
 Route::delete('admin/users/{id}/delete' , 'AdminController@deleteUser'); // ??
 Route::get('admin/ucs'                  , 'AdminController@listUcs');
+Route::get('admin/ucs/{id}/teachers'    , 'AdminController@listUcs');
 Route::get('admin/reports'              , 'AdminController@listReports');
-// Falta ainda paginas que associem ucs a docentes
 
