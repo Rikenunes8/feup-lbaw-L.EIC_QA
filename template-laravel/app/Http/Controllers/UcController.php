@@ -8,6 +8,19 @@ use Illuminate\Http\Request;
 class UcController extends Controller
 {
     /**
+     * Shows all ucs.
+     *
+     * @return Response
+     */
+    public function list()
+    {
+      if (!Auth::check()) return redirect('/login');
+      $this->authorize('show', Uc::class);
+      $ucs = DB::table('uc')->orderBy('id')->get();
+      return view();
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id

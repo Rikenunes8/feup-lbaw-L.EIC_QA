@@ -30,3 +30,18 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
+
+
+// ------------ LEIC Q&A ---------------
+// API
+Route::put('api/questions/create', 'InterventionController@createQuestion');
+Route::put('api/answers/create', 'InterventionController@createAnswer');
+Route::put('api/comments/create', 'InterventionController@createComment');
+Route::delete('api/interventions/{id}', 'InterventionController@delete');
+
+// Interventions
+Route::get('questions/{id}', 'InterventionController@show');
+
+// Ucs
+Route::get('ucs/', 'UcController@list');
+
