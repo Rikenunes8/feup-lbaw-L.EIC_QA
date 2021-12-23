@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Intervention;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class InterventionController extends Controller
 {

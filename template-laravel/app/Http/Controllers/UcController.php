@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Uc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UcController extends Controller
 {
@@ -14,7 +16,7 @@ class UcController extends Controller
      */
     public function list()
     {
-      $this->authorize('show', Uc::class);
+      // $this->authorize('show', Uc::class);
       $ucs = DB::table('uc')->orderBy('name')->get();
       return view('pages.ucs', ['ucs' => $ucs]); // TODO: this view doesn't exists yet
     }
