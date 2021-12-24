@@ -25,10 +25,11 @@ class UcPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  User  $user
+     * @param  User   $user
+     * @param  Uc   $uc
      * @return Response|bool
      */
-    public function create(User $user)
+    public function create(User $user, Uc $uc)
     {
         return $user->type == 'Admin';
     }
@@ -55,5 +56,18 @@ class UcPolicy
     public function delete(User $user, Uc $uc)
     {
         return $user->type == 'Admin';
+    }
+
+    /**
+     * Determine whether the user can add or delete an association between a uc and a teacher.
+     *
+     * @param  User  $user
+     * @param  Uc  $uc
+     * @param  User  $teacher
+     * @return Response|bool
+     */
+    public function teacher(User $user, Uc $uc, User $teacher)
+    {
+        return $user->type == 'Admin' && $teacher->type == 'Teacher';
     }
 }

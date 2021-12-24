@@ -16,9 +16,9 @@ class UcController extends Controller
      */
     public function list()
     {
-      // $this->authorize('show', Uc::class);
-      $ucs = DB::table('uc')->orderBy('name')->get();
-      return view('pages.ucs', ['ucs' => $ucs]); // TODO: this view doesn't exists yet
+        // $this->authorize('show', Uc::class); // // there is no restrictions
+        $ucs = DB::table('uc')->orderBy('name')->get();
+        return view('pages.ucs', ['ucs' => $ucs]);
     }
 
      /**
@@ -30,8 +30,8 @@ class UcController extends Controller
     public function show($id)
     {
         $uc = Uc::find($id);
-        $this->authorize('show', $uc);
-        return view('pages.uc', ['uc' => $uc]); // TODO: this view doesn't exists yet
+        // $this->authorize('show', $uc); // there is no restrictions
+        return view('pages.uc', ['uc' => $uc]);
     }
 
     /**
@@ -43,14 +43,14 @@ class UcController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
         $this->authorize('create', Uc::class);
-        return view('pages.ucCreateForm'); // TODO: this view doesn't exists yet
+        return view('pages.ucCreateForm');
     }
 
     /**
      * Create a resource in storage.
      *
      * @param  Request  $request
-     * @return Uc The uc created.
+     * @return Response 
      */
     public function create(Request $request)
     {
@@ -78,7 +78,7 @@ class UcController extends Controller
         if (!Auth::check()) return redirect('/login');
         $uc = Uc::find($id);
         $this->authorize('update', $uc);
-        return view('pages.ucEditForm', ['uc' => $uc]); // TODO: this view doesn't exists yet
+        return view('pages.ucEditForm', ['uc' => $uc]);
     }
     
     /**
@@ -130,17 +130,18 @@ class UcController extends Controller
      * 
      * @param  int  $uc_id
      * @param  int  $user_id
-     * @return bool The association was added or not.
+     * @return Response|bool The association was added or not.
      */
     public function addTeacher($uc_id, $user_id) 
     {
         if (!Auth::check()) return redirect('/login');
 
         $uc = Uc::find($uc_id);
-        $teacher = User::find($user_id);
+        $teacher = User::find($user_id);      
         $result = false;
-    
+        
         if (isset($uc) && isset($teacher)) {
+            $this->authorize('teacher', $uc, $teacher);
             $uc->teachers()->save($teacher);
             /*
             $result =   DB::insert('INSERT INTO teacher_uc (id_uc, id_teacher) VALUES (:id_uc, :id_teacher)', [
@@ -158,7 +159,7 @@ class UcController extends Controller
      * 
      * @param  int  $uc_id
      * @param  int  $user_id
-     * @return bool The association was deleted or not.
+     * @return Response|bool The association was deleted or not.
      */
     public function deleteTeacher($uc_id, $user_id) 
     {
@@ -169,6 +170,7 @@ class UcController extends Controller
         $result = false;
     
         if (isset($uc) && isset($teacher)) {
+            $this->authorize('teacher', $uc, $teacher);
             $uc->teachers()::where('id_teacher', $teacher->id)->delete();
             /*
             $result =   DB::delete ('DELETE FROM teacher_uc WHERE id_uc=:id_uc AND id_teacher=:id_teacher', [
