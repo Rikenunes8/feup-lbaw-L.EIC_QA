@@ -12,18 +12,6 @@ class InterventionPolicy
 
 
     /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Intervention  $intervention
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function forceDelete(User $user, Intervention $intervention)
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -50,11 +38,12 @@ class InterventionPolicy
      * Determine whether the user can create models.
      *
      * @param  User  $user
+     * @param  Intervention  $intervention
      * @return Response|bool
      */
-    public function create(User $user)
+    public function create(User $user, Intervention $intervention)
     {
-        return $user->type != 'Admin' && !user->blocked;
+        return $user->type != 'Admin' && !$user->blocked;
     }
 
     /**
@@ -66,7 +55,7 @@ class InterventionPolicy
      */
     public function update(User $user, Intervention $intervention)
     {
-        return $user->id == $intervention->id_author && !user->blocked;
+        return $user->id == $intervention->id_author && !$user->blocked;
     }
 
 
@@ -79,6 +68,6 @@ class InterventionPolicy
      */
     public function delete(User $user, Intervention $intervention)
     {
-        return $user->type == 'Admin';
+        return ($user->type == 'Admin' || $user->id == $intervention->id_author) && !$user->blocked;
     }
 }
