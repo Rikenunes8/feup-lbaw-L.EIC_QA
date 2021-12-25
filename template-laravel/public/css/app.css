@@ -1,4 +1,30 @@
-body {
+#header-container, #navbar-content-container {
+  grid-template-columns: 1fr 3fr;
+}
+
+#logo-img, #profile-photo {
+  height: 32px;
+}
+
+.nav-link, .navbar-text {
+  color: rgb(41, 41, 41);
+}
+
+.nav-link:hover, .nav-link:focus {
+  color: gray;
+}
+
+footer > p {
+  font-size: small;
+}
+
+@media (max-width: 767px) {
+  #form-login {
+    width: 100%!important;
+  }
+}
+
+/*body {
   background-color: #ffffff;
   color: #9b4dca;
 }
@@ -131,11 +157,12 @@ main > header span {
     margin: 0;
     border-bottom: 1px solid rgba(96, 108, 118, 0.4);
   }
-}
+}*/
 /**
  * Overide milligram colors
  * Some styles might be missing
  **/
+ /*
 button {
   background-color: #9b4dca;
   border-color: #9b4dca;
@@ -154,4 +181,4 @@ input[type=text]:focus,
 input[type=email]:focus,
 input[type=password]:focus {
   border-color: #9b4dca;
-}
+}*/
