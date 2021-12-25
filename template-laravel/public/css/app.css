@@ -1,3 +1,4 @@
+/* APP HEADER */
 #header-container, #navbar-content-container {
   grid-template-columns: 1fr 3fr;
 }
@@ -9,6 +10,7 @@
 }
 
 /*TODO improve links colors*/
+/* SIDEBAR AND APP LINKS */
 .nav-link, .navbar-text, .app-link {
   color: rgb(41, 41, 41);
 }
@@ -18,10 +20,25 @@
   color: gray;
 }
 
+/* HOME PAGE */
 #home-page .mask-white {
   background-color: rgba(255, 255, 255, 0.75);
 }
 
+/* ABOUT PAGE */
+.about-icons-item {
+  max-width: 20rem;
+}
+
+.about-icons-icon {
+  height: 5rem;
+}
+
+.about-icons-icon i {
+  font-size: 4rem;
+}
+
+/* FOOTER */
 footer > p {
   font-size: small;
 }
