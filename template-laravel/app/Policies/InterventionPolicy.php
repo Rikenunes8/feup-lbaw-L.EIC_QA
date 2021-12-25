@@ -70,4 +70,29 @@ class InterventionPolicy
     {
         return ($user->type == 'Admin' || $user->id == $intervention->id_author) && !$user->blocked;
     }
+
+    /**
+     * Determine whether the user can vote the intervention.
+     *
+     * @param  User  $user
+     * @param  Intervention  $intervention
+     * @return Response|bool
+     */
+    public function vote(User $user, Intervention $intervention)
+    {
+        return $user->type != 'Admin' && $user->id != $intervention->id_author && !$user->blocked && $intervention->type != 'comment';
+    }
+
+    /**
+     * Determine whether the user can validate the intervention.
+     *
+     * @param  User  $user
+     * @param  Intervention  $intervention
+     * @return Response|bool
+     */
+    public function validate(User $user, Intervention $intervention)
+    {
+        return $user->type == 'Teacher' && $user->id != $intervention->id_author 
+                && !$user->blocked && $intervention->type == 'answer';
+    }
 }

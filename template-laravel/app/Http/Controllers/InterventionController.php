@@ -31,7 +31,7 @@ class InterventionController extends Controller
     public function show($id)
     {
         $intervention = Intervention::find($id);
-        while ($intervention->type != 'question' || !is_null($intervention)) {
+        while ($intervention->type != 'question' && !is_null($intervention)) {
             $intervention = $intervention->parent();
         }
         if (is_null($intervention)) return App::abort(404);
@@ -215,7 +215,8 @@ class InterventionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Intervention  $intervention
+     * @param  Request $request
+     * @param  int  $id
      * @return Response
      */
     public function deleteAnswer(Request $request, $id)
@@ -226,7 +227,7 @@ class InterventionController extends Controller
         $this->authorize('delete', $answer);
         $asnwer->delete();
 
-        return $answer;
+        return redirect('questions/{{ $id }}');
     }
 
     /**
@@ -254,6 +255,8 @@ class InterventionController extends Controller
      */
     public function createComment(Request $request, $id)
     {
+        if (!Auth::check()) return redirect('/login');
+
         $comment = new Intervention();
 
         $answer = Intervention::answers()::find($id);
@@ -279,6 +282,8 @@ class InterventionController extends Controller
      */
     public function showEditCommentForm($id)
     {
+        if (!Auth::check()) return redirect('/login');
+
         $comment = Intervention::comments()::find($id);
         if (is_null($comment)) return App::abort(404);
         $answer = $comment->parent();
@@ -292,10 +297,12 @@ class InterventionController extends Controller
      *
      * @param  Request  $request
      * @param  int  $id
-     * @return Intervention The intervention updated.
+     * @return Response
      */
     public function updateComment(Request $request, $id)
     {
+        if (!Auth::check()) return redirect('/login');
+
         $comment =  Intervention::comments()::find($id);
         if (is_null($comment)) return App::abort(404);
         $answer = $comment->parent();
@@ -311,11 +318,14 @@ class InterventionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Intervention  $intervention
-     * @return Intervention The question deleted.
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
      */
     public function deleteComment(Request $request, $id)
     {
+        if (!Auth::check()) return redirect('/login');
+
         $comment =  Intervention::comments()::find($id);
         if (is_null($comment)) return App::abort(404);
         $answer = $comment->parent();
@@ -333,15 +343,45 @@ class InterventionController extends Controller
         return true;
     }
 
-    public function vote($user_id, $intervention_id, $vote)
+    /**
+     * Vote an intervention.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function vote(Request $request, $id)
     {
-        // TODO:
-        return true;
-    }
+        if (!Auth::check()) return redirect('/login');
 
-    public function validate($id)
+        $intervention = Intervention::find($id);
+        $user = Auth::user();
+        $vote = $request->input('vote'); // TODO:
+        
+        $this->authorize('vote', $intervention);
+
+        $intervention->votes()->save($user, ['vote', $vote]);
+        return redirect('questions/{{ $intervention->id }}'); // TODO: Maybe not to return redirect
+    }
+    
+    /**
+     * Validate an answer.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function validate(Request $request, $id)
     {
-        //TODO:
-        return true;
+        if (!Auth::check()) return redirect('/login');
+
+        $intervention = Intervention::answers()::find($id);
+        $user = Auth::user();
+        $valid = $request->input('valid'); // TODO:
+        
+        $this->authorize('validate', $intervention);
+
+        $intervention->valid()->save($user, ['valid', $valid]);
+        return redirect('questions/{{ $intervention->id }}'); // TODO: Maybe not to return redirect
     }
 }
