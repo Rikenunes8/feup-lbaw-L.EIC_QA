@@ -4,8 +4,11 @@
 
 @section('content')
 
-<section id="cards">
-  @each('partials.uc', $ucs, 'uc')
+<section id="ucs-page">
+  <div class="row"> 
+    @each('partials.uc', $ucs, 'uc')
+  </div>
+  
 </section>
 
 @endsection
