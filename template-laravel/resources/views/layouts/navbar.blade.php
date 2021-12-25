@@ -14,7 +14,7 @@
       </ul>
           
       @if (Auth::check()) 
-      <!-- logado, mas tambem tem de ser administrador!  -->
+      <!-- TODO logado, mas tambem tem de ser administrador!  -->
       <span class="navbar-text text-uppercase pt-3">Administração</span>
       <ul class="text-decoration-none list-unstyled ps-3">
         <li><a class="nav-link pt-0" href="{{ url('/admin/users') }}"><i class="fas fa-user-cog"></i> Gerir Contas</a></li>
