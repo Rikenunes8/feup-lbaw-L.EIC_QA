@@ -8,11 +8,13 @@
   object-fit: cover;
 }
 
-.nav-link, .navbar-text {
+/*TODO improve links colors*/
+.nav-link, .navbar-text, .app-link {
   color: rgb(41, 41, 41);
 }
 
-.nav-link:hover, .nav-link:focus {
+.nav-link:hover, .nav-link:focus, 
+.app-link:hover, .app-link:focus {
   color: gray;
 }
 

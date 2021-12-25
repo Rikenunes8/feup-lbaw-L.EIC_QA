@@ -26,14 +26,19 @@
         @endif
     </div>
 
-    <div class="col-12">
-        <div class="mb-3 form-check">
+    <div class="col-12 mb-3">
+        <div class="form-check">
             <input type="checkbox" id="remember" class="form-check-input" name="remember" {{ old('remember') ? 'checked' : '' }}>
             <label class="form-check-label" for="remember">Manter sessão iniciada</label>
         </div>
     </div>
+
     <div class="col-12">
-        <button type="submit" class="btn btn-primary">Iniciar Sessão</button>
+        <button type="submit" class="btn btn-primary btn-block">Iniciar Sessão</button>
+    </div>
+
+    <div class="col-12 d-flex justify-content-center mt-3">
+        <a href="{{ url('/recover') }}" class="app-link">Recuperar Password?</a>
     </div>
 </form>
 @endsection

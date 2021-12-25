@@ -11,7 +11,7 @@
 |
 */
 // Home
-Route::get('/', 'Auth\LoginController@home');
+Route::get('/', function () { return view('pages.static.home'); });
 
 // Cards
 Route::get('cards', 'CardController@list');
@@ -35,10 +35,10 @@ Route::post('register', 'Auth\RegisterController@register');
 // ------------ LEIC Q&A ---------------
 
 // Static Pages
-Route::get('home'    , function () { return view('pages.home'    ); });
-Route::get('about'   , function () { return view('pages.about'   ); });
-Route::get('faq'     , function () { return view('pages.faq'     ); });
-Route::get('contact' , function () { return view('pages.contact' ); });
+Route::get('home'    , function () { return view('pages.static.home'    ); });
+Route::get('about'   , function () { return view('pages.static.about'   ); });
+Route::get('faq'     , function () { return view('pages.static.faq'     ); });
+Route::get('contact' , function () { return view('pages.static.contact' ); });
 
 
 // Authentication

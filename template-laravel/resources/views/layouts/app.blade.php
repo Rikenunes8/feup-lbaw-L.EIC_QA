@@ -55,6 +55,7 @@
             </section>
           </div>
           <div class="container py-3 px-4">
+            @include('layouts.breadcrumbs')
             <section id="content">
               @yield('content')
             </section>

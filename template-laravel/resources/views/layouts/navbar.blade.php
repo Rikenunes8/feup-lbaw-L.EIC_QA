@@ -32,7 +32,7 @@
         <a class="nav-link text-uppercase" href="{{ url('/faq') }}">FAQ</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-uppercase" href="{{ url('/contacts') }}">Contactos</a>
+        <a class="nav-link text-uppercase" href="{{ url('/contact') }}">Contactos</a>
       </li>
 
     </ul>
