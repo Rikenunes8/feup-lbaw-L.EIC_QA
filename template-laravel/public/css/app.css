@@ -4,6 +4,8 @@
 
 #logo-img, #profile-photo {
   height: 32px;
+  width: 32px;
+  object-fit: cover;
 }
 
 .nav-link, .navbar-text {
@@ -12,6 +14,10 @@
 
 .nav-link:hover, .nav-link:focus {
   color: gray;
+}
+
+#home-page .mask-white {
+  background-color: rgba(255, 255, 255, 0.75);
 }
 
 footer > p {

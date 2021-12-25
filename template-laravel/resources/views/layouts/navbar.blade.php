@@ -7,19 +7,19 @@
       
       <span class="navbar-text text-uppercase pt-3">Público</span>
       <ul class="text-decoration-none list-unstyled ps-3">
-        <li><a class="nav-link pt-0" href="{{ url('/questions') }}">Questões</a></li>
-        <li><a class="nav-link pt-0" href="{{ url('/ucs') }}">Unidades Curriculares</a></li>
-        <li><a class="nav-link pt-0" href="{{ url('/users') }}">Utilizadores</a></li>
-        <li><a class="nav-link pt-0" href="{{ url('/...') }}">Pesquisar</a></li>
+        <li><a class="nav-link pt-0" href="{{ url('/questions') }}"><i class="fas fa-question"></i> Questões</a></li>
+        <li><a class="nav-link pt-0" href="{{ url('/ucs') }}"><i class="fas fa-book"></i> Unidades Curriculares</a></li>
+        <li><a class="nav-link pt-0" href="{{ url('/users') }}"><i class="fas fa-user-circle"></i> Utilizadores</a></li>
+        <li><a class="nav-link pt-0" href="{{ url('/...') }}"><i class="fas fa-search"></i> Pesquisar</a></li>
       </ul>
-      
+          
       @if (Auth::check()) 
       <!-- logado, mas tambem tem de ser administrador!  -->
       <span class="navbar-text text-uppercase pt-3">Administração</span>
       <ul class="text-decoration-none list-unstyled ps-3">
-        <li><a class="nav-link pt-0" href="{{ url('/admin/users') }}">Gerir Contas</a></li>
-        <li><a class="nav-link pt-0" href="{{ url('/admin/ucs') }}">Gerir UCs</a></li>
-        <li><a class="nav-link pt-0" href="{{ url('/admin/reports') }}">Reportes</a></li>
+        <li><a class="nav-link pt-0" href="{{ url('/admin/users') }}"><i class="fas fa-user-cog"></i> Gerir Contas</a></li>
+        <li><a class="nav-link pt-0" href="{{ url('/admin/ucs') }}"><i class="fas fa-tags"></i> Gerir UCs</a></li>
+        <li><a class="nav-link pt-0" href="{{ url('/admin/reports') }}"><i class="fas fa-exclamation-triangle"></i> Reportes</a></li>
       </ul>
       @endif
 
