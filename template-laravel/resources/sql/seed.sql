@@ -3,6 +3,9 @@ create schema if not exists lbaw21;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS cards CASCADE;
 DROP TABLE IF EXISTS items CASCADE;
+DROP TABLE IF EXISTS uc CASCADE;
+DROP TABLE IF EXISTS teacher_uc CASCADE;
+DROP TABLE IF EXISTS follow_uc CASCADE;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -36,6 +39,12 @@ CREATE TABLE "teacher_uc" (
     id_teacher  INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
     id_uc       INTEGER REFERENCES "uc" ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id_teacher, id_uc)
+);
+
+CREATE TABLE "follow_uc" (
+    id_student  INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_uc       INTEGER REFERENCES "uc" ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY (id_student, id_uc)
 );
 
 INSERT INTO users VALUES (
@@ -91,3 +100,5 @@ INSERT INTO "teacher_uc" (id_teacher, id_uc) VALUES (2, 0);
 INSERT INTO "teacher_uc" (id_teacher, id_uc) VALUES (3, 1);
 INSERT INTO "teacher_uc" (id_teacher, id_uc) VALUES (4, 2);
 INSERT INTO "teacher_uc" (id_teacher, id_uc) VALUES (5, 2);
+
+INSERT INTO "follow_uc" (id_student, id_uc) VALUES (2, 2);

@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+<h2 class="text-center">Login</h2> 
+
 <form method="POST" action="{{ route('login') }}" id="form-login" class="row w-50 mx-auto">
     {{ csrf_field() }}
 

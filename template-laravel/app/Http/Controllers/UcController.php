@@ -17,7 +17,7 @@ class UcController extends Controller
     public function list()
     {
         // $this->authorize('show', Uc::class); // // there is no restrictions
-        $ucs = DB::table('uc')->orderBy('name')->get();
+        $ucs = Uc::orderBy('name')->get();
         return view('pages.ucs', ['ucs' => $ucs]);
     }
 
@@ -32,6 +32,21 @@ class UcController extends Controller
         $uc = Uc::find($id);
         // $this->authorize('show', $uc); // there is no restrictions
         return view('pages.uc', ['uc' => $uc]);
+    }
+
+    public function follow(Request $request, $id) {
+        $uc = Uc::find($id);
+        // $this->authorize('follow', $uc);
+        $follow = $request->input('follow');
+        // TODO
+        /*
+        if ($follow) {
+            $user = User::find(Auth::user()->id);
+            $uc->followers()->save($user);
+        } else 
+            $uc->followers()::where('id_student', Auth::user()->id)->delete();
+        */
+        return $uc;
     }
 
     /**

@@ -59,7 +59,7 @@ Route::post('api/answers/{id}/report'   , 'InterventionController@report');
 Route::post('api/answers/{id}/validate' , 'InterventionController@validate');
 Route::post('api/comments/{id}/report'  , 'InterventionController@report');
 
-Route::post('api/users/{id}/follow/{uc_id}', 'UserController@follow');
+Route::post('api/follow/{uc_id}', 'UcController@follow');
 
 Route::post('api/users/{id}/notifications/{not_id}/read', 'NotificationController@read');
 

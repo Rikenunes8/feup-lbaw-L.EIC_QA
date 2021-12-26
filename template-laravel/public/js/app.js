@@ -1,4 +1,12 @@
 function addEventListeners() {
+
+  // LEIC Q&A
+  let ucFollowers = document.querySelectorAll('div.uc-card p.uc-card-icon a.uc-card-icon-follow');
+  [].forEach.call(ucFollowers, function(follower) {
+    follower.addEventListener('click', sendFollowUcRequest);
+  });
+
+  // Thingy examples
   let itemCheckers = document.querySelectorAll('article.card li.item input[type=checkbox]');
   [].forEach.call(itemCheckers, function(checker) {
     checker.addEventListener('change', sendItemUpdateRequest);
@@ -55,6 +63,13 @@ function sendDeleteItemRequest() {
   sendAjaxRequest('delete', '/api/item/' + id, null, itemDeletedHandler);
 }
 
+function sendFollowUcRequest() {
+  let id = this.closest('div.uc-card').getAttribute('data-id');
+  let element = document.querySelector('div.uc-card[data-id="' + id + '"] a.uc-card-icon-follow i');
+
+  sendAjaxRequest('post', 'api/follow/' + id, {follow: element.classList.contains('far')}, ucFollowHandler);
+}
+
 function sendCreateItemRequest(event) {
   let id = this.closest('article').getAttribute('data-id');
   let description = this.querySelector('input[name=description]').value;
@@ -108,6 +123,20 @@ function itemDeletedHandler() {
   let item = JSON.parse(this.responseText);
   let element = document.querySelector('li.item[data-id="' + item.id + '"]');
   element.remove();
+}
+
+function ucFollowHandler() {
+  // if (this.status != 200) window.location = '/';
+  let uc = JSON.parse(this.responseText);
+  let element = document.querySelector('div.uc-card[data-id="' + uc.id + '"] a.uc-card-icon-follow i');
+
+  if (element.classList.contains('fas')) {
+    element.classList.remove('fas');
+    element.classList.add('far');
+  } else {
+    element.classList.remove('far');
+    element.classList.add('fas');
+  }
 }
 
 function cardDeletedHandler() {

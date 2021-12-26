@@ -1,8 +1,7 @@
-
 <div class="col-md-6 col-lg-4 mb-2 px-1">
-  <div class="card h-100" data-id="{{ $uc->id }}">
+  <div class="card uc-card h-100" data-id="{{ $uc->id }}">
     <div class="card-body">
-      <h5 class="card-title"><a href="{{ url('/ucs/'.$uc->id) }}">{{ $uc->name }}</a></h5>
+      <h5 class="card-title me-4"><a href="{{ url('/ucs/'.$uc->id) }}">{{ $uc->name }}</a></h5>
       <h6 class="card-subtitle mt-1 mb-2"><span class="badge bg-info text-dark">{{ $uc->code }}</span></h6>
       <p class="card-text">
         {{ substr($uc->description, 0, 100) }}
@@ -13,15 +12,26 @@
       
       <p class="card-text">
         <small class="text-muted">Docentes: </small>
+        @php
+          $teachers = $uc->teachers()->orderBy('name')->take(5)->get();
+        @endphp
+        @foreach($teachers as $teacher)
+          <small class="text-muted"> {{ $teacher->name }}; </small>
+        @endforeach
       </p>
-      <!-- TODO listar os primeiros 3 docentes docentes -->
-      <?php //echo $uc->teachers()->orderBy('code')->get() ?>
 
-      @if (Auth::check()) <!-- TODO e nao admin-->
-      <p class="text-end mb-0">
-        <!-- TODO se ainda ja segue, este user esta nos followers icon: fas fa-heart, senao far fa-heart -->
-        <!-- TODO seguir -->
-        <a href="#" class="card-link"><i class="far fa-heart text-danger"></i></a>
+      @php
+        $teachers_emails = $uc->teachers()->pluck('email', 'id')->toArray(); 
+      @endphp
+      <!-- TODO: depois change para Professor nao pode seguir uma cadeira , so debug agora -->
+      @if ( Auth::check() && !in_array(Auth::user()->email, $teachers_emails) ) <!-- TODO e nao admin-->
+      <p class="uc-card-icon p-4">
+        
+        <!-- TODO seguir href -->
+        <a href="#" class="card-link uc-card-icon-follow">
+          <i class="{{ in_array(Auth::user()->email, $uc->followers()->pluck('email', 'id')->toArray() )?'fas':'far' }} fa-heart text-danger"></i>
+          <!-- <i class="far fa-heart text-danger"></i> -->
+        </a>
       </p>
       @endif
     </div>

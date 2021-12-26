@@ -38,6 +38,13 @@
   font-size: 4rem;
 }
 
+/* UCS PAGE */
+.uc-card-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 /* FOOTER */
 footer > p {
   font-size: small;
