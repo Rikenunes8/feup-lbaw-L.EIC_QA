@@ -16,7 +16,6 @@ class UcController extends Controller
      */
     public function list()
     {
-        // $this->authorize('show', Uc::class); // // there is no restrictions
         $ucs = Uc::orderBy('name')->get();
         return view('pages.ucs', ['ucs' => $ucs]);
     }
@@ -30,15 +29,17 @@ class UcController extends Controller
     public function show($id)
     {
         $uc = Uc::find($id);
-        // $this->authorize('show', $uc); // there is no restrictions
         return view('pages.uc', ['uc' => $uc]);
     }
 
-    public function follow(Request $request, $id) {
-        $uc = Uc::find($id);
-        // $this->authorize('follow', $uc);
-        $follow = $request->input('follow');
+    public function follow(Request $request, $id) 
+    {
+        if (!Auth::check()) return redirect('/login');
         
+        $uc = Uc::find($id);
+        $this->authorize('follow', $uc);
+        
+        $follow = $request->input('follow');
         if ($follow == 'true') {
             $uc->followers()->attach(Auth::user()->id);
         } else {
@@ -57,7 +58,7 @@ class UcController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
         $this->authorize('create', Uc::class);
-        return view('pages.ucCreateForm');
+        return view('pages.admin.forms.uc.create');
     }
 
     /**
@@ -92,7 +93,7 @@ class UcController extends Controller
         if (!Auth::check()) return redirect('/login');
         $uc = Uc::find($id);
         $this->authorize('update', $uc);
-        return view('pages.ucEditForm', ['uc' => $uc]);
+        return view('pages.admin.forms.uc.edit', ['uc' => $uc]);
     }
     
     /**
@@ -152,20 +153,14 @@ class UcController extends Controller
 
         $uc = Uc::find($uc_id);
         $teacher = User::find($user_id);      
-        $result = false;
-        
+          
         if (isset($uc) && isset($teacher)) {
             $this->authorize('teacher', $uc, $teacher);
-            $uc->teachers()->save($teacher);
-            /*
-            $result =   DB::insert('INSERT INTO teacher_uc (id_uc, id_teacher) VALUES (:id_uc, :id_teacher)', [
-                            'id_uc' => $uc->id, 
-                            'id_teacher' => $teacher->id
-                        ]);
-            */
+            $uc->teachers()->attach($user_id);
+            return "Success";
         }
         
-        return $result;
+        return "Error";
     }
 
     /**
@@ -181,19 +176,13 @@ class UcController extends Controller
 
         $uc = Uc::find($uc_id);
         $teacher = User::find($user_id);
-        $result = false;
     
         if (isset($uc) && isset($teacher)) {
             $this->authorize('teacher', $uc, $teacher);
-            $uc->teachers()::where('id_teacher', $teacher->id)->delete();
-            /*
-            $result =   DB::delete ('DELETE FROM teacher_uc WHERE id_uc=:id_uc AND id_teacher=:id_teacher', [
-                            'id_uc' => $uc->id, 
-                            'id_teacher' => $teacher->id
-                        ]);
-            */
+            $uc->teachers()->detach($user_id);
+            return "Success";
         }
         
-        return $result;
+        return "Error";
     }
 }

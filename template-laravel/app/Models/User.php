@@ -41,6 +41,18 @@ class User extends Authenticatable
 
     // --------------- L.EIC Q&A -----------------
 
+    public function isAdmin() {
+      return $this->type == 'Admin';
+    }
+
+    public function isTeacher() {
+      return $this->type == 'Teacher';
+    }
+
+    public function isStudent() {
+      return $this->type == 'Student';
+    }
+
     /**
      * The interventions this user is author of.
      */

@@ -29,9 +29,21 @@ class UcPolicy
      * @param  Uc   $uc
      * @return Response|bool
      */
+    public function follow(User $user, Uc $uc)
+    {
+        return $user->type == 'Student' && !$user->blocked;
+    }
+
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  User   $user
+     * @param  Uc   $uc
+     * @return Response|bool
+     */
     public function create(User $user, Uc $uc)
     {
-        return $user->type == 'Admin';
+        return $user->type == 'Admin' && !$user->blocked;
     }
 
     /**
@@ -43,7 +55,7 @@ class UcPolicy
      */
     public function update(User $user, Uc $uc)
     {
-        return $user->type == 'Admin';
+        return $user->type == 'Admin' && !$user->blocked;
     }
 
     /**
@@ -55,7 +67,7 @@ class UcPolicy
      */
     public function delete(User $user, Uc $uc)
     {
-        return $user->type == 'Admin';
+        return $user->type == 'Admin' && !$user->blocked;
     }
 
     /**
@@ -68,6 +80,6 @@ class UcPolicy
      */
     public function teacher(User $user, Uc $uc, User $teacher)
     {
-        return $user->type == 'Admin' && $teacher->type == 'Teacher';
+        return $user->type == 'Admin' && $teacher->type == 'Teacher' && !$user->blocked;
     }
 }

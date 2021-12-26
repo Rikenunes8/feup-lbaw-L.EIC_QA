@@ -58,9 +58,9 @@ Route::post('api/answers/{id}/report'   , 'InterventionController@report');
 Route::post('api/answers/{id}/validate' , 'InterventionController@validate');
 Route::post('api/comments/{id}/report'  , 'InterventionController@report');
 
-Route::post('api/follow/{uc_id}', 'UcController@follow');
+Route::post('api/ucs/follow/{uc_id}', 'UcController@follow');
 
-Route::post('api/users/{id}/notifications/{not_id}/read', 'NotificationController@read');
+Route::post('api/notifications/read/{not_id}', 'NotificationController@read');
 
 
 // Interventions - Questions
@@ -73,31 +73,30 @@ Route::post('questions/{id}/edit'     , 'InterventionController@updateQuestion')
 Route::delete('questions/{id}/delete' , 'InterventionController@deleteQuestion');
 
 // Interventions - Answers
-// Necessario mandar na route o id da questao a que responde
-Route::get('questions/{id}/answers/create' , 'InterventionController@showCreateAnswerForm');
-Route::put('questions/{id}/answers/create' , 'InterventionController@createAnswer');
-Route::get('answers/{id}/edit'      , 'InterventionController@showEditAnswerForm');
-Route::post('answers/{id}/edit'     , 'InterventionController@updateAnswer');
-Route::delete('answers/{id}/delete' , 'InterventionController@deleteAnswer');
+Route::get('questions/{id}/answers/create', 'InterventionController@showCreateAnswerForm');
+Route::put('questions/{id}/answers/create', 'InterventionController@createAnswer');
+Route::get('answers/{id}/edit'            , 'InterventionController@showEditAnswerForm');
+Route::post('answers/{id}/edit'           , 'InterventionController@updateAnswer');
+Route::delete('answers/{id}/delete'       , 'InterventionController@deleteAnswer');
 
 // Interventions - Comments
-Route::get('answers/{id}/comments/create'        , 'InterventionController@showCreateCommentForm');
-Route::put('answers/{id}/comments/create'        , 'InterventionController@createComment');
-Route::get('comments/{id}/edit'     , 'InterventionController@showEditCommentForm');
-Route::post('comments/{id}/edit'    , 'InterventionController@updateComment');
-Route::delete('comments/{id}/delete', 'InterventionController@deleteComment');
+Route::get('answers/{id}/comments/create' , 'InterventionController@showCreateCommentForm');
+Route::put('answers/{id}/comments/create' , 'InterventionController@createComment');
+Route::get('comments/{id}/edit'           , 'InterventionController@showEditCommentForm');
+Route::post('comments/{id}/edit'          , 'InterventionController@updateComment');
+Route::delete('comments/{id}/delete'      , 'InterventionController@deleteComment');
 
 // Users
-Route::get('users'              , 'UserController@list');
-Route::get('users/{id}'         , 'UserController@show');
-Route::get('users/{id}/edit'    , 'UserController@showEditForm');
-Route::post('users/{id}/edit'   , 'UserController@update');
+Route::get('users'       , 'UserController@list');
+Route::get('users/{id}'  , 'UserController@show');
+Route::get('users/edit'  , 'UserController@showEditForm');
+Route::post('users/edit' , 'UserController@update');
 
 // Notifications
 /*
-Route::get('users/{id}/notifications'                   , 'NotificationController@list');
-Route::get('users/{id}/notifications/{not_id}'          , 'NotificationController@show');
-Route::delete('users/{id}/notifications/{not_id}/delete', 'NotificationController@delete');
+Route::get('notifications'                   , 'NotificationController@list');
+Route::get('notifications/{not_id}'          , 'NotificationController@show');
+Route::delete('notifications/{not_id}/delete', 'NotificationController@delete');
 */
 
 // UCs

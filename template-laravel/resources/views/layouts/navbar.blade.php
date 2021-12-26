@@ -13,14 +13,13 @@
         <li><a class="nav-link pt-0" href="{{ url('/...') }}"><i class="fas fa-search"></i> Pesquisar</a></li>
       </ul>
           
-      @if (Auth::check()) 
-      <!-- TODO logado, mas tambem tem de ser administrador!  -->
-      <span class="navbar-text text-uppercase pt-3">Administração</span>
-      <ul class="text-decoration-none list-unstyled ps-3">
-        <li><a class="nav-link pt-0" href="{{ url('/admin/users') }}"><i class="fas fa-user-cog"></i> Gerir Contas</a></li>
-        <li><a class="nav-link pt-0" href="{{ url('/admin/ucs') }}"><i class="fas fa-tags"></i> Gerir UCs</a></li>
-        <li><a class="nav-link pt-0" href="{{ url('/admin/reports') }}"><i class="fas fa-exclamation-triangle"></i> Reportes</a></li>
-      </ul>
+      @if (Auth::check() && Auth::user()->isAdmin()) 
+        <span class="navbar-text text-uppercase pt-3">Administração</span>
+        <ul class="text-decoration-none list-unstyled ps-3">
+          <li><a class="nav-link pt-0" href="{{ url('/admin/users') }}"><i class="fas fa-user-cog"></i> Gerir Contas</a></li>
+          <li><a class="nav-link pt-0" href="{{ url('/admin/ucs') }}"><i class="fas fa-tags"></i> Gerir UCs</a></li>
+          <li><a class="nav-link pt-0" href="{{ url('/admin/reports') }}"><i class="fas fa-exclamation-triangle"></i> Reportes</a></li>
+        </ul>
       @endif
 
       <hr>

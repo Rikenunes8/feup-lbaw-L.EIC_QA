@@ -20,18 +20,13 @@
         @endforeach
       </p>
 
-      @php
-        $teachers_emails = $uc->teachers()->pluck('email', 'id')->toArray(); 
-      @endphp
-      <!-- TODO: depois change para Professor nao pode seguir uma cadeira , so debug agora -->
-      @if ( Auth::check() && !in_array(Auth::user()->email, $teachers_emails) ) <!-- TODO e nao admin-->
+      @if ( Auth::check() && Auth::user()->isStudent() ) <!-- TODO e nao admin-->
       <p class="uc-card-icon p-4">
         
-        <!-- TODO seguir href -->
         <a href="#" class="card-link uc-card-icon-follow">
           <i class="{{ in_array(Auth::user()->email, $uc->followers()->pluck('email', 'id')->toArray() )?'fas':'far' }} fa-heart text-danger"></i>
-          <!-- <i class="far fa-heart text-danger"></i> -->
         </a>
+        
       </p>
       @endif
     </div>

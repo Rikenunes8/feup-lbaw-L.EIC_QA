@@ -15,9 +15,8 @@
             
       <div class="flex-shrink-0 dropdown">
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdown-user" data-bs-toggle="dropdown" aria-expanded="false">
-          <!-- TODO o src da image vai corresponder á localizacao da Auth::user()->photo -->
-          @if ( file_exists( asset('images/users/'.Auth::user()->id) ) )
-          <img src="{{ asset('images/users/'.Auth::user()->id.'.jpg') }}" alt="profile-photo" id="profile-photo" class="rounded-circle w-32">
+          @if ( file_exists( asset('images/users/'.Auth::user()->photo) ) )
+          <img src="{{ asset('images/users/'.Auth::user()->photo.'.jpg') }}" alt="profile-photo" id="profile-photo" class="rounded-circle w-32">
           @else
           <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo" id="profile-photo" class="rounded-circle w-32">
           @endif
