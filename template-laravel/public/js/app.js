@@ -30,6 +30,7 @@ function addEventListeners() {
   let cardCreator = document.querySelector('article.card form.new_card');
   if (cardCreator != null)
     cardCreator.addEventListener('submit', sendCreateCardRequest);
+  // ----
 }
 
 function encodeForAjax(data) {
@@ -49,6 +50,28 @@ function sendAjaxRequest(method, url, data, handler) {
   request.send(encodeForAjax(data));
 }
 
+function sendFollowUcRequest() {
+  let id = this.closest('div.uc-card').getAttribute('data-id');
+  let element = document.querySelector('div.uc-card[data-id="' + id + '"] a.uc-card-icon-follow i');
+  
+  sendAjaxRequest('post', 'api/follow/' + id, {follow: element.classList.contains('far')}, ucFollowHandler);
+}
+
+function ucFollowHandler() {
+  if (this.status != 200) window.location = '/';
+  let uc = JSON.parse(this.responseText);
+  let element = document.querySelector('div.uc-card[data-id="' + uc.id + '"] a.uc-card-icon-follow i');
+
+  if (element.classList.contains('fas')) {
+    element.classList.remove('fas');
+    element.classList.add('far');
+  } else {
+    element.classList.remove('far');
+    element.classList.add('fas');
+  }
+}
+
+// Thingy examples
 function sendItemUpdateRequest() {
   let item = this.closest('li.item');
   let id = item.getAttribute('data-id');
@@ -61,13 +84,6 @@ function sendDeleteItemRequest() {
   let id = this.closest('li.item').getAttribute('data-id');
 
   sendAjaxRequest('delete', '/api/item/' + id, null, itemDeletedHandler);
-}
-
-function sendFollowUcRequest() {
-  let id = this.closest('div.uc-card').getAttribute('data-id');
-  let element = document.querySelector('div.uc-card[data-id="' + id + '"] a.uc-card-icon-follow i');
-
-  sendAjaxRequest('post', 'api/follow/' + id, {follow: element.classList.contains('far')}, ucFollowHandler);
 }
 
 function sendCreateItemRequest(event) {
@@ -123,20 +139,6 @@ function itemDeletedHandler() {
   let item = JSON.parse(this.responseText);
   let element = document.querySelector('li.item[data-id="' + item.id + '"]');
   element.remove();
-}
-
-function ucFollowHandler() {
-  // if (this.status != 200) window.location = '/';
-  let uc = JSON.parse(this.responseText);
-  let element = document.querySelector('div.uc-card[data-id="' + uc.id + '"] a.uc-card-icon-follow i');
-
-  if (element.classList.contains('fas')) {
-    element.classList.remove('fas');
-    element.classList.add('far');
-  } else {
-    element.classList.remove('far');
-    element.classList.add('fas');
-  }
 }
 
 function cardDeletedHandler() {
@@ -205,5 +207,6 @@ function createItem(item) {
 
   return new_item;
 }
+// --- 
 
 addEventListeners();

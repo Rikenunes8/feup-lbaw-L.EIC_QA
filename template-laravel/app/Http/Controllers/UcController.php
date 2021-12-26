@@ -38,14 +38,13 @@ class UcController extends Controller
         $uc = Uc::find($id);
         // $this->authorize('follow', $uc);
         $follow = $request->input('follow');
-        // TODO
-        /*
-        if ($follow) {
-            $user = User::find(Auth::user()->id);
-            $uc->followers()->save($user);
-        } else 
-            $uc->followers()::where('id_student', Auth::user()->id)->delete();
-        */
+        
+        if ($follow == 'true') {
+            $uc->followers()->attach(Auth::user()->id);
+        } else {
+            $uc->followers()->detach(Auth::user()->id);
+        }
+
         return $uc;
     }
 
