@@ -25,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/cards';
+    protected $redirectTo = '/ucs'; // TODO : change to perfil depois como estiver no openAPI
     // TODO change to user profile
 
     /**

@@ -15,7 +15,7 @@
       <p>Aplicação desenvolvida no âmbito da Unidade Curricular Laboratório de Bases de Dados e Aplicações Web.</p>
       
       <div class="">
-        <b>Organização</b>:  <a href="https://sigarra.up.pt/feup/pt/web_page.inicial" class="app-link">FEUP</a>
+        <b>Organização</b>:  <a href="https://sigarra.up.pt/feup/pt/web_page.inicial" target="blank" class="app-link">FEUP</a>
       </div>
       <div class="">
         <b>Grupo</b>: lbaw2185

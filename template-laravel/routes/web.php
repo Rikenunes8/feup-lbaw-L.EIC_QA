@@ -10,9 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Home
-Route::get('/', function () { return view('pages.static.home'); });
 
+/*
 // Cards
 Route::get('cards', 'CardController@list');
 Route::get('cards/{id}', 'CardController@show');
@@ -30,9 +29,12 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
-
+*/
 
 // ------------ LEIC Q&A ---------------
+
+// Home
+Route::get('/', function () { return view('pages.static.home'); });
 
 // Static Pages
 Route::get('home'    , function () { return view('pages.static.home'    ); });
@@ -40,16 +42,13 @@ Route::get('about'   , function () { return view('pages.static.about'   ); });
 Route::get('faq'     , function () { return view('pages.static.faq'     ); });
 Route::get('contact' , function () { return view('pages.static.contact' ); });
 
-
 // Authentication
-/*
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
-*/
-// Missing Password Recovery Routes
+// Missing Password Recovery Routes : recover
 
 // API
 Route::post('api/questions/{id}/vote'   , 'InterventionController@vote');

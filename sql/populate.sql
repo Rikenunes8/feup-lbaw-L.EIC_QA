@@ -1,7 +1,7 @@
 -----------------------------------------
 -- TRANSACTIONS
 -----------------------------------------
-
+/*
 BEGIN TRANSACTION;
 
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE READ ONLY;
@@ -18,40 +18,45 @@ FROM "intervention" AS I
 WHERE type='question';
 
 END TRANSACTION;
-
+*/
 -----------------------------------------
 -- user
 -----------------------------------------
 
 -- Admin
-INSERT INTO "user" (id, mail, username, password, type, score, blocked, registry_date) VALUES (0, 'jfcunha@fe.up.pt', 'admin', 'admin', 'Admin', NULL, NULL, '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, score, blocked, registry_date) VALUES (1, 'percurso.academico@fe.up.pt', 'secretaria', 'p-academico', 'Admin', NULL, NULL, '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, score, blocked, registry_date) VALUES (0, 'jfcunha@fe.up.pt', 'admin', 'admin', 'Admin', NULL, NULL, '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, score, blocked, registry_date) VALUES (1, 'percurso.academico@fe.up.pt', 'secretaria', 'p-academico', 'Admin', NULL, NULL, '2021-11-01');
 
 -- Teacher
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (2, 'mbb@fc.up.pt', 'mbb', 'mbb', 'Teacher', 'Manuel Bernardo Martins Barbosa', 'My research interests lie in Cryptography and Information Security and Formal Verification.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (3, 'jpleal@fc.up.pt', 'jpleal', 'jpleal', 'Teacher', 'José Paulo de Vilhena Geraldes Leal', 'Para além de professor, interesso-me por escrever livros pedagógicos.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (4, 'ssn@fe.up.pt', 'ssn', 'ssn', 'Teacher', 'Sérgio Sobral Nunes', 'I am an Assistant Professor at the Department of Informatics Engineering at the Faculty of Engineering of the University of Porto (FEUP), and a Senior Researcher at the Centre for Information Systems and Computer Graphics at INESC TEC.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (5, 'tbs@fe.up.pt', 'tbs', 'tbs', 'Teacher', 'Tiago Boldt Pereira de Sousa', 'Conclui o Mestrado em Mestrado Integrado em Engenharia Informática e Computação em 2011 pela Universidade do Porto Faculdade de Engenharia. Publiquei 5 artigos em revistas especializadas.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (6, 'amflorid@fc.up.pt', 'amflorid', 'amflorid', 'Teacher', 'António Mário da Silva Marcos Florido', 'Sou investigador e membro da direção do Laboratório de Inteligência Artificial e Ciência de Computadores (LIACC) da FCUP.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (7, 'mricardo@fe.up.pt', 'mricardo', 'mricardo', 'Teacher', 'Manuel Alberto Pereira Ricardo', 'Licenciado, Mestre e Doutor (2000) em Engenharia Eletrotécnica e de Computadores, ramo de Telecomunicações, pela Faculdade de Engenharia da Universidade do Porto (FEUP).', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (8, 'pabranda@fc.up.pt', 'pabranda', 'pabranda', 'Teacher', 'Pedro Miguel Alves Brandão', 'Fiz o meu doutoramento no Computer Laboratory da Univ. de Cambridge sobre o tema de Body Sensor Networks. Obtive uma bolsa da Fundação para a Ciência e Tecnologia para suporte ao doutoramento.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (2, 'mbb@fc.up.pt', 'mbb', 'mbb', 'Teacher', 'Manuel Bernardo Martins Barbosa', 'My research interests lie in Cryptography and Information Security and Formal Verification.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (3, 'jpleal@fc.up.pt', 'jpleal', 'jpleal', 'Teacher', 'José Paulo de Vilhena Geraldes Leal', 'Para além de professor, interesso-me por escrever livros pedagógicos.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (4, 'ssn@fe.up.pt', 'ssn', 'ssn', 'Teacher', 'Sérgio Sobral Nunes', 'I am an Assistant Professor at the Department of Informatics Engineering at the Faculty of Engineering of the University of Porto (FEUP), and a Senior Researcher at the Centre for Information Systems and Computer Graphics at INESC TEC.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (5, 'tbs@fe.up.pt', 'tbs', 'tbs', 'Teacher', 'Tiago Boldt Pereira de Sousa', 'Conclui o Mestrado em Mestrado Integrado em Engenharia Informática e Computação em 2011 pela Universidade do Porto Faculdade de Engenharia. Publiquei 5 artigos em revistas especializadas.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (6, 'amflorid@fc.up.pt', 'amflorid', 'amflorid', 'Teacher', 'António Mário da Silva Marcos Florido', 'Sou investigador e membro da direção do Laboratório de Inteligência Artificial e Ciência de Computadores (LIACC) da FCUP.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (7, 'mricardo@fe.up.pt', 'mricardo', 'mricardo', 'Teacher', 'Manuel Alberto Pereira Ricardo', 'Licenciado, Mestre e Doutor (2000) em Engenharia Eletrotécnica e de Computadores, ramo de Telecomunicações, pela Faculdade de Engenharia da Universidade do Porto (FEUP).', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (8, 'pabranda@fc.up.pt', 'pabranda', 'pabranda', 'Teacher', 'Pedro Miguel Alves Brandão', 'Fiz o meu doutoramento no Computer Laboratory da Univ. de Cambridge sobre o tema de Body Sensor Networks. Obtive uma bolsa da Fundação para a Ciência e Tecnologia para suporte ao doutoramento.', '2021-11-01');
 
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (16, 'lpreis@fe.up.pt', 'lpreis', 'lpreis', 'Teacher', 'Luís Paulo Gonçalves dos Reis', 'Licenciado (1993), Mestre (1995) e Doutor (2003) em Engenharia Eletrotécnica e de Computadores (especializações em Informática e Sistemas, Informática Industrial, Inteligência Artificial/Robótica) pela Universidade do Porto.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (17, 'pfs@fe.up.pt', 'pfs', 'pfs', 'Teacher', 'Pedro Alexandre Guimarães Lobo Ferreira Souto', 'Professor Auxiliar, Departamento de Engenharia Informática.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (18, 'jmpc@fe.up.pt', 'jmpc', 'jmpc', 'Teacher', 'João Manuel Paiva Cardoso', 'Received a 5-year Electronics Engineering degree from the University of Aveiro in 1993. He has been involved in the organization of various international conferences.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (19, 'aaguiar@fe.up.pt', 'aaguiar', 'aaguiar', 'Teacher', 'Ademar Manuel Teixeira de Aguiar', 'Professor Associado na FEUP e investigador no INESC TEC, com mais de 30 anos de experiencia em desenvolvimento de software, especializou-se em arquitectura e design de software.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (20, 'jpf@fe.up.pt', 'jpf', 'jpf', 'Teacher', 'João Carlos Pascoal Faria', 'Doutoramento em Engenharia Electrotécnica e de Computadores pela FEUP em 1999, onde é atualmente Professor Associado no Departamento de Engenharia Informática e Diretor do Mestrado Integrado em Engenharia Informática e Computação.', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (21, 'villate@fe.up.pt', 'jev', 'jev', 'Teacher', 'Jaime Enrique Villate Matiz', 'Licenciatura em Física, 1983, Universidade Nacional de Colômbia, Bogotá. Licenciatura em Engenharia de Sistemas (Informática), 1984, Universidade Distrital de Bogotá, Colômbia. Master of  Arts em Física, 1987 e Ph. D. em Física, 1990...', '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, about, registry_date) VALUES (22, 'jmcruz@fe.up.pt', 'mmc', 'mmc', 'Teacher', 'José Manuel De Magalhães Cruz', 'Docente na FEUP', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (16, 'lpreis@fe.up.pt', 'lpreis', 'lpreis', 'Teacher', 'Luís Paulo Gonçalves dos Reis', 'Licenciado (1993), Mestre (1995) e Doutor (2003) em Engenharia Eletrotécnica e de Computadores (especializações em Informática e Sistemas, Informática Industrial, Inteligência Artificial/Robótica) pela Universidade do Porto.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (17, 'pfs@fe.up.pt', 'pfs', 'pfs', 'Teacher', 'Pedro Alexandre Guimarães Lobo Ferreira Souto', 'Professor Auxiliar, Departamento de Engenharia Informática.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (18, 'jmpc@fe.up.pt', 'jmpc', 'jmpc', 'Teacher', 'João Manuel Paiva Cardoso', 'Received a 5-year Electronics Engineering degree from the University of Aveiro in 1993. He has been involved in the organization of various international conferences.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (19, 'aaguiar@fe.up.pt', 'aaguiar', 'aaguiar', 'Teacher', 'Ademar Manuel Teixeira de Aguiar', 'Professor Associado na FEUP e investigador no INESC TEC, com mais de 30 anos de experiencia em desenvolvimento de software, especializou-se em arquitectura e design de software.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (20, 'jpf@fe.up.pt', 'jpf', 'jpf', 'Teacher', 'João Carlos Pascoal Faria', 'Doutoramento em Engenharia Electrotécnica e de Computadores pela FEUP em 1999, onde é atualmente Professor Associado no Departamento de Engenharia Informática e Diretor do Mestrado Integrado em Engenharia Informática e Computação.', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (21, 'villate@fe.up.pt', 'jev', 'jev', 'Teacher', 'Jaime Enrique Villate Matiz', 'Licenciatura em Física, 1983, Universidade Nacional de Colômbia, Bogotá. Licenciatura em Engenharia de Sistemas (Informática), 1984, Universidade Distrital de Bogotá, Colômbia. Master of  Arts em Física, 1987 e Ph. D. em Física, 1990...', '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, about, registry_date) VALUES (22, 'jmcruz@fe.up.pt', 'mmc', 'mmc', 'Teacher', 'José Manuel De Magalhães Cruz', 'Docente na FEUP', '2021-11-01');
 
 -- Student
-INSERT INTO "user" (id, mail, username, password, type, name, birthdate, entry_year, registry_date) VALUES ( 9, 'up201805455@fc.up.pt', 'up201805455', 'up201805455', 'Student', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, birthdate, entry_year, registry_date) VALUES (10, 'up201906852@fe.up.pt', 'up201906852', 'up201906852', 'Student', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, birthdate, entry_year, registry_date) VALUES (11, 'up201905427@fe.up.pt', 'up201905427', 'up201905427', 'Student', 'Patrícia Oliveira', '2001-03-19 17:00:00', 2019, '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, birthdate, entry_year, registry_date) VALUES (12, 'up201805327@fc.up.pt', 'up201805327', 'up201805327', 'Student', 'Tiago Antunes', '2000-06-10 11:00:00', 2018, '2021-11-01');
-INSERT INTO "user" (id, mail, username, password, type, name, birthdate, entry_year, registry_date, blocked, block_reason) VALUES (13, 'up201905046@fe.up.pt', 'up201905046', 'up201905046', 'Student', 'Margarida Ribeiro', '2001-06-10 11:00:00', 2019, '2021-11-01', TRUE, 'Abuso de permissões');
-INSERT INTO "user" (id, mail, username, password, type, name, birthdate, entry_year, registry_date, blocked, block_reason) VALUES (14, 'up201476549@fc.up.pt', 'up201476549', 'up201476549', 'Student', 'Francisco Mendes', '1996-11-07 11:00:00', 2014, '2021-11-01', TRUE, 'Conteúdos impróprios');
-INSERT INTO "user" (id, mail, username, password, type, name, birthdate, entry_year, registry_date, blocked, block_reason) VALUES (15, 'up201823452@fe.up.pt', 'up201823452', 'up201823452', 'Student', 'Ana Martins', '2000-08-24 11:00:00', 2018, '2021-11-01', TRUE, 'Conta foi hackeada');
+INSERT INTO "users" (id, email, username, password, type, name, birthdate, entry_year, registry_date) VALUES ( 9, 'up201805455@fc.up.pt', 'up201805455', 'up201805455', 'Student', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, birthdate, entry_year, registry_date) VALUES (10, 'up201906852@fe.up.pt', 'up201906852', 'up201906852', 'Student', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, birthdate, entry_year, registry_date) VALUES (11, 'up201905427@fe.up.pt', 'up201905427', 'up201905427', 'Student', 'Patrícia Oliveira', '2001-03-19 17:00:00', 2019, '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, birthdate, entry_year, registry_date) VALUES (12, 'up201805327@fc.up.pt', 'up201805327', 'up201805327', 'Student', 'Tiago Antunes', '2000-06-10 11:00:00', 2018, '2021-11-01');
+INSERT INTO "users" (id, email, username, password, type, name, birthdate, entry_year, registry_date, blocked, block_reason) VALUES (13, 'up201905046@fe.up.pt', 'up201905046', 'up201905046', 'Student', 'Margarida Ribeiro', '2001-06-10 11:00:00', 2019, '2021-11-01', TRUE, 'Abuso de permissões');
+INSERT INTO "users" (id, email, username, password, type, name, birthdate, entry_year, registry_date, blocked, block_reason) VALUES (14, 'up201476549@fc.up.pt', 'up201476549', 'up201476549', 'Student', 'Francisco Mendes', '1996-11-07 11:00:00', 2014, '2021-11-01', TRUE, 'Conteúdos impróprios');
+INSERT INTO "users" (id, email, username, password, type, name, birthdate, entry_year, registry_date, blocked, block_reason) VALUES (15, 'up201823452@fe.up.pt', 'up201823452', 'up201823452', 'Student', 'Ana Martins', '2000-08-24 11:00:00', 2018, '2021-11-01', TRUE, 'Conta foi hackeada');
+
+-- $2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W
+-- -- Password is 1234. Generated using Hash::make('1234')
+
+UPDATE "users" SET password = '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W';
 
 -----------------------------------------
 -- uc
