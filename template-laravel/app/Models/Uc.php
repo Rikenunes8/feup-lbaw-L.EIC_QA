@@ -14,6 +14,8 @@ class Uc extends Model
    */
   protected $table = 'uc';
 
+  protected $fillable = ['name', 'code', 'description'];
+
   /**
    * The interventions that belong to this uc. Only questions.
    */
