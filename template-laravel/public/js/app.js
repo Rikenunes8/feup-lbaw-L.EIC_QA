@@ -54,7 +54,7 @@ function sendFollowUcRequest() {
   let id = this.closest('div.uc-card').getAttribute('data-id');
   let element = document.querySelector('div.uc-card[data-id="' + id + '"] a.uc-card-icon-follow i');
   
-  sendAjaxRequest('post', 'api/ucs/follow/' + id, {follow: element.classList.contains('far')}, ucFollowHandler);
+  sendAjaxRequest('post', '/api/ucs/follow/' + id, {follow: element.classList.contains('far')}, ucFollowHandler);
 }
 
 function ucFollowHandler() {
