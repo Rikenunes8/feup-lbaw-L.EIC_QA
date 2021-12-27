@@ -58,7 +58,7 @@ class UcController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
         $this->authorize('showCreate', Uc::class);
-        return view('pages.admin.forms.uc.create');
+        return view('pages.forms.uc.create');
     }
 
     /**
@@ -93,7 +93,7 @@ class UcController extends Controller
         if (!Auth::check()) return redirect('/login');
         $uc = Uc::find($id);
         $this->authorize('update', $uc);
-        return view('pages.admin.forms.uc.edit', ['uc' => $uc]);
+        return view('pages.forms.uc.edit', ['uc' => $uc]);
     }
     
     /**

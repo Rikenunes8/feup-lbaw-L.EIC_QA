@@ -50,7 +50,7 @@ class InterventionController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $this->authorize('create', Intervention::class);
-        return view('pages.questionCreateForm');
+        return view('pages.pages.forms.question.create');
     }
 
     /**
@@ -90,7 +90,7 @@ class InterventionController extends Controller
         if (is_null($question)) return App::abort(404);
 
         $this->authorize('update', $question);
-        return view('pages.questionEditForm', ['question' => $question]);
+        return view('pages.forms.question.edit', ['question' => $question]);
     }
 
     /**
@@ -145,7 +145,7 @@ class InterventionController extends Controller
         $question = Intervention::questions()::find($id);
         if (is_null($question)) return App::abort(404);
         $this->authorize('create', Intervention::class);
-        return view('pages.answerCreateForm', ['question' => $question]);
+        return view('pages.forms.answer.create', ['question' => $question]);
     }
 
     /**
@@ -187,7 +187,7 @@ class InterventionController extends Controller
         $answer = Intervention::answers()::find($id);
         if (is_null($answer)) return App::abort(404);
         $this->authorize('update', $answer);
-        return view('pages.answerEditForm', ['answer' => $answer]);
+        return view('pages.forms.answer.edit', ['answer' => $answer]);
     }
 
     /**
@@ -242,7 +242,7 @@ class InterventionController extends Controller
         $answer = Intervention::answers()::find($id);
         if (is_null($answer)) return App::abort(404);
         $this->authorize('create', Intervention::class);
-        return view('pages.commentCreateForm', ['asnwer' => $answer]);
+        return view('pages.forms.comment.create', ['answer' => $answer]);
     }
 
     /**
@@ -288,7 +288,7 @@ class InterventionController extends Controller
         $answer = $comment->parent();
 
         $this->authorize('update', $comment);
-        return view('pages.commentEditForm', ['asnwer' => $answer]);
+        return view('pages.forms.comment.edit', ['comment' => $comment]);
     }
 
     /**
