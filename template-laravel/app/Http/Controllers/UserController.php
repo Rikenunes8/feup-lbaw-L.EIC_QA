@@ -61,8 +61,52 @@ class UserController extends Controller
         $user = User::find($id);
         $this->authorize('update', $user);
 
-        $uc->update($request->all());
+        $user->update($request->all());
 
         return redirect('/users/{{ $user->id }}'); 
+    }
+
+    /**
+     * Block user.
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function block(Request $request, $id)
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $user = User::find($id);
+        $this->authorize('block', $user);
+
+        if ($user->blocked) {
+            $user->blocked = FALSE;
+            $user->block_reason = NULL;
+        } else {
+            $user->blocked = TRUE;
+            $user->block_reason = $request->input('block_reason');
+        }
+        $user->save();
+
+        return $user;
+    }
+
+    /**
+     * Delete user.
+     * 
+     * @param  int  $id
+     * @return Response
+     */
+    public function delete($id)
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $user = User::find($id);
+        $this->authorize('delete', $user);
+
+        $user->delete();
+
+        return $user;
     }
 }

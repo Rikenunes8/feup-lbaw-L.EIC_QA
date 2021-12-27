@@ -91,6 +91,9 @@ Route::get('users'       , 'UserController@list');
 Route::get('users/edit'  , 'UserController@showEditForm');
 Route::post('users/edit' , 'UserController@update')->name('users.edit');
 Route::get('users/{id}'  , 'UserController@show');
+  // TODO: api?
+Route::post('api/users/{id}/block'    , 'UserController@block');
+Route::delete('api/users/{id}/delete' , 'UserController@delete'); // ??
 
 // Notifications
 /*
@@ -117,8 +120,6 @@ Route::get('search', 'InterventionController@list');
 
 // Admin
 Route::get('admin/users'                , 'AdminController@listUsers');
-Route::post('admin/users/{id}/block'    , 'AdminController@blockUser');
-Route::delete('admin/users/{id}/delete' , 'AdminController@deleteUser'); // ??
 Route::get('admin/ucs'                  , 'AdminController@listUcs');
 Route::get('admin/ucs/{id}/teachers'    , 'AdminController@listTeachers');
 Route::get('admin/reports'              , 'AdminController@listReports');
