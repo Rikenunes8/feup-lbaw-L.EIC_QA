@@ -65,9 +65,9 @@ Route::post('api/notifications/read/{not_id}', 'NotificationController@read');
 
 // Interventions - Questions
 Route::get('questions'                , 'InterventionController@list');
-Route::get('questions/{id}'           , 'InterventionController@show');
 Route::get('questions/create'         , 'InterventionController@showCreateQuestionForm');
 Route::put('questions/create'         , 'InterventionController@createQuestion');
+Route::get('questions/{id}'           , 'InterventionController@show');
 Route::get('questions/{id}/edit'      , 'InterventionController@showEditQuestionForm');
 Route::post('questions/{id}/edit'     , 'InterventionController@updateQuestion');
 Route::delete('questions/{id}/delete' , 'InterventionController@deleteQuestion');
@@ -88,9 +88,9 @@ Route::delete('comments/{id}/delete'      , 'InterventionController@deleteCommen
 
 // Users
 Route::get('users'       , 'UserController@list');
-Route::get('users/{id}'  , 'UserController@show');
 Route::get('users/edit'  , 'UserController@showEditForm');
 Route::post('users/edit' , 'UserController@update');
+Route::get('users/{id}'  , 'UserController@show');
 
 // Notifications
 /*
@@ -101,9 +101,9 @@ Route::delete('notifications/{not_id}/delete', 'NotificationController@delete');
 
 // UCs
 Route::get('ucs'                , 'UcController@list');
-Route::get('ucs/{id}'           , 'UcController@show');
 Route::get('ucs/create'         , 'UcController@showCreateForm');
 Route::put('ucs/create'         , 'UcController@create');
+Route::get('ucs/{id}'           , 'UcController@show');
 Route::get('ucs/{id}/edit'      , 'UcController@showEditForm');
 Route::post('ucs/{id}/edit'     , 'UcController@update');
 Route::delete('ucs/{id}/delete' , 'UcController@delete');

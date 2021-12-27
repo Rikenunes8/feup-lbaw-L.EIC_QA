@@ -58,7 +58,7 @@ footer > p {
 }
 
 @media (max-width: 767px) {
-  #form-login {
+  #form-login, #form-uc-create {
     width: 100%!important;
   }
 }
