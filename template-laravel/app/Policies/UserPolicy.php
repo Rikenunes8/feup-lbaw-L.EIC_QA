@@ -13,48 +13,48 @@ class UserPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  User  $userAuth
      * @param  User  $user
+     * @param  User  $user2
      * @return Response|bool
      */
-    public function show(User $userAuth, User $user)
+    public function show(User $user)
     {
-        return !$userAuth->blocked;
+        return !$user->blocked;
     }
 
     /**
      * Determine whether the user can update the model.
      *
-     * @param  User  $userAuth
      * @param  User  $user
+     * @param  User  $user2
      * @return Response|bool
      */
-    public function update(User $userAuth, User $user)
+    public function update(User $user, User $user2)
     {
-        return $userAuth->id == $user->id && !$userAuth->blocked;
+        return $user->id == $user2->id && !$user->blocked;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  User  $userAuth
      * @param  User  $user
+     * @param  User  $user2
      * @return Response|bool
      */
-    public function delete(User $userAuth, User $user)
+    public function delete(User $user, User $user2)
     {
-        return $userAuth->isAdmin();
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can block the model.
      *
-     * @param  User  $userAuth
      * @param  User  $user
+     * @param  User  $user2
      * @return Response|bool
      */
-    public function block(User $userAuth, User $user)
+    public function block(User $user, User $user2)
     {
-        return $userAuth->isAdmin();
+        return $user->isAdmin();
     }
 }
