@@ -45,6 +45,22 @@
   right: 0;
 }
 
+/*ADMIN PAGES*/
+div.admin-action-add {
+  position: relative;
+}
+
+div.admin-action-add a {
+  position: absolute;
+  right: 0.75rem;
+  top: 0;
+}
+
+td.admin-table-actions {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
 /* FOOTER */
 footer > p {
   font-size: small;
