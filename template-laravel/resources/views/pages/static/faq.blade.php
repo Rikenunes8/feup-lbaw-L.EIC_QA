@@ -4,7 +4,9 @@
 
 @section('content')
 <section id="faq-page">
-  <div class="accordion w-100" id="faq-accordion">
+  <h2>Preguntas Frequentes</h2>
+
+  <div class="accordion w-100 mt-3" id="faq-accordion">
 
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading-question-one">

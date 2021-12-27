@@ -1,7 +1,7 @@
 <div class="col-md-6 col-lg-4 mb-2 px-1">
   <div class="card uc-card h-100" data-id="{{ $uc->id }}">
     <div class="card-body">
-      <h5 class="card-title me-4"><a href="{{ url('/ucs/'.$uc->id) }}">{{ $uc->name }}</a></h5>
+      <h5 class="card-title me-4"><a href="{{ url('/ucs/'.$uc->id) }}" class="app-link">{{ $uc->name }}</a></h5>
       <h6 class="card-subtitle mt-1 mb-2"><span class="badge bg-info text-dark">{{ $uc->code }}</span></h6>
       <p class="card-text">
         {{ substr($uc->description, 0, 100) }}
