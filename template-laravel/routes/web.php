@@ -88,9 +88,9 @@ Route::delete('comments/{id}/delete'      , 'InterventionController@deleteCommen
 
 // Users
 Route::get('users'       , 'UserController@list');
-Route::get('users/edit'  , 'UserController@showEditForm');
-Route::post('users/edit' , 'UserController@update')->name('users.edit');
 Route::get('users/{id}'  , 'UserController@show');
+Route::get('users/{id}/edit'  , 'UserController@showEditForm');
+Route::post('users/{id}/edit' , 'UserController@update')->name('users.edit');
 
 Route::post('api/users/{id}/block'    , 'UserController@block');
 Route::delete('api/users/{id}/delete' , 'UserController@delete'); // ??

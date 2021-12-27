@@ -18,9 +18,9 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
+    /*protected $fillable = [
         'name', 'email', 'password',
-    ];
+    ];*/
 
     /**
      * The attributes that should be hidden for arrays.
@@ -41,6 +41,15 @@ class User extends Authenticatable
 
     // --------------- L.EIC Q&A -----------------
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+      'name', 'email', 'password', 'username', 'about', 'birthdate', 'photo',
+    ];
+    
     public function isAdmin() {
       return $this->type == 'Admin';
     }
