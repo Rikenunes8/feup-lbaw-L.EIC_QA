@@ -6,6 +6,11 @@ function addEventListeners() {
     follower.addEventListener('click', sendFollowUcRequest);
   });
 
+  let ucDeleters = document.querySelectorAll('td.admin-table-uc-actions a.admin-table-delete');
+  [].forEach.call(ucDeleters, function(deleter) {
+    deleter.addEventListener('click', sendDeleteUcRequest);
+  });
+
   // Thingy examples
   let itemCheckers = document.querySelectorAll('article.card li.item input[type=checkbox]');
   [].forEach.call(itemCheckers, function(checker) {
@@ -69,6 +74,19 @@ function ucFollowHandler() {
     element.classList.remove('far');
     element.classList.add('fas');
   }
+}
+
+function sendDeleteUcRequest() {
+  let id = this.closest('tr').getAttribute('data-id');
+
+  sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler);
+}
+
+function ucDeletedHandler() {
+  if (this.status != 200) window.location = '/';
+  let uc = JSON.parse(this.responseText);
+  let element = document.querySelector('tr[data-id="' + uc.id + '"]');
+  element.remove();
 }
 
 // Thingy examples

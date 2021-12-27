@@ -131,13 +131,10 @@ class UcController extends Controller
     public function delete(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
-        
         $uc = Uc::find($id);
         $this->authorize('delete', $uc);
-        
         $uc->delete();
-
-        return redirect('/admin/ucs');
+        return $uc;
     }
 
     /**

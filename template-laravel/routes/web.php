@@ -109,7 +109,7 @@ Route::post('ucs/create'        , 'UcController@create')->name('ucs.create');
 Route::get('ucs/{id}'           , 'UcController@show');
 Route::get('ucs/{id}/edit'      , 'UcController@showEditForm');
 Route::post('ucs/{id}/edit'     , 'UcController@update')->name('ucs.edit');
-Route::delete('ucs/{id}/delete' , 'UcController@delete');
+Route::delete('api/ucs/{id}/delete' , 'UcController@delete');
 
 Route::put('api/ucs/{uc_id}/teachers/{user_id}/add'       , 'UcController@addTeacher');
 Route::delete('api/ucs/{uc_id}/teachers/{user_id}/delete' , 'UcController@deleteTeacher');
