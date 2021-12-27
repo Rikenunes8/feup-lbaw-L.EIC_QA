@@ -18,79 +18,51 @@ class UserController extends Controller
         $users = User::where('type', '!=', "Admin")->orderBy('score', 'DESC')->get();
         return view('pages.users', ['users' => $users]);
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return Response
      */
-    public function show(User $user)
+    public function show($id)
     {
-        //
+        if (!Auth::check()) return redirect('/login');
+        $user = User::find($id);
+        $this->authorize('show', $user);
+        return view('pages.user', ['user' => $user]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return Response
      */
-    public function edit(User $user)
+    public function showEditForm($id)
     {
-        //
+        if (!Auth::check()) return redirect('/login');
+        $user = User::find($id);
+        $this->authorize('update', $user);
+        return view('pages.admin.forms.user.edit', ['user' => $user]);
     }
-
+    
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        //
-    }
+        if (!Auth::check()) return redirect('/login');
+        
+        $user = User::find($id);
+        $this->authorize('update', $user);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
+        $uc->update($request->all());
+
+        return redirect('/users/{{ $user->id }}'); 
     }
 }
