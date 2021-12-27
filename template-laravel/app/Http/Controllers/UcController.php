@@ -57,7 +57,7 @@ class UcController extends Controller
     public function showCreateForm()
     {
         if (!Auth::check()) return redirect('/login');
-        $this->authorize('create', Uc::class);
+        $this->authorize('showCreate', Uc::class);
         return view('pages.admin.forms.uc.create');
     }
 
@@ -72,7 +72,7 @@ class UcController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $uc = new Uc();
-        $this->authorize('create', Uc::class);
+        $this->authorize('create', $uc);
 
         $uc->name = $request->input('name');
         $uc->code = $request->input('code');

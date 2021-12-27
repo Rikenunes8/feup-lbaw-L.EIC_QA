@@ -66,30 +66,30 @@ Route::post('api/notifications/read/{not_id}', 'NotificationController@read');
 // Interventions - Questions
 Route::get('questions'                , 'InterventionController@list');
 Route::get('questions/create'         , 'InterventionController@showCreateQuestionForm');
-Route::put('questions/create'         , 'InterventionController@createQuestion');
+Route::post('questions/create'         , 'InterventionController@createQuestion')->name('questions.create');
 Route::get('questions/{id}'           , 'InterventionController@show');
 Route::get('questions/{id}/edit'      , 'InterventionController@showEditQuestionForm');
-Route::post('questions/{id}/edit'     , 'InterventionController@updateQuestion');
+Route::post('questions/{id}/edit'     , 'InterventionController@updateQuestion')->name('questions.edit');
 Route::delete('questions/{id}/delete' , 'InterventionController@deleteQuestion');
 
 // Interventions - Answers
 Route::get('questions/{id}/answers/create', 'InterventionController@showCreateAnswerForm');
-Route::put('questions/{id}/answers/create', 'InterventionController@createAnswer');
+Route::post('questions/{id}/answers/create', 'InterventionController@createAnswer')->name('answers.create');
 Route::get('answers/{id}/edit'            , 'InterventionController@showEditAnswerForm');
-Route::post('answers/{id}/edit'           , 'InterventionController@updateAnswer');
+Route::post('answers/{id}/edit'           , 'InterventionController@updateAnswer')->name('answers.edit');
 Route::delete('answers/{id}/delete'       , 'InterventionController@deleteAnswer');
 
 // Interventions - Comments
 Route::get('answers/{id}/comments/create' , 'InterventionController@showCreateCommentForm');
-Route::put('answers/{id}/comments/create' , 'InterventionController@createComment');
+Route::post('answers/{id}/comments/create' , 'InterventionController@createComment')->name('comments.create');
 Route::get('comments/{id}/edit'           , 'InterventionController@showEditCommentForm');
-Route::post('comments/{id}/edit'          , 'InterventionController@updateComment');
+Route::post('comments/{id}/edit'          , 'InterventionController@updateComment')->name('comments.edit');
 Route::delete('comments/{id}/delete'      , 'InterventionController@deleteComment');
 
 // Users
 Route::get('users'       , 'UserController@list');
 Route::get('users/edit'  , 'UserController@showEditForm');
-Route::post('users/edit' , 'UserController@update');
+Route::post('users/edit' , 'UserController@update')->name('users.edit');
 Route::get('users/{id}'  , 'UserController@show');
 
 // Notifications
@@ -102,10 +102,10 @@ Route::delete('notifications/{not_id}/delete', 'NotificationController@delete');
 // UCs
 Route::get('ucs'                , 'UcController@list');
 Route::get('ucs/create'         , 'UcController@showCreateForm');
-Route::put('ucs/create'         , 'UcController@create');
+Route::post('ucs/create'        , 'UcController@create')->name('ucs.create');
 Route::get('ucs/{id}'           , 'UcController@show');
 Route::get('ucs/{id}/edit'      , 'UcController@showEditForm');
-Route::post('ucs/{id}/edit'     , 'UcController@update');
+Route::post('ucs/{id}/edit'     , 'UcController@update')->name('ucs.edit');
 Route::delete('ucs/{id}/delete' , 'UcController@delete');
 
 Route::put('api/ucs/{uc_id}/teachers/{user_id}/add'       , 'UcController@addTeacher');
@@ -120,6 +120,6 @@ Route::get('admin/users'                , 'AdminController@listUsers');
 Route::post('admin/users/{id}/block'    , 'AdminController@blockUser');
 Route::delete('admin/users/{id}/delete' , 'AdminController@deleteUser'); // ??
 Route::get('admin/ucs'                  , 'AdminController@listUcs');
-Route::get('admin/ucs/{id}/teachers'    , 'AdminController@listUcs');
+Route::get('admin/ucs/{id}/teachers'    , 'AdminController@listTeachers');
 Route::get('admin/reports'              , 'AdminController@listReports');
 

@@ -23,7 +23,7 @@ class UcPolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can follow the model.
      *
      * @param  User   $user
      * @param  Uc   $uc
@@ -32,6 +32,17 @@ class UcPolicy
     public function follow(User $user, Uc $uc)
     {
         return $user->type == 'Student' && !$user->blocked;
+    }
+
+    /**
+     * Determine whether the user can view model's create form.
+     *
+     * @param  User   $user
+     * @return Response|bool
+     */
+    public function showCreate(User $user)
+    {
+        return $user->type == 'Admin' && !$user->blocked;
     }
 
     /**
@@ -45,7 +56,7 @@ class UcPolicy
     {
         return $user->type == 'Admin' && !$user->blocked;
     }
-
+    
     /**
      * Determine whether the user can update the model.
      *
