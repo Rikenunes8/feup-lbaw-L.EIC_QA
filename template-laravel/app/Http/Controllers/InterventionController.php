@@ -16,10 +16,9 @@ class InterventionController extends Controller
      */
     public function list()
     {
-        // $this->authorize('show', Intervention::class); // Anyone can see the list of questions
         $questions = Intervention::questions()->orderBy('votes', 'DESC')->get();
-        // $questions = DB::table('intervention')->where('type', 'question')->orderBy('votes')->get();
-        return view('pages.questions', ['questions' => $questions]); // TODO: this view doesn't exists yet
+
+        return view('pages.questions', ['questions' => $questions]);
     }
 
     /**
@@ -371,7 +370,7 @@ class InterventionController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function validate(Request $request, $id)
+    public function valid(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
 

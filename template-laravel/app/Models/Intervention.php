@@ -64,7 +64,7 @@ class Intervention extends Model
      * Filter query by question type.
      */
     public function scopeQuestions($query) {
-      return $query->whereType('question')->get();
+      return $query->whereType('question');
     }
     
 
@@ -72,7 +72,7 @@ class Intervention extends Model
      * Filter query by answer type.
      */
     public function scopeAnswers($query) {
-        return $query->whereType('answer')->get();
+        return $query->whereType('answer');
     }
     
 
@@ -80,6 +80,6 @@ class Intervention extends Model
      * Filter query by comment type.
      */
     public function scopeComments($query) {
-        return $query->whereType('comment')->get();
+        return $query->whereType('comment');
     }
 }
