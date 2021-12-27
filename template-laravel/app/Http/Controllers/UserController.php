@@ -46,7 +46,7 @@ class UserController extends Controller
         if (!Auth::check()) return redirect('/login');
         $user = User::find($id);
         $this->authorize('update', $user);
-        return view('pages.admin.forms.user.edit', ['user' => $user]);
+        return view('pages.forms.user.edit', ['user' => $user]);
     }
     
     /**
