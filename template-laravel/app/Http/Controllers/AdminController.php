@@ -16,6 +16,7 @@ class AdminController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
+        $this->authorize('show', User::class);
         $users = User::orderBy('username')->get();
         return view('pages.admin.users', ['users' => $users]);
     }
@@ -29,8 +30,25 @@ class AdminController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
+        $this->authorize('show', User::class);
         $ucs = Uc::orderBy('name')->get();
         return view('pages.admin.ucs', ['ucs' => $ucs]);
+    }
+
+    /**
+     * Shows all teachers responsible for an uc in admin format.
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function listTeachers($id)
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $this->authorize('show', User::class);
+        $uc = Uc::find($id);
+        $teachers = $uc->teachers;
+        return view('pages.admin.ucTeachers', ['uc' => $uc, 'teachers' => $teachers]);
     }
 
     /**
