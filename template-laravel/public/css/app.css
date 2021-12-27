@@ -45,13 +45,6 @@
   right: 0;
 }
 
-.user-card .card-title {
-  display: inline;
-}
-.user-card .users-profile-photo {
-  display: inline;
-}
-
 /* FOOTER */
 footer > p {
   font-size: small;
