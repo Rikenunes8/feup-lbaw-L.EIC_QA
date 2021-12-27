@@ -33,4 +33,28 @@ class UserPolicy
     {
         return $userAuth->id == $user->id && !$userAuth->blocked;
     }
+
+    /**
+     * Determine whether the user can delete the model.
+     *
+     * @param  User  $userAuth
+     * @param  User  $user
+     * @return Response|bool
+     */
+    public function delete(User $userAuth, User $user)
+    {
+        return $userAuth->isAdmin();
+    }
+
+    /**
+     * Determine whether the user can block the model.
+     *
+     * @param  User  $userAuth
+     * @param  User  $user
+     * @return Response|bool
+     */
+    public function block(User $userAuth, User $user)
+    {
+        return $userAuth->isAdmin();
+    }
 }
