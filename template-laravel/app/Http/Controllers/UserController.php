@@ -62,10 +62,9 @@ class UserController extends Controller
         
         $user = User::find($id);
         $this->authorize('update', $user);
-
         $user->update($request->all());
 
-        return redirect('/users/{{ $user->id }}'); 
+        return redirect('/users'); 
     }
 
     /**

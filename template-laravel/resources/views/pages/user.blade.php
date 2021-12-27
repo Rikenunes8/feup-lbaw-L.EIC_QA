@@ -18,7 +18,7 @@
         <span class="mt-1 mb-2">Aderiu a {{ date('d/m/Y', strtotime($user->registry_date)); }}</span>
         <h4>Sobre mim</h4> 
         <p>{{ $user->about }}</p>
-        <p>Aniversário: {{ date('d/m/Y', strtotime($user->birthdate)); }}</p>
+        <p>Aniversário: {{ date('m/d/Y', strtotime($user->birthdate)); }}</p>
         <h4>Contactos</h4> 
         <p>Email: {{ $user->email }}</p>
       </div>
