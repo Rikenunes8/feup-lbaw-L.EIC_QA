@@ -33,8 +33,8 @@ class AdminController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $this->authorize('show', User::class);
-        $ucs = Uc::orderBy('name')->paginate(10);
-        return view('pages.admin.ucs', compact('ucs'));
+        $ucs = Uc::orderBy('name')->get();
+        return view('pages.admin.ucs', ['ucs' => $ucs]);
     }
 
     /**
@@ -49,9 +49,11 @@ class AdminController extends Controller
 
         $this->authorize('show', User::class);
         $uc = Uc::find($id);
-        $uc_teachers_ids = $uc->teachers()->select('id')->get();
-        $teachers = User::teachers()->whereNotIn('id', $uc_teachers_ids)->get();
-        return view('pages.admin.ucTeachers', ['uc' => $uc, 'teachers' => $teachers]);
+        $teachersAssoc = $uc->teachers()->orderBy('name')->get();
+        $uc_teachers_ids = $teachersAssoc->pluck('id')->toArray();
+        $teachersNotAssoc = User::teachers()->whereNotIn('id', $uc_teachers_ids)->orderBy('name')->get();
+        
+        return view('pages.admin.ucTeachers', ['uc' => $uc, 'teachersAssoc' => $teachersAssoc, 'teachersNotAssoc' => $teachersNotAssoc]);
     }
 
     /**

@@ -7,7 +7,7 @@
 <section id="admin-ucs-page">
   <h2>Unidades Curriculares</h2> 
 
-  <div class="row my-3">
+  <div class="row mt-3 mb-5">
     <div class="col-12 admin-action-add">
       <small class="text-mutted">Gestão de Unidadades Curriculares</small>
       <a href="{{ url('ucs/create') }}" class="btn btn-primary text-white"><i class="fas fa-plus"></i></a>
@@ -17,7 +17,7 @@
   <div class="row"> 
     <div class="col-12">
       <div class="table-responsive">
-        <table class="table table-striped table-bordered caption-top">
+        <table id="admin-table" class="table table-striped table-bordered caption-top">
           <thead>
             <tr>
               <th scope="col">Nome</th>
@@ -47,12 +47,6 @@
           </tbody>
         </table>
       </div>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-12 d-flex justify-content-end">
-      {!! $ucs->links() !!}
     </div>
   </div>
   

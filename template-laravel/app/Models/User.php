@@ -105,27 +105,23 @@ class User extends Authenticatable
     /**
      * Filter query by Admin type.
      */
-    /*
     public function scopeAdmins($query) {
-        return $query->whereType('Admin')->get();
+        return $query->whereType('Admin');
     }
-    */
  
     /**
      * Filter query by Teacher type.
      */
-    /*
     public function scopeTeachers($query) {
-        return $query->whereType('Teacher')->get();
+        return $query->whereType('Teacher');
     }
-    */
+    
     
     /**
      * Filter query by Student type.
      */
-    /*
     public function scopeStudents($query) {
-        return $query->whereType('Student')->get();
+        return $query->whereType('Student');
     }
-    */
+    
 }

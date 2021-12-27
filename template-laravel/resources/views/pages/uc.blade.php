@@ -25,12 +25,18 @@
           @php
             $teachers = $uc->teachers()->orderBy('name')->get();
           @endphp
-          @foreach($teachers as $teacher)
+          @if (count($teachers) != 0)
+            @foreach($teachers as $teacher)
+              <tr>
+                <th scope="row"><a href="{{ url('/users/'.$teacher->id) }}" class="app-link">{{ $teacher->name }}</a></th>
+                <td>{{ $teacher->email }}</td>
+              </tr>
+            @endforeach
+          @else
             <tr>
-              <th scope="row"><a href="{{ url('/users/'.$teacher->id) }}" class="app-link">{{ $teacher->name }}</a></th>
-              <td>{{ $teacher->email }}</td>
+              <td colspan="2">Nenhum Docente</td>
             </tr>
-          @endforeach
+          @endif
         </tbody>
       </table>
       </div>

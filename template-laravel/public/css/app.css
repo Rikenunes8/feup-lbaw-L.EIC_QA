@@ -10,13 +10,25 @@
 }
 
 /*TODO improve links colors*/
-/* SIDEBAR AND APP LINKS */
-.nav-link, .navbar-text, .app-link {
+/* APP LINKS */
+.app-link {
+  color: rgb(255, 152, 0);
+}
+
+.app-link:hover, .app-link:focus {
+  color: rgb(255, 87, 34);
+}
+
+section#faq-page .accordion-button:not(.collapsed) {
+  color: #ff9800;
+}
+/* SIDEBAR ADD TABLE LINKS*/
+.nav-link, .navbar-text, table .app-link {
   color: rgb(41, 41, 41);
 }
 
 .nav-link:hover, .nav-link:focus, 
-.app-link:hover, .app-link:focus {
+table .app-link:hover, table .app-link:focus {
   color: gray;
 }
 

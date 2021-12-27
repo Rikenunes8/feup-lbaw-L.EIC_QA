@@ -33,13 +33,27 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.css"
       rel="stylesheet"
     />
+    <!-- DataTable -->
+    <link
+      href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css"
+      rel="stylesheet"
+    />
 
+    <!-- App CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <script type="text/javascript">
         // Fix for Firefox autofocus CSS bug
         // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
     </script>
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- DataTable -->
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- App JS -->
     <script type="text/javascript" src="{{ asset('js/app.js') }}" defer></script>
   </head>
   <body>
