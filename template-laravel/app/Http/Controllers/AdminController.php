@@ -49,7 +49,8 @@ class AdminController extends Controller
 
         $this->authorize('show', User::class);
         $uc = Uc::find($id);
-        $teachers = $uc->teachers;
+        $uc_teachers_ids = $uc->teachers()->select('id')->get();
+        $teachers = User::teachers()->whereNotIn('id', $uc_teachers_ids)->get();
         return view('pages.admin.ucTeachers', ['uc' => $uc, 'teachers' => $teachers]);
     }
 
