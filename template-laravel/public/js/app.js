@@ -210,10 +210,3 @@ function createItem(item) {
 // --- 
 
 addEventListeners();
-
-$(document).ready(function () {
-  $('#admin-ucs-table').DataTable({
-    "pagingType": "simple_numbers"
-  });
-  $('.dataTables_length').addClass('bs-select');
-});

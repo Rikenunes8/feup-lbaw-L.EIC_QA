@@ -33,8 +33,8 @@ class AdminController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $this->authorize('show', User::class);
-        $ucs = Uc::orderBy('name')->get();
-        return view('pages.admin.ucs', ['ucs' => $ucs]);
+        $ucs = Uc::orderBy('name')->paginate(10);
+        return view('pages.admin.ucs', compact('ucs'));
     }
 
     /**

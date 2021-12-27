@@ -36,6 +36,10 @@
         </tbody>
       </table>
 
+      <div class="d-flex">
+        {!! $ucs->links() !!}
+      </div>
+
     </div>
   </div>
 
