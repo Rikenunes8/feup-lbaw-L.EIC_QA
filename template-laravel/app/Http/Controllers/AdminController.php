@@ -33,8 +33,8 @@ class AdminController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $this->authorize('show', User::class);
-        $ucs = Uc::orderBy('name')->paginate(10);
-        return view('pages.admin.ucs', compact('ucs'));
+        $ucs = Uc::orderBy('name')->get();
+        return view('pages.admin.ucs', ['ucs' => $ucs]);
     }
 
     /**
@@ -49,7 +49,7 @@ class AdminController extends Controller
 
         $this->authorize('show', User::class);
         $uc = Uc::find($id);
-        $teachers = $uc->teachers;
+        $teachers = $uc->teachers()->orderBy('name')->get();
         return view('pages.admin.ucTeachers', ['uc' => $uc, 'teachers' => $teachers]);
     }
 
