@@ -32,7 +32,10 @@ class UserController extends Controller
         if (!Auth::check()) return redirect('/login');
         $user = User::find($id);
         $this->authorize('show', $user);
-        return view('pages.user', ['user' => $user]);
+        $questions = $user->interventions()->questions()->orderBy('votes', 'DESC')->paginate(2, ['*'], 'questionsPage');
+        $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->paginate(2, ['*'], 'answersPage');
+
+        return view('pages.user', compact('user', 'questions', 'answers'));
     }
 
     /**
