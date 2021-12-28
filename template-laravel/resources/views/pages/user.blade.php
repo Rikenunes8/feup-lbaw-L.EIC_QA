@@ -42,9 +42,10 @@
             </div>
           </div>
         </div>
+        <hr>
       </section>
 
-      <section>
+      <section class="mt-5">
         <h3 class="me-4">As minhas Questões</h3>
         
         <div class="row">
@@ -56,9 +57,10 @@
             {!! $questions->links() !!}
           </div>
         </div>
+        <hr>
       </section>
         
-      <section>
+      <section class="mt-5">
         <h3 class="me-4">As minhas Respostas</h3>
 
         <div class="row">
@@ -70,6 +72,7 @@
             {!! $answers->links() !!}
           </div>
         </div>
+        <hr>
       </section>
     </div>
   </div>
