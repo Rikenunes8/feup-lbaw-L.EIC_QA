@@ -26,6 +26,11 @@ function addEventListeners() {
     deleter.addEventListener('click', sendDeleteUserRequest);
   });
 
+  let userBlockers = document.querySelectorAll('td.admin-table-user-actions a.admin-table-block');
+  [].forEach.call(userBlockers, function(blocker) {
+    blocker.addEventListener('click', sendBlockUserRequest);
+  });
+
   // Thingy examples
   let itemCheckers = document.querySelectorAll('article.card li.item input[type=checkbox]');
   [].forEach.call(itemCheckers, function(checker) {
@@ -103,18 +108,27 @@ function sendDeleteUserRequest() {
   sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
 }
 
+function sendBlockUserRequest(event) {
+  let user = this.closest('tr');
+  let id = user.getAttribute('data-id');
+  let reason = user.querySelector('input[name=reason]').value;
+
+  if (reason != '')
+    sendAjaxRequest('post', '/api/users/' + id + '/block', {block_reason: reason}, userBlockedHandler);
+
+  event.preventDefault();
+}
+
+
 function ucFollowHandler() {
   if (this.status != 200) window.location = '/';
   let uc = JSON.parse(this.responseText);
   let element = document.querySelector('div.uc-card[data-id="' + uc.id + '"] a.uc-card-icon-follow i');
 
-  if (element.classList.contains('fas')) {
-    element.classList.remove('fas');
-    element.classList.add('far');
-  } else {
-    element.classList.remove('far');
-    element.classList.add('fas');
-  }
+  if (element.classList.contains('fas'))
+    element.classList.replace('fas', 'far');
+  else 
+    element.classList.replace('far', 'fas');
 }
 
 function ucDeletedHandler() {
@@ -161,6 +175,30 @@ function userDeletedHandler() {
   let user = JSON.parse(this.responseText);
   let element = document.querySelector('tr[data-id="' + user.id + '"]');
   element.remove();
+}
+
+function userBlockedHandler() {
+  if (this.status != 200) window.location = '/';
+  let user = JSON.parse(this.responseText);
+  let input = document.querySelector('tr[data-id="' + user.id + '"] input[name=reason]');
+  
+  input.disabled = user.blocked;
+  if (!user.blocked)
+    input.setAttribute('value', '');
+  
+  let element = document.querySelector('tr[data-id="' + user.id + '"] td.admin-table-user-actions a.admin-table-block');
+  let icon = element.querySelector('i');
+  let span = element.querySelector('span');
+
+  if (user.blocked) {
+    element.classList.replace('btn-info', 'btn-warning');
+    icon.classList.replace('fa-lock', 'fa-unlock');
+    span.innerHTML = "Unlock";
+  } else {
+    element.classList.replace('btn-warning', 'btn-info');
+    icon.classList.replace('fa-unlock', 'fa-lock');
+    span.innerHTML = "Lock";
+  }
 }
 
 // Thingy examples

@@ -40,13 +40,13 @@
                 <th scope="row"><a href="{{ url('/users/'.$user->id) }}" class="app-link">{{ $user->name }}</a></th>
                 <td>{{ $user->email }}</td>
                 <td>
-                  <input type="text" value="{{ $user->block_reason }}" {{ is_null($user->block_reason)?'':'disabled' }}>
+                  <input type="text" name="reason" value="{{ $user->block_reason }}" {{ is_null($user->block_reason)?'':'disabled' }}>
                 </td>
                 <td class="text-center admin-table-user-actions">
                   @if (is_null($user->block_reason))
-                    <a href="#" class="btn btn-info text-black me-1 admin-table-block"><i class="fas fa-lock"></i><span class="d-none">Lock</span></a>
+                    <a href="#" class="btn btn-info text-dark me-1 admin-table-block"><i class="fas fa-lock"></i><span class="d-none">Lock</span></a>
                   @else 
-                    <a href="#" class="btn btn-warning text-black me-1 admin-table-block"><i class="fas fa-unlock"></i><span class="d-none">Unlock</span></a>
+                    <a href="#" class="btn btn-warning text-dark me-1 admin-table-block"><i class="fas fa-unlock"></i><span class="d-none">Unlock</span></a>
                   @endif
                   <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="far fa-trash-alt"></i></a>
                 </td>
