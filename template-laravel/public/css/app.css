@@ -91,10 +91,24 @@ section#faq-page .accordion-button:not(.collapsed) {
   width: 88%
 }
 
-#question-page .question-page-actions {
+#question-page .question-detail .question-page-actions,
+#question-page .answer-detail .question-page-actions,
+#question-page .comment-detail .question-page-actions {
+  display: none;
   position: absolute;
   bottom: 1rem;
   right: 1rem;
+}
+
+#question-page .question-detail .card:hover .question-page-actions,
+#question-page .answer-detail .card:hover .question-page-actions,
+#question-page .comment-detail .card:hover .question-page-actions {
+  display: inherit;
+}
+
+#question-page .card-body > p:first-of-type {
+  margin-right: 3rem;
+  margin-bottom: 3rem;
 }
 
 /* UCS PAGE */

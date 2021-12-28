@@ -21,12 +21,20 @@
           <div class="col-11 card">
             <div class="card-body">
               <p>{{ $question->text }}</p>
+              @if ( Auth::check() )
               <div class="text-center question-page-actions">
+                @if ( !Auth::user()->isAdmin() )
                 <a href="{{ url('questions/'.$question->id.'/answers/create') }}" class="btn btn-info text-black me-1"><i class="fas fa-reply"></i></a>
+                @endif
+                @if ( Auth::user()->id == $question->id_author )
                 <a href="{{ url('questions/'.$question->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
-                <a href="#" class="btn btn-danger text-white question-page-delete me-1"><i class="fas fa-exclamation-triangle"></i></a>
+                @endif
+                <a href="#" class="btn btn-dark text-white question-page-delete me-1"><i class="fas fa-exclamation-triangle"></i></a>
+                @if ( Auth::user()->id == $question->id_author || Auth::user()->isAdmin() )
                 <a href="#" class="btn btn-danger text-white question-page-delete me-1"><i class="far fa-trash-alt"></i></a>
+                @endif
               </div>
+              @endif
             </div>          
           </div>
         </div>
@@ -44,12 +52,43 @@
             <div class="card-body">
               <p>{{ $answer->text }}</p>
               <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($answer->date)); }}, por {{ $answer->author->username }}</p>
-              <div class="text-center question-page-actions">
-                <a href="{{ url('questions/'.$question->id.'/answers/create') }}" class="btn btn-info text-black me-1"><i class="fas fa-reply"></i></a>
-                <a href="{{ url('questions/'.$question->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
-                <a href="#" class="btn btn-danger text-white question-page-delete me-1"><i class="fas fa-exclamation-triangle"></i></a>
-                <a href="#" class="btn btn-danger text-white question-page-delete me-1"><i class="far fa-trash-alt"></i></a>
+              @if ( Auth::check() )
+              <div class="text-center question-card-icon p-4">
+                @php
+                  $check = 'fa-check question-valid-icon';
+                  $times = 'fa-times question-invalid-icon';
+                  
+                  $valid = null;
+                  foreach ($answer->valid as $validation) {
+                    if ($validation->pivot->valid) $valid = true;
+                    else $valid = false;
+                  }
+                  
+                  $teachersResponsible = $question->uc->teachers()->wherePivot('id_teacher', '=', Auth::user()->id);
+                @endphp
+                @if ( is_null($valid) )
+                
+                @if ( $teachersResponsible->exists() )
+                <i class="fas {{ $check }} me-1"></i>
+                <i class="fas {{ $times }} me-1"></i>
+                @endif
+                @else 
+                <i class="fas {{ $valid ? $check : $times }}"></i>
+                @endif
               </div>
+              <div class="text-center question-page-actions">
+                @if ( !Auth::user()->isAdmin() )
+                <a href="{{ url('answers/'.$answer->id.'/comments/create') }}" class="btn btn-info text-black me-1"><i class="fas fa-reply"></i></a>
+                @endif
+                @if ( Auth::user()->id == $answer->id_author )
+                <a href="{{ url('answers/'.$answer->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
+                @endif
+                <a href="#" class="btn btn-dark text-white question-page-delete me-1"><i class="fas fa-exclamation-triangle"></i></a>
+                @if ( Auth::user()->id == $answer->id_author || Auth::user()->isAdmin() )
+                <a href="#" class="btn btn-danger text-white question-page-delete me-1"><i class="far fa-trash-alt"></i></a>
+                @endif
+              </div>
+              @endif
             </div>          
           </div>
         </div>
@@ -64,12 +103,17 @@
             <div class="card-body">
               <p>{{ $comment->text }}</p>
               <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($comment->date)); }}, por {{ $comment->author->username }}</p>
+              @if ( Auth::check() )
               <div class="text-center question-page-actions">
-                <a href="{{ url('questions/'.$question->id.'/answers/create') }}" class="btn btn-info text-black me-1"><i class="fas fa-reply"></i></a>
-                <a href="{{ url('questions/'.$question->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
-                <a href="#" class="btn btn-danger text-white question-page-delete me-1"><i class="fas fa-exclamation-triangle"></i></a>
+                @if ( Auth::user()->id == $comment->id_author )
+                <a href="{{ url('comments/'.$comment->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
+                @endif
+                <a href="#" class="btn btn-dark text-white question-page-delete me-1"><i class="fas fa-exclamation-triangle"></i></a>
+                @if ( Auth::user()->id == $comment->id_author || Auth::user()->isAdmin() )
                 <a href="#" class="btn btn-danger text-white question-page-delete me-1"><i class="far fa-trash-alt"></i></a>
+                @endif
               </div>
+              @endif
             </div>
           </div>
         </div>
