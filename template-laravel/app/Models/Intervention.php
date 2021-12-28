@@ -13,6 +13,19 @@ class Intervention extends Model
    */
   protected $table = 'intervention';
 
+
+  public function isQuestion() {
+    return $this->type == 'question';
+  }
+
+  public function isAnswer() {
+    return $this->type == 'answer';
+  }
+
+  public function isComment() {
+    return $this->type == 'comment';
+  }
+
   /**
    * The user this intervention belongs to.
    */

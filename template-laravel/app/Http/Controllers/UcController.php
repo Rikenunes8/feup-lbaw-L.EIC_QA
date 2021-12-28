@@ -150,8 +150,8 @@ class UcController extends Controller
         if (!Auth::check()) return redirect('/login');
         $uc = Uc::find($uc_id);
         $teacher = User::find($user_id);  
-        // TODO       
-        // $this->authorize('teacher', $uc, $teacher);
+            
+        $this->authorize('teacher', [$uc, $teacher]);
         $uc->teachers()->attach($user_id);
         return $teacher;
     }
@@ -168,8 +168,8 @@ class UcController extends Controller
         if (!Auth::check()) return redirect('/login');
         $uc = Uc::find($uc_id);
         $teacher = User::find($user_id);
-        // TODO
-        // $this->authorize('teacher', $uc, $teacher);
+        
+        $this->authorize('teacher', [$uc, $teacher]);
         $uc->teachers()->detach($user_id);
         return $teacher;
     }

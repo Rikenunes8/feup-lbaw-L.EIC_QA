@@ -31,7 +31,7 @@ class InterventionPolicy
      */
     public function show(User $user, Intervention $intervention)
     {
-        return $intervention->type == 'question';
+        return $intervention->isQuestion();
     }
 
     /**
@@ -43,7 +43,7 @@ class InterventionPolicy
      */
     public function create(User $user, Intervention $intervention)
     {
-        return $user->type != 'Admin' && !$user->blocked;
+        return $user->isAdmin() && !$user->blocked;
     }
 
     /**
@@ -68,7 +68,7 @@ class InterventionPolicy
      */
     public function delete(User $user, Intervention $intervention)
     {
-        return ($user->type == 'Admin' || $user->id == $intervention->id_author) && !$user->blocked;
+        return ($user->isAdmin() || $user->id == $intervention->id_author) && !$user->blocked;
     }
 
     /**
@@ -80,7 +80,7 @@ class InterventionPolicy
      */
     public function vote(User $user, Intervention $intervention)
     {
-        return $user->type != 'Admin' && $user->id != $intervention->id_author && !$user->blocked && $intervention->type != 'comment';
+        return $user->isAdmin() && $user->id != $intervention->id_author && !$user->blocked && !$intervention->isComment();
     }
 
     /**
@@ -92,7 +92,7 @@ class InterventionPolicy
      */
     public function validate(User $user, Intervention $intervention)
     {
-        return $user->type == 'Teacher' && $user->id != $intervention->id_author 
-                && !$user->blocked && $intervention->type == 'answer';
+        return $user->isTeacher() && $user->id != $intervention->id_author 
+                && !$user->blocked && $intervention->isAnswer();
     }
 }
