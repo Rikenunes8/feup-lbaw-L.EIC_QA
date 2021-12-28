@@ -30,13 +30,14 @@ class InterventionController extends Controller
     public function show($id)
     {
         $intervention = Intervention::find($id);
-        while ($intervention->type != 'question' && !is_null($intervention)) {
+        while (!$intervention->isQuestion() && !is_null($intervention)) {
             $intervention = $intervention->parent();
         }
         if (is_null($intervention)) return App::abort(404);
 
         $question = $intervention;
         $this->authorize('show', $question);
+        
         return view('pages.question', ['question' => $question]);
     }
 

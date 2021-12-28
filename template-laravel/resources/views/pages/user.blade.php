@@ -44,7 +44,7 @@
         </div>
         <hr>
       </section>
-
+      @if ( !$user->isAdmin() )
       <section class="mt-5">
         <h3 class="me-4">As minhas Questões</h3>
         
@@ -74,6 +74,7 @@
         </div>
         <hr>
       </section>
+      @endif
     </div>
   </div>
 </section>
