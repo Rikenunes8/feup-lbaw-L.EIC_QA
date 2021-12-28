@@ -12,15 +12,28 @@
       @else
         <h2 class="me-4">Perfil</h2> 
       @endif
-      <div>
-        <h3 class="me-4">{{ $user->name }}</h2> 
-        <span class="badge bg-info text-dark mt-1 mb-2">{{ $user->type }}</span>
-        <span class="mt-1 mb-2">Aderiu a {{ date('d/m/Y', strtotime($user->registry_date)); }}</span>
-        <h4>Sobre mim</h4> 
-        <p>{{ $user->about }}</p>
-        <p>Aniversário: {{ date('m/d/Y', strtotime($user->birthdate)); }}</p>
-        <h4>Contactos</h4> 
-        <p>Email: {{ $user->email }}</p>
+      <div class="row">
+        <div class="col-md-6 col-lg-4 mb-2 px-1">
+          @if ( file_exists( asset('images/users/'.$user->photo) ) )
+            <img src="{{ asset('images/users/'.$user->photo.'.jpg') }}" alt="profile-photo" id="profile-photo" class="w-75 h-75">
+          @else
+            <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo" id="profile-photo" class="w-75 h-75">
+          @endif
+        </div>
+        <div class="col-md-6 col-lg-8 mb-2 px-1">
+          <h3 class="me-4">{{ $user->name }}</h2> 
+          <span class="badge bg-info text-dark mt-1 mb-2">{{ $user->type }}</span>
+          <span class="mt-1 mb-2">Aderiu a {{ date('d/m/Y', strtotime($user->registry_date)); }}</span>
+          <h4>Sobre mim</h4>
+          <div class="pl-3"> 
+            <p>{{ $user->about }}</p>
+            <p>Aniversário: {{ date('m/d/Y', strtotime($user->birthdate)); }}</p>
+          </div>
+          <h4>Contactos</h4> 
+          <div class="pl-3">
+            <p>Email: {{ $user->email }}</p>
+          </div>
+        </div>
       </div>
       <div class="row">
         <h3 class="me-4">As minhas Questões</h3>
