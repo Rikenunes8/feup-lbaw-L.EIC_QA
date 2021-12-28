@@ -64,7 +64,7 @@ class UserController extends Controller
         $this->authorize('update', $user);
         $user->update($request->all());
 
-        return redirect('/users'); 
+        return redirect("/users/$user->id"); 
     }
 
     /**

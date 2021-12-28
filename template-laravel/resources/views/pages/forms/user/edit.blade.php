@@ -40,7 +40,7 @@
     
     <div class="mb-3 col-12">
         <label for="birthdate" class="form-label">Aniversário</label>
-        <input type="date" id="birthdate" class="form-control" name="birthdate" value="{{ date('Y-m-d', strtotime($user->birthdate)); }}">
+        <input type="date" id="birthdate" class="form-control" name="birthdate" placeholder="dd/mm/yyyy" value="{{ is_null($user->birthdate) ? '' : date('Y-m-d', strtotime($user->birthdate)); }}">
         @if ($errors->has('birthdate'))
         <div class="mt-1 py-2 alert alert-danger alert-dismissible fade show">
             <button type="button" class="h-auto btn-close btn-sm" data-bs-dismiss="alert"></button>  
