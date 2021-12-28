@@ -42,8 +42,37 @@ section#faq-page .accordion-button:not(.collapsed) {
   font-size: 4rem;
 }
 
+/* QUESTIONS PAGE */
+.user-action-add {
+  display: flex;
+  justify-content: space-between;
+}
+
+.question-card .question-card-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: rgb(255,255,255)!important;
+}
+
+.question-card span.text-muted {
+  font-size: .75rem;
+}
+
+.question-card .question-card-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: end;
+}
+
+.question-valid-icon {
+  color: #00b74a;
+}
+
 /* UCS PAGE */
-.uc-card-icon {
+.uc-card-icon, .question-card-icon {
   position: absolute;
   top: 0;
   right: 0;
