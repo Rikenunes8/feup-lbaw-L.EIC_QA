@@ -8,7 +8,7 @@
         </div>
 
         <div class="col-11 p-relative">
-          <h5 class="card-title me-4"><a href="{{ url('/question/'.$question->id) }}" class="app-link">{{ $question->title }}</a></h5>
+          <h5 class="card-title me-4"><a href="{{ url('/questions/'.$question->id) }}" class="app-link">{{ $question->title }}</a></h5>
           <h6 class="card-subtitle mt-1 mb-2">
             <span class="badge bg-info text-dark">{{ $question->uc->code }}</span>
             <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ $question->author->username }}</span>

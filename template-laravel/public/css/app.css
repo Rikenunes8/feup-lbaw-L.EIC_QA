@@ -57,7 +57,8 @@ section#faq-page .accordion-button:not(.collapsed) {
 }
 
 .question-card span.text-muted, 
-.user-profile span.text-muted {
+.user-profile span.text-muted,
+#question-page .question-card p.text-muted {
   font-size: .75rem;
 }
 
@@ -74,6 +75,26 @@ section#faq-page .accordion-button:not(.collapsed) {
 
 .question-invalid-icon {
   color: #e42e0d;
+}
+
+/* QUESTION PAGE */
+#question-page .question-detail > .row {
+  margin-right: 1rem;
+  width: 100%;
+}
+#question-page .answer-detail > .row {
+  margin-right: 1rem;
+  width: 94%;
+}
+#question-page .comment-detail > .row {
+  margin-right: 1rem;
+  width: 88%
+}
+
+#question-page .question-page-actions {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 }
 
 /* UCS PAGE */
