@@ -71,6 +71,10 @@ section#faq-page .accordion-button:not(.collapsed) {
   color: #00b74a;
 }
 
+.question-invalid-icon {
+  color: #e42e0d;
+}
+
 /* UCS PAGE */
 .uc-card-icon, .question-card-icon {
   position: absolute;

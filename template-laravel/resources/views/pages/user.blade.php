@@ -16,14 +16,15 @@
       <h2 class="me-4">Perfil</h2> 
       @endif
       <div class="row mt-4">
-        <div class="col-md-6 col-lg-4 mb-2 px-1">
+        <div class="col-md-3 mb-2 px-1">
           @if ( Auth::check() && file_exists( asset('images/users/'.$user->photo) ) )
-            <img src="{{ asset('images/users/'.$user->photo.'.jpg') }}" alt="profile-photo" id="profile-photo" class="w-75 h-75">
+          <img src="{{ asset('images/users/'.$user->photo.'.jpg') }}" alt="profile-photo-big" id="profile-photo-big" class="mx-auto d-block" width=100%>
           @else
-            <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo" id="profile-photo" class="w-75 h-75">
+          <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo-big" id="profile-photo-big" class="mx-auto d-block" width=100%>
           @endif
+          <p class="h5 text-center mt-2">Pontuação: {{$user->score}}</p>
         </div>
-        <div class="col-md-6 col-lg-8 mb-2 px-1">
+        <div class="col-md-8 offset-md-1 mb-2 px-1">
           <h3 class="me-4">{{ $user->name }}</h2> 
           <span class="badge bg-info text-dark mt-1 mb-2">{{ $user->type }}</span>
           <span class="mt-1 mb-2">Aderiu a {{ date('d/m/Y', strtotime($user->registry_date)); }}</span>

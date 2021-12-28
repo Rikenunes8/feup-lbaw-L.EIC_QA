@@ -1,4 +1,4 @@
-<div class="col-12 mb-2 px-1 w-100">
+<div class="col-12 mb-2 px-1">
   <div class="card question-card h-100" data-id="{{ $question->id }}">
     <div class="card-body">
       
@@ -11,7 +11,7 @@
           <h5 class="card-title me-4"><a href="{{ url('/question/'.$question->id) }}" class="app-link">{{ $question->title }}</a></h5>
           <h6 class="card-subtitle mt-1 mb-2">
             <span class="badge bg-info text-dark">{{ $question->uc->code }}</span>
-            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ $question->author->username }}</span> <!-- TODO $question->author() -->
+            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ $question->author->username }}</span>
           </h6>
           <p class="card-text">
             {{ substr($question->text, 0, 70) }}
