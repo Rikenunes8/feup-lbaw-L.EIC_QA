@@ -17,7 +17,7 @@
       @endif
       <div class="row mt-4">
         <div class="col-md-6 col-lg-4 mb-2 px-1">
-          @if ( file_exists( asset('images/users/'.$user->photo) ) )
+          @if ( Auth::check() && file_exists( asset('images/users/'.$user->photo) ) )
             <img src="{{ asset('images/users/'.$user->photo.'.jpg') }}" alt="profile-photo" id="profile-photo" class="w-75 h-75">
           @else
             <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo" id="profile-photo" class="w-75 h-75">
