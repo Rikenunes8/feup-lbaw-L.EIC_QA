@@ -29,7 +29,7 @@
           <tbody>
             @foreach($ucs as $uc)
             <tr data-id="{{ $uc->id }}">
-              <th scope="row"><a href="{{ url('/ucs/'.$uc->id) }}" class="app-link">{{ $uc->name }}</a></td>
+              <th scope="row"><a href="{{ url('/ucs/'.$uc->id) }}" class="app-link">{{ $uc->name }}</a></th>
               <td>{{ $uc->code }}</td>
               <td>
                 {{ substr($uc->description, 0, 50) }}

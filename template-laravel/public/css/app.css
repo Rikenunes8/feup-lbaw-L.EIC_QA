@@ -89,7 +89,7 @@ div.admin-action-add a {
   top: 0;
 }
 
-td.admin-table-uc-actions {
+td.admin-table-uc-actions, td.admin-table-user-actions {
   white-space: nowrap;
   vertical-align: middle;
 }

@@ -19,7 +19,7 @@ class AdminController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $this->authorize('show', User::class);
-        $users = User::orderBy('username')->get();
+        $users = User::where('id', '!=', Auth::user()->id)->orderBy('name')->get();
         return view('pages.admin.users', ['users' => $users]);
     }
 
