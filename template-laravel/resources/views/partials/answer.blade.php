@@ -25,21 +25,16 @@
           </p>
           
           @php
-            $valid = null;
+            $icon = '';
             foreach ($answer->valid as $validation) {
-              if ($validation->pivot->valid) $valid = true;
-              else $valid = false;
+              if ($validation->pivot->valid) $icon = 'fa-check question-valid-icon';
+              else $icon = 'fa-times question-invalid-icon';
             }
           @endphp
-          @if ($valid == true)
           <p class="question-card-icon p-4">
-            <i class="fas fa-check question-valid-icon"></i>
+            <i class="fas {{ $icon }}"></i>
           </p>
-          @elseif ($valid == false)
-          <p class="question-card-icon p-4">
-            <i class="fas fa-times question-invalid-icon"></i>
-          </p>
-          @endif
+          
         </div>
       </div>
     </div>
