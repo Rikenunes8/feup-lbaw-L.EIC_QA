@@ -47,6 +47,13 @@
         @endphp
         @each('partials.question', $questions, 'question') <!-- TODO: 4th argument to view no elements -->
       </div>
+      <div class="row">
+        <h3 class="me-4">As minhas Respostas</h3>
+        @php
+          $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->get();
+        @endphp
+        @each('partials.answer', $answers, 'answer') <!-- TODO: 4th argument to view no elements -->
+      </div>
     </div>
   </div>
 </section>
