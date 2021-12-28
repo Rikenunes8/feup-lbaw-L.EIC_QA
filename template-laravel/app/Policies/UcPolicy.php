@@ -31,7 +31,7 @@ class UcPolicy
      */
     public function follow(User $user, Uc $uc)
     {
-        return $user->type == 'Student' && !$user->blocked;
+        return $user->isStudent() && !$user->blocked;
     }
 
     /**
@@ -42,7 +42,7 @@ class UcPolicy
      */
     public function showCreate(User $user)
     {
-        return $user->type == 'Admin' && !$user->blocked;
+        return $user->isAdmin() && !$user->blocked;
     }
 
     /**
@@ -54,7 +54,7 @@ class UcPolicy
      */
     public function create(User $user, Uc $uc)
     {
-        return $user->type == 'Admin' && !$user->blocked;
+        return $user->isAdmin() && !$user->blocked;
     }
     
     /**
@@ -66,7 +66,7 @@ class UcPolicy
      */
     public function update(User $user, Uc $uc)
     {
-        return $user->type == 'Admin' && !$user->blocked;
+        return $user->isAdmin() && !$user->blocked;
     }
 
     /**
@@ -78,7 +78,7 @@ class UcPolicy
      */
     public function delete(User $user, Uc $uc)
     {
-        return $user->type == 'Admin' && !$user->blocked;
+        return $user->isAdmin() && !$user->blocked;
     }
 
     /**
@@ -91,6 +91,6 @@ class UcPolicy
      */
     public function teacher(User $user, Uc $uc, User $teacher)
     {
-        return $user->type == 'Admin' && $teacher->type == 'Teacher' && !$user->blocked;
+        return $user->isAdmin() && $teacher->isTeacher();
     }
 }
