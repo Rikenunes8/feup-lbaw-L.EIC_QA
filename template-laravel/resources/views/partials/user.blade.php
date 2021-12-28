@@ -4,7 +4,7 @@
 
       <div class="row">
         <div class="col-3">
-          <a href="#" class="link-dark text-decoration-none" aria-expanded="false">
+          <a href="{{ url('/users/'.$user->id) }}" class="link-dark text-decoration-none" aria-expanded="false">
             @if ( file_exists( asset('images/users/'.Auth::user()->photo) && Auth::check()) )
             <img src="{{ asset('images/users/'.Auth::user()->photo.'.jpg') }}" alt="profile-photo" class="w-100">
             @else
