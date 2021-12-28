@@ -5,17 +5,14 @@
 @section('content')
 
 <section id="admin-uc-teachers-page">
-  <h2>Docentes</h2> 
+  <h2>Docentes de <span class="badge bg-info text-dark">{{ $uc->code }}</span></h2> 
 
-  <p>Gestão de Docentes da Unidade Curricular: {{ $uc->name }} <span class="badge bg-info text-dark">{{ $uc->code }}</span></p>
-
-  <!-- TODO dropdown de possibilidades e adiconar botao -->
-  <!-- API add and delete -->
+  <p>Gestão de Docentes da Unidade Curricular: {{ $uc->name }}</p>
 
   <div class="row"> 
     <div class="col-12">
       <div class="table-responsive">
-        <table id="admin-table" class="table table-striped table-bordered caption-top">
+        <table id="admin-table" class="table table-striped table-bordered caption-top" data-id="{{ $uc->id }}">
           <thead>
             <tr>
               <th scope="col">Nome</th>
@@ -24,20 +21,30 @@
             </tr>
           </thead>
           <tbody>
-            @if (count($teachersAssoc) != 0)
+            @if (count($teachersAssoc) == 0 && count($teachersNotAssoc) == 0)
+              <tr>
+                <td colspan="3">Nenhum Docente</td>
+              </tr>
+            @else
               @foreach($teachersAssoc as $teacher)
               <tr data-id="{{ $teacher->id }}">
                 <th scope="row"><a href="{{ url('/users/'.$teacher->id) }}" class="app-link">{{ $teacher->name }}</a></td>
                 <td>{{ $teacher->email }}</td>
-                <td class="admin-table-teacher-actions">
-                  <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="far fa-trash-alt"></i></a>
+                <td class="text-center admin-table-teacher-actions">
+                  <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="far fa-trash-alt"></i> <span class="d-none">Eliminar</span></a>
                 </td>
               </tr>
               @endforeach
-            @else
-              <tr>
-                <td colspan="3">Nenhum Docente</td>
+
+              @foreach($teachersNotAssoc as $teacher)
+              <tr data-id="{{ $teacher->id }}">
+                <th scope="row"><a href="{{ url('/users/'.$teacher->id) }}" class="app-link">{{ $teacher->name }}</a></td>
+                <td>{{ $teacher->email }}</td>
+                <td class="text-center admin-table-teacher-actions">
+                  <a href="#" class="btn btn-primary text-white admin-table-add"><i class="fas fa-plus"></i> <span class="d-none">Adicionar</span></a>
+                </td>
               </tr>
+              @endforeach
             @endif
           </tbody>
         </table>
