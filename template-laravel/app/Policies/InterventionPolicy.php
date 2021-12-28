@@ -41,9 +41,21 @@ class InterventionPolicy
      * @param  Intervention  $intervention
      * @return Response|bool
      */
+    public function showCreate(User $user)
+    {
+        return !$user->isAdmin() && !$user->blocked;
+    }
+
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  User  $user
+     * @param  Intervention  $intervention
+     * @return Response|bool
+     */
     public function create(User $user, Intervention $intervention)
     {
-        return $user->isAdmin() && !$user->blocked;
+        return !$user->isAdmin() && !$user->blocked;
     }
 
     /**

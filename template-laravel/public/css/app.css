@@ -126,7 +126,8 @@ footer > p {
 }
 
 @media (max-width: 767px) {
-  #form-login, #form-uc-create, #form-uc-edit {
+  #form-login, #form-uc-create, #form-uc-edit,
+  #form-question-create, #form-question-edit{
     width: 100%!important;
   }
 }

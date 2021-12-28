@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Intervention;
+use App\Models\Uc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -49,9 +50,9 @@ class InterventionController extends Controller
     public function showCreateQuestionForm()
     {
         if (!Auth::check()) return redirect('/login');
-
-        $this->authorize('create', Intervention::class);
-        return view('pages.pages.forms.question.create');
+        $this->authorize('showCreate', Intervention::class);
+        $ucs = Uc::orderBy('name')->get();
+        return view('pages.forms.question.create', ['ucs' => $ucs]);
     }
 
     /**
@@ -65,16 +66,16 @@ class InterventionController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $question = new Intervention();
-        $this->authorize('create', Intervention::class);
+        $this->authorize('create', $question);
 
         $question->id_author = Auth::user()->id;
         $question->title = $request->input('title');
         $question->text = $request->input('text');
-        $question->category = $request->input('category');
+        $question->category = $request->category;
         $question->type = 'question';
         $question->save();
 
-        return redirect('qustions/{{ $question->id }}');
+        return redirect('questions/'.$question->id);
     }
 
     /**
@@ -86,12 +87,11 @@ class InterventionController extends Controller
     public function showEditQuestionForm($id)
     {
         if (!Auth::check()) return redirect('/login');
-
-        $question = Intervention::questions()::find($id);
+        $question = Intervention::questions()->find($id);
         if (is_null($question)) return App::abort(404);
-
         $this->authorize('update', $question);
-        return view('pages.forms.question.edit', ['question' => $question]);
+        $ucs = Uc::orderBy('name')->get();
+        return view('pages.forms.question.edit', ['question' => $question, 'ucs' => $ucs]);
     }
 
     /**
@@ -104,16 +104,14 @@ class InterventionController extends Controller
     public function updateQuestion(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
-
-        $question =  Intervention::question()::find($id);
+        $question =  Intervention::questions()->find($id);
         if (is_null($question)) return App::abort(404);
-
         $this->authorize('update', $question);
-
+        $question->title = $request->input('title');
         $question->text = $request->input('text');
-        $question->save(); // TODO: Is this right?
-
-        return redirect('/questions/{{ $question->id }}');
+        $question->category = $request->category;
+        $question->save();
+        return redirect('questions/'.$question->id);
     }
 
     /**
