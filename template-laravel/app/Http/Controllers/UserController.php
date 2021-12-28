@@ -99,7 +99,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
 
