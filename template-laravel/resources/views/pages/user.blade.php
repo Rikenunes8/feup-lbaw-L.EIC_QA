@@ -18,8 +18,8 @@
       <section>
         <div class="row mt-4">
           <div class="col-md-3 mb-2 px-1">
-            @if ( Auth::check() && file_exists( asset('images/users/'.$user->photo) ) )
-            <img src="{{ asset('images/users/'.$user->photo.'.jpg') }}" alt="profile-photo-big" id="profile-photo-big" class="mx-auto d-block" width=100%>
+            @if ( Auth::check() && !is_null($user->photo) && file_exists( public_path('images/users/'.$user->photo) ) )
+            <img src="{{ asset('images/users/'.$user->photo) }}" alt="profile-photo-big" id="profile-photo-big" class="mx-auto d-block" width=100%>
             @else
             <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo-big" id="profile-photo-big" class="mx-auto d-block" width=100%>
             @endif

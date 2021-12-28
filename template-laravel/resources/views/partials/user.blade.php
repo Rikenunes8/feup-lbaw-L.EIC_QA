@@ -5,8 +5,8 @@
       <div class="row">
         <div class="col-3">
           <a href="{{ url('/users/'.$user->id) }}" class="link-dark text-decoration-none" aria-expanded="false">
-            @if ( Auth::check() && file_exists( asset('images/users/'.$user->photo) ) )
-            <img src="{{ asset('images/users/'.$user->photo.'.jpg') }}" alt="profile-photo" class="w-100">
+            @if ( Auth::check() && !is_null($user->photo) && file_exists( public_path('images/users/'.$user->photo) ) )
+            <img src="{{ asset('images/users/'.$user->photo) }}" alt="profile-photo" class="w-100">
             @else
             <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo" class="w-100">
             @endif

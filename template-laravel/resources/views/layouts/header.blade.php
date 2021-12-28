@@ -15,8 +15,8 @@
             
       <div class="flex-shrink-0 dropdown">
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdown-user" data-bs-toggle="dropdown" aria-expanded="false">
-          @if ( file_exists( asset('images/users/'.Auth::user()->photo) ) )
-          <img src="{{ asset('images/users/'.Auth::user()->photo.'.jpg') }}" alt="profile-photo" id="profile-photo" class="rounded-circle w-32">
+          @if ( !is_null(Auth::user()->photo) && file_exists( 'images/users/'.Auth::user()->photo) )
+          <img src="{{ asset('images/users/'.Auth::user()->photo) }}" alt="profile-photo" id="profile-photo" class="rounded-circle w-32">
           @else
           <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo" id="profile-photo" class="rounded-circle w-32">
           @endif

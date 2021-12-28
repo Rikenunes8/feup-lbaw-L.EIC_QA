@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
+
+use Illuminate\Support\Facades\Storage;
+use App\Upload;
 
 
 class UserController extends Controller
@@ -65,7 +70,32 @@ class UserController extends Controller
         
         $user = User::find($id);
         $this->authorize('update', $user);
-        $user->update($request->all());
+
+        $user->username = $request->input('username');
+
+        $password = $request->input('password');
+        $confirm = $request->input('confirm');
+        if ($password != '') {
+            if ($password != $confirm)
+                return Redirect::back()->withErrors(['confirm' => 'Password não corresponde']); 
+            $user->password = Hash::make($password);
+        }
+
+        if (!Auth::user()->isAdmin()) {
+            $user->name = $request->input('name');
+            $user->about = $request->input('about');         
+            $user->birthdate = date("Y-m-d H:i:s", strtotime($request->input('birthdate')));
+            
+            if ($request->hasFile('photo')) {
+                $file = $request->photo;
+                $filename = $user->id.'_'.time().'.'.$file->getClientOriginalExtension();
+                
+                $request->photo->storeAs('users', $filename, 'images_uploads');
+
+                $user->photo = $filename;
+            }
+        }
+        $user->save();
 
         return redirect("/users/$user->id"); 
     }

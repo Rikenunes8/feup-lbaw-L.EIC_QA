@@ -10,10 +10,7 @@
         <label for="email" class="form-label">E-mail</label>
         <input type="email" id="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
         @if ($errors->has('email'))
-        <div class="mt-1 py-2  alert alert-danger alert-dismissible fade show">
-            <button type="button" class="h-auto btn-close btn-sm" data-bs-dismiss="alert"></button>  
-            {{ $errors->first('email') }}
-        </div>
+            @include('layouts.error', ['error' => $errors->first('email')])
         @endif
     </div>
     
@@ -21,10 +18,7 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" id="password" class="form-control" name="password" required>
         @if ($errors->has('password'))
-        <div class="mt-1 py-2 alert alert-danger alert-dismissible fade show">
-            <button type="button" class="h-auto btn-close btn-sm" data-bs-dismiss="alert"></button>  
-            {{ $errors->first('password') }}
-        </div>
+            @include('layouts.error', ['error' => $errors->first('password')])
         @endif
     </div>
 
