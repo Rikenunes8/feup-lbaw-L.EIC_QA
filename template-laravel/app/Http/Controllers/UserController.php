@@ -8,9 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use App\Upload;
-
 
 class UserController extends Controller
 {
@@ -88,10 +87,15 @@ class UserController extends Controller
             
             if ($request->hasFile('photo')) {
                 $file = $request->photo;
-                $filename = $user->id.'_'.time().'.'.$file->getClientOriginalExtension();
-                
-                $request->photo->storeAs('users', $filename, 'images_uploads');
 
+                $image = array('file' => $file);
+                $rules = array('file' => 'image');
+                $validator = Validator::make($image, $rules);
+                if ($validator->fails())
+                    return Redirect::back()->withErrors(['photo' => 'Não é uma imagem']); 
+
+                $filename = $user->id.'_'.time().'.'.$file->getClientOriginalExtension();
+                $request->photo->storeAs('users', $filename, 'images_uploads');
                 $user->photo = $filename;
             }
         }
