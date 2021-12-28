@@ -4,51 +4,77 @@
 
 @section('content')
 
-<section id="user-page">
+<section id="user-profile-page">
   <div class="row user-profile" data-id="{{ $user->id }}"> 
     <div class="col-12 position-relative">
       @if ( Auth::check() && Auth::user()->id == $user->id )
-      <div class="float-end">
-        <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-primary text-white"><i class="fas fa-edit"></i></a>
-      </div>
-      <h2 class="me-4">O meu Perfil</h2> 
+        <div class="float-end">
+          <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-primary text-white">Editar<i class="far fa-edit ms-2"></i></a>
+        </div>
+        <h2 class="me-4">O meu Perfil</h2> 
       @else
-      <h2 class="me-4">Perfil</h2> 
+        <h2>{{ $user->name }}</h2> 
       @endif
+      
       <section>
         <div class="row mt-4">
-          <div class="col-md-3 mb-2 px-1">
+          <div class="col-md-4 mb-2">
             @if ( Auth::check() && !is_null($user->photo) && file_exists( public_path('images/users/'.$user->photo) ) )
-            <img src="{{ asset('images/users/'.$user->photo) }}" alt="profile-photo-big" id="profile-photo-big" class="mx-auto d-block" width=100%>
+            <img src="{{ asset('images/users/'.$user->photo) }}" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">
             @else
-            <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo-big" id="profile-photo-big" class="mx-auto d-block" width=100%>
+            <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">
             @endif
-            <p class="h5 text-center mt-2">Pontuação: {{$user->score}}</p>
+            @if (!$user->isAdmin())
+            <p class="h6 text-center m-0 py-2 bg-light">Pontuação: {{$user->score}}</p>
+            @endif
           </div>
-          <div class="col-md-8 offset-md-1 mb-2 px-1">
-            <h3 class="me-4">{{ $user->name }}</h2> 
-            <span class="badge bg-info text-dark mt-1 mb-2">{{ $user->type }}</span>
-            <span class="mt-1 mb-2">Aderiu a {{ date('d/m/Y', strtotime($user->registry_date)); }}</span>
-            <h4 class="mt-4">Sobre mim</h4>
-            <div class="px-3"> 
+          <div class="col-md-8 mb-2">
+            <h4>{{ $user->username }}</h4> 
+            @php 
+              $bg = 'bg-info text-dark';
+              if ($user->isTeacher()) $bg = 'bg-warning text-dark';
+              elseif ($user->isAdmin()) $bg = 'bg-danger text-white';
+            @endphp
+            <span class="badge {{ $bg }} me-2">{{ $user->type }}</span>
+            <span class="text-muted">Aderiu a {{ date('d/m/Y', strtotime($user->registry_date)); }}</span>
+            
+            @if (!is_null($user->about) || !is_null($user->birthdate))
+            <h5 class="mt-4">Sobre mim</h5>
+            <div class="ms-3"> 
+              @if (!is_null($user->about))
               <p>{{ $user->about }}</p>
+              @endif
               @if (!is_null($user->birthdate))
-              <p>Aniversário: {{ date('d/m/Y', strtotime($user->birthdate)); }}</p>
+              <p><i class="fas fa-birthday-cake me-2"></i>Aniversário: {{ date('d/m/Y', strtotime($user->birthdate)); }}</p>
               @endif
             </div>
-            <h4>Contactos</h4> 
-            <div class="px-3">
+            @endif
+
+            <h5 class="mt-4">Contactos</h5> 
+            <div class="ms-3">
               <p>Email: {{ $user->email }}</p>
             </div>
           </div>
         </div>
-        <hr>
       </section>
 
-      <section class="mt-5">
-        <h3 class="me-4">As minhas Questões</h3>
+      @if (!$user->isAdmin())
+      <hr>
+
+      <section class="mt-4">
+        @if ( Auth::check() && Auth::user()->id == $user->id )
+          <div>
+            <div class="float-end">
+              <a href="{{ url('questions/create') }}" class="btn btn-primary text-white">Nova Questão <i class="fas fa-plus ms-2"></i></a>
+            </div>
+            <h5 class="me-4">As minhas Questões</h5>
+          </div>
+        @else
+          <h5>Questões</h5> 
+        @endif
         
-        <div class="row">
+        @if ( count($questions) != 0 )
+        <div class="row mt-4  clear">
           @each('partials.question', $questions, 'question') <!-- TODO: 4th argument to view no elements -->
         </div>
         
@@ -57,13 +83,21 @@
             {!! $questions->links() !!}
           </div>
         </div>
-        <hr>
+        @else 
+        <p>Não existem Questões</p>
+        @endif
       </section>
+      <hr>
         
-      <section class="mt-5">
-        <h3 class="me-4">As minhas Respostas</h3>
+      <section class="mt-4">
+        @if ( Auth::check() && Auth::user()->id == $user->id )
+          <h5>As minhas Respostas</h5>
+        @else
+          <h5>Respostas</h5> 
+        @endif
 
-        <div class="row">
+        @if ( count($questions) != 0 )
+        <div class="row mt-2">
           @each('partials.answer', $answers, 'answer') <!-- TODO: 4th argument to view no elements -->
         </div>
 
@@ -72,8 +106,12 @@
             {!! $answers->links() !!}
           </div>
         </div>
-        <hr>
+        @else 
+        <p>Não existem Respostas</p>
+        @endif
       </section>
+      @endif
+
     </div>
   </div>
 </section>

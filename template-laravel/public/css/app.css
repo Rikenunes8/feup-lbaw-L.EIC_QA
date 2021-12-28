@@ -56,7 +56,8 @@ section#faq-page .accordion-button:not(.collapsed) {
   background-color: rgb(255,255,255)!important;
 }
 
-.question-card span.text-muted {
+.question-card span.text-muted, 
+.user-profile span.text-muted {
   font-size: .75rem;
 }
 
