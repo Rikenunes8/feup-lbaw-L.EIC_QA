@@ -37,7 +37,7 @@
                 ...
                 @endif
               </td>
-              <td class="admin-table-uc-actions">
+              <td class="text-center admin-table-uc-actions">
                 <a href="{{ url('admin/ucs/'.$uc->id.'/teachers') }}" class="btn btn-info text-black me-1"><i class="far fa-address-card"></i></a>
                 <a href="{{ url('ucs/'.$uc->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
                 <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="far fa-trash-alt"></i></a>

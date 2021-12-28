@@ -11,6 +11,16 @@ function addEventListeners() {
     deleter.addEventListener('click', sendDeleteUcRequest);
   });
 
+  let ucTeacherDeleters = document.querySelectorAll('td.admin-table-teacher-actions a.admin-table-delete');
+  [].forEach.call(ucTeacherDeleters, function(deleter) {
+    deleter.addEventListener('click', sendDeleteUcTeacherRequest);
+  });
+
+  let ucTeacherAdders = document.querySelectorAll('td.admin-table-teacher-actions a.admin-table-add');
+  [].forEach.call(ucTeacherAdders, function(adder) {
+    adder.addEventListener('click', sendAddUcTeacherRequest);
+  });
+
   // Thingy examples
   let itemCheckers = document.querySelectorAll('article.card li.item input[type=checkbox]');
   [].forEach.call(itemCheckers, function(checker) {
@@ -62,6 +72,26 @@ function sendFollowUcRequest() {
   sendAjaxRequest('post', '/api/ucs/follow/' + id, {follow: element.classList.contains('far')}, ucFollowHandler);
 }
 
+function sendDeleteUcRequest() {
+  let id = this.closest('tr').getAttribute('data-id');
+
+  sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler);
+}
+
+function sendDeleteUcTeacherRequest() {
+  let uc_id = this.closest('table').getAttribute('data-id');
+  let teacher_id = this.closest('tr').getAttribute('data-id');
+
+  sendAjaxRequest('delete', '/api/ucs/' + uc_id + '/teachers/' + teacher_id + '/delete', null, ucTeacherDeletedHandler);
+}
+
+function sendAddUcTeacherRequest() {
+  let uc_id = this.closest('table').getAttribute('data-id');
+  let teacher_id = this.closest('tr').getAttribute('data-id');
+
+  sendAjaxRequest('put', '/api/ucs/' + uc_id + '/teachers/' + teacher_id + '/add', null, ucTeacherAddedHandler);
+}
+
 function ucFollowHandler() {
   if (this.status != 200) window.location = '/';
   let uc = JSON.parse(this.responseText);
@@ -76,17 +106,43 @@ function ucFollowHandler() {
   }
 }
 
-function sendDeleteUcRequest() {
-  let id = this.closest('tr').getAttribute('data-id');
-
-  sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler);
-}
-
 function ucDeletedHandler() {
   if (this.status != 200) window.location = '/';
   let uc = JSON.parse(this.responseText);
   let element = document.querySelector('tr[data-id="' + uc.id + '"]');
   element.remove();
+}
+
+function ucTeacherDeletedHandler() {
+  if (this.status != 200) window.location = '/';
+  let teacher = JSON.parse(this.responseText);
+  let element = document.querySelector('tr[data-id="' + teacher.id + '"] td.admin-table-teacher-actions');
+  element.removeChild(element.lastElementChild);
+
+  let new_a = document.createElement('a');
+  new_a.classList.add('btn','btn-primary','text-white', 'admin-table-add');
+  new_a.setAttribute('href', '#');
+  new_a.innerHTML = `<i class="fas fa-plus"></i> <span class="d-none">Adicionar</span>`;
+
+  new_a.addEventListener('click', sendAddUcTeacherRequest);
+
+  element.appendChild(new_a);
+}
+
+function ucTeacherAddedHandler() {
+  if (this.status != 200) window.location = '/';
+  let teacher = JSON.parse(this.responseText);
+  let element = document.querySelector('tr[data-id="' + teacher.id + '"] td.admin-table-teacher-actions');
+  element.removeChild(element.lastElementChild);
+
+  let new_a = document.createElement('a');
+  new_a.classList.add('btn','btn-danger','text-white', 'admin-table-delete');
+  new_a.setAttribute('href', '#');
+  new_a.innerHTML = `<i class="far fa-trash-alt"></i> <span class="d-none">Eliminar</span>`;
+
+  new_a.addEventListener('click', sendDeleteUcTeacherRequest);
+
+  element.appendChild(new_a);
 }
 
 // Thingy examples

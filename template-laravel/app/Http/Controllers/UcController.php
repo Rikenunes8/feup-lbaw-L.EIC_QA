@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Uc;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -144,20 +145,15 @@ class UcController extends Controller
      * @param  int  $user_id
      * @return Response|bool The association was added or not.
      */
-    public function addTeacher($uc_id, $user_id) 
+    public function addTeacher(Request $request, $uc_id, $user_id) 
     {
         if (!Auth::check()) return redirect('/login');
-
         $uc = Uc::find($uc_id);
-        $teacher = User::find($user_id);      
-          
-        if (isset($uc) && isset($teacher)) {
-            $this->authorize('teacher', $uc, $teacher);
-            $uc->teachers()->attach($user_id);
-            return "Success";
-        }
-        
-        return "Error";
+        $teacher = User::find($user_id);  
+        // TODO       
+        // $this->authorize('teacher', $uc, $teacher);
+        $uc->teachers()->attach($user_id);
+        return $teacher;
     }
 
     /**
@@ -167,19 +163,14 @@ class UcController extends Controller
      * @param  int  $user_id
      * @return Response|bool The association was deleted or not.
      */
-    public function deleteTeacher($uc_id, $user_id) 
+    public function deleteTeacher(Request $request, $uc_id, $user_id) 
     {
         if (!Auth::check()) return redirect('/login');
-
         $uc = Uc::find($uc_id);
         $teacher = User::find($user_id);
-    
-        if (isset($uc) && isset($teacher)) {
-            $this->authorize('teacher', $uc, $teacher);
-            $uc->teachers()->detach($user_id);
-            return "Success";
-        }
-        
-        return "Error";
+        // TODO
+        // $this->authorize('teacher', $uc, $teacher);
+        $uc->teachers()->detach($user_id);
+        return $teacher;
     }
 }
