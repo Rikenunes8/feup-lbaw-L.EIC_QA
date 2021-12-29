@@ -41,6 +41,19 @@
       </table>
       </div>
 
+      @php 
+        $questions = $uc->interventions()->whereType('question')->orderBy('votes', 'DESC')->take(5)->get();
+      @endphp
+      @if ( count($questions) != 0 )
+      <hr>
+      <section class="mt-4">
+        <h5>Top Questões</h5> 
+        <div class="row mt-2">
+          @each('partials.question', $questions, 'question')
+        </div>
+      </section>
+      @endif
+
       @if ( Auth::check() && Auth::user()->isStudent() )
       <p class="uc-card-icon pt-2 pe-4">
         
