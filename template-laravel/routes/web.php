@@ -11,26 +11,6 @@
 |
 */
 
-/*
-// Cards
-Route::get('cards', 'CardController@list');
-Route::get('cards/{id}', 'CardController@show');
-
-// API
-Route::put('api/cards', 'CardController@create');
-Route::delete('api/cards/{card_id}', 'CardController@delete');
-Route::put('api/cards/{card_id}/', 'ItemController@create');
-Route::post('api/item/{id}', 'ItemController@update');
-Route::delete('api/item/{id}', 'ItemController@delete');
-
-// Authentication
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
-*/
-
 // ------------ LEIC Q&A ---------------
 
 // Home
@@ -73,14 +53,12 @@ Route::post('questions/{id}/edit'     , 'InterventionController@updateQuestion')
 Route::delete('questions/{id}/delete' , 'InterventionController@deleteQuestion');
 
 // Interventions - Answers
-// Route::get('questions/{id}/answers/create', 'InterventionController@showCreateAnswerForm');
 Route::post('questions/{id}/answers/create', 'InterventionController@createAnswer')->name('answers.create');
 Route::get('answers/{id}/edit'            , 'InterventionController@showEditAnswerForm');
 Route::post('answers/{id}/edit'           , 'InterventionController@updateAnswer')->name('answers.edit');
 Route::delete('api/answers/{id}/delete'       , 'InterventionController@deleteAnswer');
 
 // Interventions - Comments
-// Route::get('answers/{id}/comments/create' , 'InterventionController@showCreateCommentForm');
 Route::post('answers/{id}/comments/create' , 'InterventionController@createComment')->name('comments.create');
 Route::get('comments/{id}/edit'           , 'InterventionController@showEditCommentForm');
 Route::post('comments/{id}/edit'          , 'InterventionController@updateComment')->name('comments.edit');

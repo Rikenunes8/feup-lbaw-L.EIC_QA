@@ -49,7 +49,7 @@
           <div class="text-center question-page-actions p-3" data-id="{{ $intervention->id }}">
             @if ( !Auth::user()->isAdmin() && !$intervention->isComment())
               @if ($intervention->isQuestion())
-                <a href="#answer-form" class="btn btn-white text-black me-1"><i class="fas fa-reply"></i></a>
+                <a href="#answer-form" class="btn btn-primary text-white me-1"><i class="fas fa-reply"></i></a>
               @else
                 <button class="btn btn-primary text-white me-1" onclick="showCommentCreateForm(this)" value="{{ $intervention->id }}"><i class="fas fa-reply"></i></button>
               @endif
