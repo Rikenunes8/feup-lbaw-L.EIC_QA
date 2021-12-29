@@ -311,6 +311,8 @@ class InterventionController extends Controller
         else if ($association->first()->pivot->vote !== $vote) {
             $intervention->votes()->updateExistingPivot($user->id, ['vote' => $vote]);
         }
+        
+        $intervention = Intervention::find($id);
 
         return $intervention;
     }

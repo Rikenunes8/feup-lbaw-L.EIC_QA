@@ -249,6 +249,7 @@ function interventionDeletedHandler() {
 }
 
 function interventionVotedHandler() {
+  if (this.status == 403) return;
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
 
