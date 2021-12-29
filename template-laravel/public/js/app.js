@@ -30,6 +30,22 @@ function addEventListeners() {
   [].forEach.call(userBlockers, function(blocker) {
     blocker.addEventListener('click', sendBlockUserRequest);
   });
+
+  let interventionDeleters = document.querySelectorAll('.intervention-detail div.question-page-actions a.question-page-delete');
+  [].forEach.call(interventionDeleters, function(deleter) {
+    deleter.addEventListener('click', sendDeleteInterventionRequest);
+  });
+
+  let interventionUpVoters = document.querySelectorAll('.intervention-detail .intervention-votes a.intervention-upvote');
+  [].forEach.call(interventionUpVoters, function(voter) {
+    voter.addEventListener('click', sendUpVoteInterventionRequest);
+  });
+
+  let interventionDownVoters = document.querySelectorAll('.intervention-detail .intervention-votes a.intervention-downvote');
+  [].forEach.call(interventionDownVoters, function(voter) {
+    voter.addEventListener('click', sendDownVoteInterventionRequest);
+  });
+
 }
 
 function encodeForAjax(data) {
@@ -93,6 +109,23 @@ function sendBlockUserRequest(event) {
   event.preventDefault();
 }
 
+function sendDeleteInterventionRequest() {
+  let id = this.closest('section').getAttribute('data-id');
+
+  sendAjaxRequest('delete', '/api/interventions/' + id + '/delete', null, interventionDeletedHandler);
+}
+
+function sendUpVoteInterventionRequest() {
+  let id = this.closest('section').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/interventions/' + id + '/vote', {vote: true}, interventionVotedHandler);
+}
+
+function sendDownVoteInterventionRequest() {
+  let id = this.closest('section').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/interventions/' + id + '/vote', {vote: false}, interventionVotedHandler);
+}
 
 function ucFollowHandler() {
   if (this.status != 200) window.location = '/';
@@ -173,6 +206,27 @@ function userBlockedHandler() {
     icon.classList.replace('fa-unlock', 'fa-lock');
     span.innerHTML = "Lock";
   }
+}
+
+function interventionDeletedHandler() {
+  if (this.status != 200) window.location = '/';
+  let intervention = JSON.parse(this.responseText);
+  let element = document.querySelector('section.intervention-detail[data-id="' + intervention.id + '"]');
+  if (element.classList.contains('question-detail'))
+    location.reload();
+  else
+    element.remove();
+
+}
+
+
+function interventionVotedHandler() {
+  console.log(this.responseText);
+  if (this.status != 200) window.location = '/';
+  let intervention = JSON.parse(this.responseText);
+
+  let element = document.querySelector('section.intervention-detail[data-id="' + intervention.id + '"] .intervention-votes-number' );
+  element.innerHTML = intervention.votes;
 }
 
 function showCommentCreateForm(btn) {

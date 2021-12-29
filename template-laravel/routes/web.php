@@ -31,12 +31,11 @@ Route::post('register', 'Auth\RegisterController@register');
 // Missing Password Recovery Routes : recover
 
 // API
-Route::post('api/questions/{id}/vote'   , 'InterventionController@vote');
-Route::post('api/questions/{id}/report' , 'InterventionController@report');
-Route::post('api/answers/{id}/vote'     , 'InterventionController@vote');
-Route::post('api/answers/{id}/report'   , 'InterventionController@report');
+
+Route::post('api/interventions/{id}/vote'     , 'InterventionController@vote');
+Route::delete('api/interventions/{id}/delete' , 'InterventionController@delete');
+Route::post('api/interventions/{id}/report'  , 'InterventionController@report');
 Route::post('api/answers/{id}/validate' , 'InterventionController@validate');
-Route::post('api/comments/{id}/report'  , 'InterventionController@report');
 
 Route::post('api/ucs/follow/{uc_id}', 'UcController@follow');
 
@@ -50,19 +49,16 @@ Route::post('questions/create'         , 'InterventionController@createQuestion'
 Route::get('questions/{id}'           , 'InterventionController@show');
 Route::get('questions/{id}/edit'      , 'InterventionController@showEditQuestionForm');
 Route::post('questions/{id}/edit'     , 'InterventionController@updateQuestion')->name('questions.edit');
-Route::delete('questions/{id}/delete' , 'InterventionController@deleteQuestion');
 
 // Interventions - Answers
 Route::post('questions/{id}/answers/create', 'InterventionController@createAnswer')->name('answers.create');
 Route::get('answers/{id}/edit'            , 'InterventionController@showEditAnswerForm');
 Route::post('answers/{id}/edit'           , 'InterventionController@updateAnswer')->name('answers.edit');
-Route::delete('api/answers/{id}/delete'       , 'InterventionController@deleteAnswer');
 
 // Interventions - Comments
 Route::post('answers/{id}/comments/create' , 'InterventionController@createComment')->name('comments.create');
 Route::get('comments/{id}/edit'           , 'InterventionController@showEditCommentForm');
 Route::post('comments/{id}/edit'          , 'InterventionController@updateComment')->name('comments.edit');
-Route::delete('api/comments/{id}/delete'      , 'InterventionController@deleteComment');
 
 // Users
 Route::get('users'       , 'UserController@list');

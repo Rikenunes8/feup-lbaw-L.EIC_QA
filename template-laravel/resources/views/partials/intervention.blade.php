@@ -1,10 +1,10 @@
-<section class="{{ $intervention->type }}-detail {{ $intervention->isComment()?'mt-2':'mt-3' }} {{ $intervention->isQuestion()?'':'d-flex flex-row-reverse' }}">
+<section class="intervention-detail {{ $intervention->type }}-detail {{ $intervention->isComment()?'mt-2':'mt-3' }} {{ $intervention->isQuestion()?'':'d-flex flex-row-reverse' }}" data-id="{{ $intervention->id }}">
   <div class="row">
     <div class="col-1 intervention-votes">
       @if (!$intervention->isComment())
-      <a href="#" class="app-link intervention-vote"><h3 class="text-center">&#x25B2;</h3></a>
-      <h3 class="text-center">{{ $intervention->votes }}</h3>
-      <a href="#" class="app-link intervention-vote"><h3 class="text-center">&#x25BC;</h3></a>
+      <a href="#" class="app-link intervention-vote intervention-upvote"><h3 class="text-center">&#x25B2;</h3></a>
+      <h3 class="text-center intervention-votes-number">{{ $intervention->votes }}</h3>
+      <a href="#" class="app-link intervention-vote intervention-downvote"><h3 class="text-center">&#x25BC;</h3></a>
       @endif
     </div>
     <div class="col-11 card">
@@ -46,7 +46,7 @@
             </div>
           @endif
 
-          <div class="text-center question-page-actions p-3" data-id="{{ $intervention->id }}">
+          <div class="text-center question-page-actions p-3">
             @if ( !Auth::user()->isAdmin() && !$intervention->isComment())
               @if ($intervention->isQuestion())
                 <a href="#answer-form" class="btn btn-primary text-white me-1"><i class="fas fa-reply"></i></a>

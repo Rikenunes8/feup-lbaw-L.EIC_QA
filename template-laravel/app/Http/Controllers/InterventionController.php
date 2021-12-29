@@ -33,10 +33,10 @@ class InterventionController extends Controller
     public function show($id)
     {
         $intervention = Intervention::find($id);
-        while (!$intervention->isQuestion() && !is_null($intervention)) {
+        while (!is_null($intervention) && !$intervention->isQuestion()) {
             $intervention = $intervention->parent();
         }
-        if (is_null($intervention)) return App::abort(404);
+        if (is_null($intervention)) return redirect('/questions');
 
         $question = $intervention;
         $this->authorize('show', $question);
@@ -124,38 +124,6 @@ class InterventionController extends Controller
         return redirect('questions/'.$question->id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Intervention  $intervention
-     * @return Response
-     */
-    public function deleteQuestion(Request $request, $id)
-    {
-        if (!Auth::check()) return redirect('/login');
-
-        $question =  Intervention::questions()->find($id);
-        if (is_null($question)) return App::abort(404);
-        $this->authorize('delete', $question);
-        $question->delete();
-
-        return redirect('/questions');
-    }
-
-    /*
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-    public function showCreateAnswerForm($id)
-    {   
-        if (!Auth::check()) return redirect('/login');
-
-        $question = Intervention::questions()->find($id);
-        if (is_null($question)) return App::abort(404);
-        $this->authorize('create', Intervention::class);
-        return view('pages.forms.answer.create', ['question' => $question]);
-    }
-    */
 
     /**
      * Create a resource in storage.
@@ -222,39 +190,7 @@ class InterventionController extends Controller
         return redirect('questions/'.$answer->id_intervention);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Request $request
-     * @param  int  $id
-     * @return Response
-     */
-    public function deleteAnswer(Request $request, $id)
-    {
-        if (!Auth::check()) return redirect('/login');
-
-        $answer =  Intervention::answers()->find($id);
-        $this->authorize('delete', $answer);
-        $asnwer->delete();
-
-        return redirect('questions/{{ $id }}');
-    }
-
-    /*
-     * Show the form for creating a new resource.
-     *
-     * @param  int  $id
-     * @return Response
-    public function showCreateCommentForm($id)
-    {
-        if (!Auth::check()) return redirect('/login');
-
-        $answer = Intervention::answers()->find($id);
-        if (is_null($answer)) return App::abort(404);
-        $this->authorize('create', Intervention::class);
-        return view('pages.forms.comment.create', ['answer' => $answer]);
-    }
-    */
+    
 
     /**
      * Create a resource in storage.
@@ -322,25 +258,24 @@ class InterventionController extends Controller
         return redirect('questions/'.$answer[0]->id_intervention);
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Request  $request
+     * @param  Request $request
      * @param  int  $id
      * @return Response
      */
-    public function deleteComment(Request $request, $id)
+    public function delete(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
 
-        $comment =  Intervention::comments()->find($id);
-        if (is_null($comment)) return App::abort(404);
-        $answer = $comment->parent();
+        $intervention =  Intervention::find($id);
+        if (is_null($intervention)) return App::abort(404);
+        $this->authorize('delete', $intervention);
+        $intervention->delete();
 
-        $this->authorize('delete', $comment);
-        $comment->delete();
-
-        return redirect('question/{{ answer->id_intervention }}');
+        return $intervention;
     }
 
     public function report(Request $request, $id)
@@ -359,16 +294,25 @@ class InterventionController extends Controller
      */
     public function vote(Request $request, $id)
     {
+        
         if (!Auth::check()) return redirect('/login');
 
         $intervention = Intervention::find($id);
         $user = Auth::user();
-        $vote = $request->input('vote'); // TODO:
-        
-        $this->authorize('vote', $intervention);
+        $vote = $request->input('vote');
+        $vote = $vote=='true'? true : false;
 
-        $intervention->votes()->save($user, ['vote', $vote]);
-        return redirect('questions/{{ $intervention->id }}'); // TODO: Maybe not to return redirect
+        $this->authorize('vote', $intervention);
+        $association = $intervention->votes()->where('id_user', $user->id);
+
+        if (!$association->exists()) {
+            $intervention->votes()->attach($user->id, ['vote' => $vote]);
+        }
+        else if ($association->first()->pivot->vote !== $vote) {
+            $intervention->votes()->updateExistingPivot($user->id, ['vote' => $vote]);
+        }
+
+        return $intervention;
     }
     
     /**
