@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,7 @@ class UserController extends Controller
      */
     public function list()
     {
-        $users = User::where('type', '!=', "Admin")->orderBy('score', 'DESC')->get();
+        $users = User::where('type', '!=', "Admin")->orderBy('score', 'DESC')->paginate(18);
         return view('pages.users', ['users' => $users]);
     }
 
@@ -33,11 +34,12 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        if (!Auth::check()) return redirect('/login');
+        // if (!Auth::check()) return redirect('/login');
         $user = User::find($id);
-        $this->authorize('show', $user);
-        $questions = $user->interventions()->questions()->orderBy('votes', 'DESC')->paginate(2, ['*'], 'questionsPage');
-        $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->paginate(2, ['*'], 'answersPage');
+        if (is_null($user)) return App::abort(404);
+        // $this->authorize('show', $user);
+        $questions = $user->interventions()->questions()->orderBy('votes', 'DESC')->paginate(4, ['*'], 'questionsPage');
+        $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->paginate(4, ['*'], 'answersPage');
 
         return view('pages.user', compact('user', 'questions', 'answers'));
     }
@@ -52,6 +54,7 @@ class UserController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
         $user = User::find($id);
+        if (is_null($user)) return App::abort(404);
         $this->authorize('update', $user);
         return view('pages.forms.user.edit', ['user' => $user]);
     }

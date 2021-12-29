@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Models\Intervention;
 use App\Models\Uc;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class InterventionController extends Controller
      */
     public function list()
     {
-        $questions = Intervention::questions()->orderBy('votes', 'DESC')->get();
+        $questions = Intervention::questions()->orderBy('votes', 'DESC')->paginate(15);
 
         return view('pages.questions', ['questions' => $questions]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Models\Uc;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class UcController extends Controller
      */
     public function list()
     {
-        $ucs = Uc::orderBy('name')->get();
+        $ucs = Uc::orderBy('name')->paginate(18);
         return view('pages.ucs', ['ucs' => $ucs]);
     }
 
@@ -30,6 +31,7 @@ class UcController extends Controller
     public function show($id)
     {
         $uc = Uc::find($id);
+        if (is_null($uc)) return App::abort(404);
         return view('pages.uc', ['uc' => $uc]);
     }
 
@@ -93,6 +95,7 @@ class UcController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
         $uc = Uc::find($id);
+        if (is_null($uc)) return App::abort(404);
         $this->authorize('update', $uc);
         return view('pages.forms.uc.edit', ['uc' => $uc]);
     }
