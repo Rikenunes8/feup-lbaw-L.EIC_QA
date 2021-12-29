@@ -346,4 +346,6 @@ $(document).ready(function () {
     "pagingType": "simple_numbers"
   });
   $('.dataTables_length').addClass('bs-select');
+
+  tinymce.init({selector:'textarea#text-editor'});
 });

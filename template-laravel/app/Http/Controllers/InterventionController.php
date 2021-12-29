@@ -8,6 +8,7 @@ use App\Models\Uc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class InterventionController extends Controller
 {
@@ -71,7 +72,9 @@ class InterventionController extends Controller
 
         $question->id_author = Auth::user()->id;
         $question->title = $request->input('title');
-        $question->text = $request->input('text');
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma descrição!']); 
+        $question->text = $request['text'];
         $question->category = $request->category;
         $question->type = 'question';
         $question->save();

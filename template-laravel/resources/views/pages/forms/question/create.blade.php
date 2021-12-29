@@ -16,7 +16,7 @@
 
     <div class="mb-3 col-12">
         <label for="text" class="form-label">Texto</label>
-        <textarea rows="5" id="text" class="form-control" name="text" required></textarea>
+        <textarea rows="5" id="text-editor" class="form-control" name="text"></textarea>
         @if ($errors->has('text'))
             @include('layouts.error', ['error' => $errors->first('text')])
         @endif

@@ -14,16 +14,16 @@
       <span class="badge bg-info text-dark mt-1 mb-2">{{ $question->uc->code }}</span>
       <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ $question->author->username }}</span>
       
-      <section class="question-detail">
+      <section class="question-detail mt-3">
         <div class="row">
-          <div class="col-1">
-            <a><h3 class="text-center">&#x25B2;</h3></a>
+          <div class="col-1 intervention-votes">
+            <a href="#" class="app-link intervention-vote"><h3 class="text-center">&#x25B2;</h3></a>
             <h3 class="text-center">{{ $question->votes }}</h3>
-            <a><h3 class="text-center">&#x25BC;</h3></a>
+            <a href="#" class="app-link intervention-vote"><h3 class="text-center">&#x25BC;</h3></a>
           </div>
           <div class="col-11 card">
             <div class="card-body">
-              <p>{{ $question->text }}</p>
+              <p>{!! $question->text !!}</p>
               @if ( Auth::check() )
               <div class="text-center question-page-actions p-3">
                 @if ( !Auth::user()->isAdmin() )
@@ -46,14 +46,14 @@
       @foreach($question->childs as $answer)
       <section class="answer-detail mt-3 d-flex flex-row-reverse">
         <div class="row">
-          <div class="col-1">
-            <a><h3 class="text-center">&#x25B2;</h3></a>
+          <div class="col-1 intervention-votes">
+            <a href="#" class="app-link intervention-vote"><h3 class="text-center">&#x25B2;</h3></a>
             <h3 class="text-center">{{ $answer->votes }}</h3>
-            <a><h3 class="text-center">&#x25BC;</h3></a>
+            <a href="#" class="app-link intervention-vote"><h3 class="text-center">&#x25BC;</h3></a>
           </div>
           <div class="col-11 card">
             <div class="card-body">
-              <p>{{ $answer->text }}</p>
+              <p>{!! $answer->text !!}</p>
               <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($answer->date)); }}, por {{ $answer->author->username }}</p>
               @if ( Auth::check() )
               <div class="text-center question-card-icon p-3">
@@ -107,7 +107,7 @@
           </div>
           <div class="col-11 card">
             <div class="card-body">
-              <p>{{ $comment->text }}</p>
+              <p>{!! $comment->text !!}</p>
               <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($comment->date)); }}, por {{ $comment->author->username }}</p>
               @if ( Auth::check() )
               <div class="text-center question-page-actions p-3">

@@ -14,7 +14,7 @@
             <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ $question->author->username }}</span>
           </h6>
           <p class="card-text">
-            {{ substr($question->text, 0, 70) }}
+            {!! substr($question->text, 0, 70) !!}
             @if (strlen($question->text) > 70)
             ...
             @endif

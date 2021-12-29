@@ -91,6 +91,12 @@ section#faq-page .accordion-button:not(.collapsed) {
   width: 88%
 }
 
+#question-page .intervention-votes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 #question-page .question-detail .question-page-actions,
 #question-page .answer-detail .question-page-actions,
 #question-page .comment-detail .question-page-actions {
