@@ -147,8 +147,13 @@ footer > p {
 }
 
 @media (max-width: 767px) {
-  #form-login, #form-uc-create, #form-uc-edit,
-  #form-question-create, #form-question-edit{
+  #form-login, #form-uc-create, #form-uc-edit {
+    width: 100%!important;
+  }
+}
+@media (max-width: 1199px) {
+  #form-question-create, #form-question-edit,
+  #form-answer-edit, #form-comment-edit {
     width: 100%!important;
   }
 }

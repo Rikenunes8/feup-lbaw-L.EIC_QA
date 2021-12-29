@@ -3,7 +3,7 @@
 @section('content')
 <h2 class="text-center">Editar Questão</h2> 
 
-<form method="POST" action="{{ route('questions.edit', $question->id) }}" id="form-question-edit" class="row w-50 mx-auto">
+<form method="POST" action="{{ route('questions.edit', $question->id) }}" id="form-question-edit" class="row w-75 mx-auto">
     {{ csrf_field() }}
     
     <div class="mb-3 col-12">
@@ -16,7 +16,7 @@
 
     <div class="mb-3 col-12">
         <label for="text" class="form-label">Texto</label>
-        <textarea rows="5" id="text" class="form-control" name="text" required>{{ $question->text }}</textarea>
+        <textarea rows="15" class="form-control text-editor" name="text">{{ $question->text }}</textarea>
         @if ($errors->has('text'))
             @include('layouts.error', ['error' => $errors->first('text')])
         @endif
