@@ -96,8 +96,8 @@ section#faq-page .accordion-button:not(.collapsed) {
 #question-page .comment-detail .question-page-actions {
   display: none;
   position: absolute;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: 0;
+  right: 0;
 }
 
 #question-page .question-detail .card:hover .question-page-actions,
@@ -107,9 +107,10 @@ section#faq-page .accordion-button:not(.collapsed) {
 }
 
 #question-page .card-body > p:first-of-type {
-  margin-right: 3rem;
-  margin-bottom: 3rem;
+  margin-right: 8rem;
+  margin-bottom: 1rem;
 }
+
 
 /* UCS PAGE */
 .uc-card-icon, .question-card-icon {

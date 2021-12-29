@@ -7,6 +7,9 @@
 <section id="question-page">
   <div class="row question-card" data-id="{{ $question->id }}"> 
     <div class="col-12 position-relative">
+      <div class="float-end">
+        <a href="{{ url('questions/create') }}" class="btn btn-primary text-white">Nova Questão <i class="fas fa-plus ms-2"></i></a>
+      </div>
       <h2 class="me-4">{{ $question->title }}</h2> 
       <span class="badge bg-info text-dark mt-1 mb-2">{{ $question->uc->code }}</span>
       <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ $question->author->username }}</span>
@@ -22,7 +25,7 @@
             <div class="card-body">
               <p>{{ $question->text }}</p>
               @if ( Auth::check() )
-              <div class="text-center question-page-actions">
+              <div class="text-center question-page-actions p-3">
                 @if ( !Auth::user()->isAdmin() )
                 <a href="{{ url('questions/'.$question->id.'/answers/create') }}" class="btn btn-info text-black me-1"><i class="fas fa-reply"></i></a>
                 @endif
@@ -53,30 +56,33 @@
               <p>{{ $answer->text }}</p>
               <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($answer->date)); }}, por {{ $answer->author->username }}</p>
               @if ( Auth::check() )
-              <div class="text-center question-card-icon p-4">
+              <div class="text-center question-card-icon p-3">
                 @php
-                  $check = 'fa-check question-valid-icon';
-                  $times = 'fa-times question-invalid-icon';
+                  $check = 'fa-check';
+                  $times = 'fa-times';
+                  $isTeacherResponsible = $question->uc->teachers()->wherePivot('id_teacher', '=', Auth::user()->id)->exists();
                   
                   $valid = null;
                   foreach ($answer->valid as $validation) {
                     if ($validation->pivot->valid) $valid = true;
                     else $valid = false;
                   }
-                  
-                  $teachersResponsible = $question->uc->teachers()->wherePivot('id_teacher', '=', Auth::user()->id);
                 @endphp
+
                 @if ( is_null($valid) )
-                
-                @if ( $teachersResponsible->exists() )
-                <i class="fas {{ $check }} me-1"></i>
-                <i class="fas {{ $times }} me-1"></i>
-                @endif
-                @else 
-                <i class="fas {{ $valid ? $check : $times }}"></i>
+                  @if ( $isTeacherResponsible )
+                  <a href="#" class="btn btn-success text-white me-1"> <i class="fas {{ $check }} "></i></a>
+                  <a href="#" class="btn btn-danger text-white me-1"> <i class="fas {{ $times }} "></i></a>
+                  @endif
+                @else
+                  @if ( $isTeacherResponsible )
+                  <a href="#" class="btn {{ $valid ? 'btn-success' : 'btn-danger' }} text-white me-1"> <i class="fas {{ $valid ? $check : $times }} "></i></a>
+                  @else
+                  <i class="fas {{ $valid ? $check : $times }}"></i>
+                  @endif
                 @endif
               </div>
-              <div class="text-center question-page-actions">
+              <div class="text-center question-page-actions p-3">
                 @if ( !Auth::user()->isAdmin() )
                 <a href="{{ url('answers/'.$answer->id.'/comments/create') }}" class="btn btn-info text-black me-1"><i class="fas fa-reply"></i></a>
                 @endif
@@ -104,7 +110,7 @@
               <p>{{ $comment->text }}</p>
               <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($comment->date)); }}, por {{ $comment->author->username }}</p>
               @if ( Auth::check() )
-              <div class="text-center question-page-actions">
+              <div class="text-center question-page-actions p-3">
                 @if ( Auth::user()->id == $comment->id_author )
                 <a href="{{ url('comments/'.$comment->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
                 @endif
