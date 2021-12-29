@@ -46,6 +46,19 @@ function addEventListeners() {
     voter.addEventListener('click', sendDownVoteInterventionRequest);
   });
 
+  let answerValidValidaters = document.querySelectorAll('.intervention-detail .question-card-icon a.validate-valid');
+  [].forEach.call(answerValidValidaters, function(validater) {
+    validater.addEventListener('click', sendValidAnswerRequest);
+  });
+  let answerInvalidValidaters = document.querySelectorAll('.intervention-detail .question-card-icon a.validate-invalid');
+  [].forEach.call(answerInvalidValidaters, function(validater) {
+    validater.addEventListener('click', sendInvalidAnswerRequest);
+  });
+  let answerNoneValidaters = document.querySelectorAll('.intervention-detail .question-card-icon a.invalidate');
+  [].forEach.call(answerNoneValidaters, function(validater) {
+    validater.addEventListener('click', sendNoneAnswerRequest);
+  });
+
 }
 
 function encodeForAjax(data) {
@@ -125,6 +138,22 @@ function sendDownVoteInterventionRequest() {
   let id = this.closest('section').getAttribute('data-id');
 
   sendAjaxRequest('post', '/api/interventions/' + id + '/vote', {vote: false}, interventionVotedHandler);
+}
+
+function sendValidAnswerRequest() {
+  let id = this.closest('section').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/interventions/' + id + '/validate', {valid: true}, answerValidatedHandler);
+}
+function sendInvalidAnswerRequest() {
+  let id = this.closest('section').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/interventions/' + id + '/validate', {valid: false}, answerValidatedHandler);
+}
+function sendNoneAnswerRequest() {
+  let id = this.closest('section').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/interventions/' + id + '/validate', {valid: null}, answerValidatedHandler);
 }
 
 function ucFollowHandler() {
@@ -219,14 +248,52 @@ function interventionDeletedHandler() {
 
 }
 
-
 function interventionVotedHandler() {
-  console.log(this.responseText);
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
 
   let element = document.querySelector('section.intervention-detail[data-id="' + intervention.id + '"] .intervention-votes-number' );
   element.innerHTML = intervention.votes;
+}
+
+function answerValidatedHandler() {
+  if (this.status != 200) window.location = '/';
+  let ret = JSON.parse(this.responseText);
+
+  let intervention = ret[0];
+  let valid = ret[1];
+
+  let cardIcon = document.querySelector('.answer-detail[data-id="' + intervention.id + '"] div.question-card-icon');
+  cardIcon.innerHTML = '';
+
+  let a1 = document.createElement('a');
+  a1.setAttribute('href', "#");
+  a1.setAttribute('class', "btn btn-success text-white me-1");
+  a1.innerHTML = '<i class="fas fa-check"></i>'
+
+  let a2 = document.createElement('a');
+  a2.setAttribute('href', "#");
+  a2.setAttribute('class', "btn btn-danger text-white me-1");
+  a2.innerHTML = '<i class="fas fa-times"></i>'
+  
+  if (valid == null) {
+    a1.classList.add("validate-valid");
+    a1.addEventListener('click', sendValidAnswerRequest);
+    cardIcon.appendChild(a1);
+    a2.classList.add("validate-invalid");
+    a2.addEventListener('click', sendInvalidAnswerRequest);
+    cardIcon.appendChild(a2);
+  }
+  else if (valid) {
+    a1.classList.add("invalidate");
+    a1.addEventListener('click', sendNoneAnswerRequest);
+    cardIcon.appendChild(a1);
+  }
+  else {
+    a2.classList.add("invalidate");
+    a2.addEventListener('click', sendNoneAnswerRequest);
+    cardIcon.appendChild(a2);
+  }
 }
 
 function showCommentCreateForm(btn) {

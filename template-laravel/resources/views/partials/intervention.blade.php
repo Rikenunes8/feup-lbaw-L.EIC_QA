@@ -33,12 +33,12 @@
 
               @if ( is_null($valid) )
                 @if ( $isTeacherResponsible )
-                <a href="#" class="btn btn-success text-white me-1"> <i class="fas {{ $check }} "></i></a>
-                <a href="#" class="btn btn-danger text-white me-1"> <i class="fas {{ $times }} "></i></a>
+                <a href="#" class="btn btn-success text-white me-1 validate-valid"> <i class="fas {{ $check }} "></i></a>
+                <a href="#" class="btn btn-danger text-white me-1 validate-invalid"> <i class="fas {{ $times }} "></i></a>
                 @endif
               @else
                 @if ( $isTeacherResponsible )
-                <a href="#" class="btn {{ $valid ? 'btn-success' : 'btn-danger' }} text-white me-1"> <i class="fas {{ $valid ? $check : $times }} "></i></a>
+                <a href="#" class="btn {{ $valid ? 'btn-success' : 'btn-danger' }} text-white me-1 invalidate"> <i class="fas {{ $valid ? $check : $times }} "></i></a>
                 @else
                 <i class="fas {{ $valid ? $check.' question-valid-icon' : $times.' question-invalid-icon' }}"></i>
                 @endif

@@ -102,7 +102,7 @@ class InterventionPolicy
      * @param  Intervention  $intervention
      * @return Response|bool
      */
-    public function validate(User $user, Intervention $intervention)
+    public function valid(User $user, Intervention $intervention)
     {
         return $user->isTeacher() && $user->id != $intervention->id_author 
                 && !$user->blocked && $intervention->isAnswer();

@@ -328,11 +328,21 @@ class InterventionController extends Controller
 
         $intervention = Intervention::answers()->find($id);
         $user = Auth::user();
-        $valid = $request->input('valid'); // TODO:
-        
-        $this->authorize('validate', $intervention);
+        $validAux = $request->input('valid');
+        $valid = null;
+        if ($validAux == 'true') $valid = true;
+        else if ($validAux == 'false') $valid = false;
 
-        $intervention->valid()->save($user, ['valid', $valid]);
-        return redirect('questions/{{ $intervention->id }}'); // TODO: Maybe not to return redirect
+        $this->authorize('valid', $intervention);
+
+        
+        if (is_null($valid)) {
+            $oldUserValidation = $intervention->valid()->first();
+            $intervention->valid()->detach($oldUserValidation->id_teacher);
+        }
+        else {
+            $intervention->valid()->attach($user->id, ['valid' => $valid]);
+        }
+        return [$intervention, $valid];
     }
 }
