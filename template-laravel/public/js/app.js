@@ -201,6 +201,19 @@ function userBlockedHandler() {
   }
 }
 
+function showCommentCreateForm(btn) {
+  let id = btn.value;
+  let form = document.querySelector('section.comment-answer-form-'+ id);
+
+  if (form.classList.contains('d-none')) {
+    form.classList.replace('d-none', 'd-flex');
+    form.classList.add('flex-row-reverse');
+  } else {
+    form.classList.remove('flex-row-reverse');
+    form.classList.replace('d-flex', 'd-none');
+  }
+}
+
 // Thingy examples
 function sendItemUpdateRequest() {
   let item = this.closest('li.item');
@@ -347,5 +360,5 @@ $(document).ready(function () {
   });
   $('.dataTables_length').addClass('bs-select');
 
-  tinymce.init({selector:'textarea#text-editor'});
+  tinymce.init({selector:'textarea.text-editor'});
 });

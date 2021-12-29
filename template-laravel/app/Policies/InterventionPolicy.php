@@ -92,7 +92,7 @@ class InterventionPolicy
      */
     public function vote(User $user, Intervention $intervention)
     {
-        return $user->isAdmin() && $user->id != $intervention->id_author && !$user->blocked && !$intervention->isComment();
+        return !$user->isAdmin() && $user->id != $intervention->id_author && !$user->blocked && !$intervention->isComment();
     }
 
     /**

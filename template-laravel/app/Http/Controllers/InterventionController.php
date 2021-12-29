@@ -73,7 +73,7 @@ class InterventionController extends Controller
         $question->id_author = Auth::user()->id;
         $question->title = $request->input('title');
         if (is_null($request['text']))
-            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma descrição!']); 
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
         $question->text = $request['text'];
         $question->category = $request->category;
         $question->type = 'question';
@@ -91,10 +91,12 @@ class InterventionController extends Controller
     public function showEditQuestionForm($id)
     {
         if (!Auth::check()) return redirect('/login');
+
         $question = Intervention::questions()->find($id);
         if (is_null($question)) return App::abort(404);
         $this->authorize('update', $question);
         $ucs = Uc::orderBy('name')->get();
+
         return view('pages.forms.question.edit', ['question' => $question, 'ucs' => $ucs]);
     }
 
@@ -108,13 +110,17 @@ class InterventionController extends Controller
     public function updateQuestion(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
+
         $question =  Intervention::questions()->find($id);
         if (is_null($question)) return App::abort(404);
         $this->authorize('update', $question);
         $question->title = $request->input('title');
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
         $question->text = $request->input('text');
         $question->category = $request->category;
         $question->save();
+
         return redirect('questions/'.$question->id);
     }
 
@@ -128,7 +134,7 @@ class InterventionController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $question =  Intervention::questions()::find($id);
+        $question =  Intervention::questions()->find($id);
         if (is_null($question)) return App::abort(404);
         $this->authorize('delete', $question);
         $question->delete();
@@ -136,20 +142,20 @@ class InterventionController extends Controller
         return redirect('/questions');
     }
 
-    /**
+    /*
      * Show the form for creating a new resource.
      *
      * @return Response
-     */
     public function showCreateAnswerForm($id)
     {   
         if (!Auth::check()) return redirect('/login');
 
-        $question = Intervention::questions()::find($id);
+        $question = Intervention::questions()->find($id);
         if (is_null($question)) return App::abort(404);
         $this->authorize('create', Intervention::class);
         return view('pages.forms.answer.create', ['question' => $question]);
     }
+    */
 
     /**
      * Create a resource in storage.
@@ -163,18 +169,18 @@ class InterventionController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $answer = new Intervention();
-        $question = Intervention::question()::find($id);
+        $question = Intervention::questions()->find($id);
         if (is_null($question)) return App::abort(404);
-
         $this->authorize('create', $answer);
-
-        $answer->text = $request->input('text');
         $answer->id_author = Auth::user()->id;
-        $answer->id_intervention = $id;
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
+        $answer->text = $request['text'];
+        $answer->id_intervention = $question->id;
         $answer->type = 'answer';
         $answer->save();
 
-        return redirect('questions/{{ $question->id }}');
+        return redirect('questions/'.$question->id);
     }
 
     /**
@@ -187,9 +193,10 @@ class InterventionController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $answer = Intervention::answers()::find($id);
+        $answer = Intervention::answers()->find($id);
         if (is_null($answer)) return App::abort(404);
         $this->authorize('update', $answer);
+
         return view('pages.forms.answer.edit', ['answer' => $answer]);
     }
 
@@ -204,14 +211,15 @@ class InterventionController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $answer =  Intervention::answers()::find($id);
+        $answer =  Intervention::answers()->find($id);
         if (is_null($answer)) return App::abort(404);
         $this->authorize('update', $answer);
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
+        $answer->text = $request['text'];
+        $answer->save();
 
-        $answer->text = $request->input('text');
-        $answer->save(); // TODO: Is this right?
-
-        return redirect('questions/{{ $answer->id_intervention }}');
+        return redirect('questions/'.$answer->id_intervention);
     }
 
     /**
@@ -225,28 +233,28 @@ class InterventionController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $answer =  Intervention::answers()::find($id);
+        $answer =  Intervention::answers()->find($id);
         $this->authorize('delete', $answer);
         $asnwer->delete();
 
         return redirect('questions/{{ $id }}');
     }
 
-    /**
+    /*
      * Show the form for creating a new resource.
      *
      * @param  int  $id
      * @return Response
-     */
     public function showCreateCommentForm($id)
     {
         if (!Auth::check()) return redirect('/login');
 
-        $answer = Intervention::answers()::find($id);
+        $answer = Intervention::answers()->find($id);
         if (is_null($answer)) return App::abort(404);
         $this->authorize('create', Intervention::class);
         return view('pages.forms.comment.create', ['answer' => $answer]);
     }
+    */
 
     /**
      * Create a resource in storage.
@@ -260,20 +268,18 @@ class InterventionController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $comment = new Intervention();
-
-        $answer = Intervention::answers()::find($id);
-        if (is_null($answer)) return App::abort(404);
-        $question = $answer->parent();
-
         $this->authorize('create', $comment);
-
-        $comment->text = $request->input('text');
+        $answer = Intervention::answers()->find($id);
+        if (is_null($answer)) return App::abort(404);
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']);
         $comment->id_author = Auth::user()->id;
-        $comment->id_intervention = $id;
+        $comment->text = $request['text'];
+        $comment->id_intervention = $answer->id;
         $comment->type = 'comment';
         $comment->save();
 
-        return redirect('/questions/{{ $question->id }}');
+        return redirect('questions/'.$answer->id_intervention);
     }
 
     /**
@@ -286,11 +292,10 @@ class InterventionController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $comment = Intervention::comments()::find($id);
+        $comment = Intervention::comments()->find($id);
         if (is_null($comment)) return App::abort(404);
-        $answer = $comment->parent();
-
         $this->authorize('update', $comment);
+
         return view('pages.forms.comment.edit', ['comment' => $comment]);
     }
 
@@ -305,16 +310,16 @@ class InterventionController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $comment =  Intervention::comments()::find($id);
+        $comment =  Intervention::comments()->find($id);
         if (is_null($comment)) return App::abort(404);
-        $answer = $comment->parent();
-
         $this->authorize('update', $comment);
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']);
+        $answer = $comment->parent()->get();
+        $comment->text = $request['text'];
+        $comment->save(); 
 
-        $comment->text = $request->input('text');
-        $comment->save(); // TODO: Is this right?
-
-        return redirect('question/{{ answer->id_intervention }}');
+        return redirect('questions/'.$answer[0]->id_intervention);
     }
 
     /**
@@ -328,7 +333,7 @@ class InterventionController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $comment =  Intervention::comments()::find($id);
+        $comment =  Intervention::comments()->find($id);
         if (is_null($comment)) return App::abort(404);
         $answer = $comment->parent();
 
@@ -377,7 +382,7 @@ class InterventionController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $intervention = Intervention::answers()::find($id);
+        $intervention = Intervention::answers()->find($id);
         $user = Auth::user();
         $valid = $request->input('valid'); // TODO:
         

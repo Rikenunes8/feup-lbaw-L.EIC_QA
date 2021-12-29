@@ -3,7 +3,7 @@
 @section('content')
 <h2 class="text-center">Criar Questão</h2> 
 
-<form method="POST" action="{{ route('questions.create') }}" id="form-question-create" class="row w-50 mx-auto">
+<form method="POST" action="{{ route('questions.create') }}" id="form-question-create" class="row w-75 mx-auto">
     {{ csrf_field() }}
     
     <div class="mb-3 col-12">
@@ -16,7 +16,7 @@
 
     <div class="mb-3 col-12">
         <label for="text" class="form-label">Texto</label>
-        <textarea rows="5" id="text-editor" class="form-control" name="text"></textarea>
+        <textarea rows="15" class="form-control text-editor" name="text"></textarea>
         @if ($errors->has('text'))
             @include('layouts.error', ['error' => $errors->first('text')])
         @endif
