@@ -7,9 +7,11 @@
 <section id="question-page">
   <div class="row question-card" data-id="{{ $question->id }}"> 
     <div class="col-12 position-relative">
+      @if ( Auth::check() && !Auth::user()->isAdmin())
       <div class="float-end">
         <a href="{{ url('questions/create') }}" class="btn btn-primary text-white">Nova Questão <i class="fas fa-plus ms-2"></i></a>
       </div>
+      @endif
       <h2 class="me-4">{{ $question->title }}</h2> 
       <span class="badge bg-info text-dark mt-1 mb-2">{{ $question->uc->code }}</span>
       <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ $question->author->username }}</span>
@@ -27,7 +29,7 @@
               @if ( Auth::check() )
               <div class="text-center question-page-actions p-3">
                 @if ( !Auth::user()->isAdmin() )
-                <a href="{{ url('questions/'.$question->id.'/answers/create') }}" class="btn btn-info text-black me-1"><i class="fas fa-reply"></i></a>
+                <a href="{{ url('questions/'.$question->id.'/answers/create') }}" class="btn btn-primary text-white me-1"><i class="fas fa-reply"></i></a>
                 @endif
                 @if ( Auth::user()->id == $question->id_author )
                 <a href="{{ url('questions/'.$question->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
@@ -84,7 +86,7 @@
               </div>
               <div class="text-center question-page-actions p-3">
                 @if ( !Auth::user()->isAdmin() )
-                <a href="{{ url('answers/'.$answer->id.'/comments/create') }}" class="btn btn-info text-black me-1"><i class="fas fa-reply"></i></a>
+                <a href="{{ url('answers/'.$answer->id.'/comments/create') }}" class="btn btn-primary text-white me-1"><i class="fas fa-reply"></i></a>
                 @endif
                 @if ( Auth::user()->id == $answer->id_author )
                 <a href="{{ url('answers/'.$answer->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
