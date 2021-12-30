@@ -302,6 +302,43 @@ function answerValidatedHandler() {
   }
 }
 
+function showRegisterFormFields() {
+  const select = document.querySelector('select#usertype');
+  if (select === null) return;
+
+  const type = select.value;
+  let teacher_student_fileds = document.querySelectorAll('div.teacher-student-extra-fields');
+  let only_student_fields = document.querySelectorAll('div.student-extra-fields');
+  let name_field = document.querySelector('input#name');
+  let entry_year_field = document.querySelector('input#entryyear');
+  let about_field = document.querySelector('textarea#about');
+
+  switch (type) {
+    case "Admin":
+      [].forEach.call(teacher_student_fileds, function(field) { field.classList.add('d-none'); });
+      [].forEach.call(only_student_fields, function(field) { field.classList.add('d-none'); });
+      name_field.required = false;
+      entry_year_field.required = false;
+      break;
+    case "Teacher":
+      [].forEach.call(teacher_student_fileds, function(field) { field.classList.remove('d-none'); });
+      [].forEach.call(only_student_fields, function(field) { field.classList.add('d-none'); });
+      name_field.required = true;
+      entry_year_field.required = false;
+      about_field.setAttribute('rows', '8');
+      break;
+    case "Student":
+      [].forEach.call(teacher_student_fileds, function(field) { field.classList.remove('d-none'); });
+      [].forEach.call(only_student_fields, function(field) { field.classList.remove('d-none'); });
+      name_field.required = true;
+      entry_year_field.required = true;
+      about_field.setAttribute('rows', '11');
+      break;
+    default:
+      break;
+  }
+}
+
 function showCommentCreateForm(btn) {
   let id = btn.value;
   let form = document.querySelector('section.comment-answer-form-'+ id);
@@ -341,4 +378,5 @@ $(document).ready(function () {
   $('.dataTables_length').addClass('bs-select');
 
   tinymce.init({selector:'textarea.text-editor'});
+  showRegisterFormFields();
 });

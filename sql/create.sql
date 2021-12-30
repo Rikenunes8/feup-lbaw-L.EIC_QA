@@ -23,7 +23,7 @@ CREATE TYPE "type_validation" AS ENUM ('acceptance', 'rejection');
 
 CREATE TABLE "users" (
     id             SERIAL PRIMARY KEY,
-    email           TEXT NOT NULL CONSTRAINT email_uk UNIQUE ,
+    email          TEXT NOT NULL CONSTRAINT email_uk UNIQUE ,
     username       TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
     password       TEXT NOT NULL,
     registry_date  TIMESTAMP  NOT NULL DEFAULT now(),

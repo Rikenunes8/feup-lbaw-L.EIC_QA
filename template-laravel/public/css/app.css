@@ -141,6 +141,11 @@ td.admin-table-uc-actions, td.admin-table-user-actions {
   vertical-align: middle;
 }
 
+.form-label.required:after {
+  content:" *";
+  color:red;
+}
+
 /* FOOTER */
 footer > p {
   font-size: small;

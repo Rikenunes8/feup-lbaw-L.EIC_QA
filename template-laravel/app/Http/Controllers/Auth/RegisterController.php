@@ -27,7 +27,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/cards';
+    protected $redirectTo = '/questions'; // TODO -> to profile
 
     /**
      * Create a new controller instance.
@@ -47,11 +47,34 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+        if ($data['usertype'] == "Admin") {
+            return Validator::make($data, [
+                'email' => 'required|string|email|max:255|unique:users,email',
+                'username' => 'required|string|max:20|unique:users,username',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+        } else if ($data['usertype'] == "Teacher") {
+            return Validator::make($data, [
+                'email' => 'required|string|email|max:255|unique:users,email',
+                'username' => 'required|string|max:20|unique:users,username',
+                'password' => 'required|string|min:6|confirmed',
+                'name' => 'required|string|max:255',
+                'about' => 'nullable|string|max:500',
+                'photo' => 'nullable|image|mimes:jpeg,jpg,png,bmp,tiff,gif|max:4096',
+                'birthdate' => 'nullable|date_format:Y-m-d\TH:i',
+            ]);
+        } else { // ($data['usertype'] == "Student")
+            return Validator::make($data, [
+                'email' => 'required|string|email|max:255|unique:users,email',
+                'username' => 'required|string|max:20|unique:users,username',
+                'password' => 'required|string|min:6|confirmed',
+                'name' => 'required|string|max:255',
+                'about' => 'nullable|string|max:500',
+                'photo' => 'nullable|image|mimes:jpeg,jpg,png,bmp,tiff,gif|max:4096',
+                'birthdate' => 'nullable|date_format:Y-m-d\TH:i',
+                'entryyear' => 'required|numeric|min:0',
+            ]);
+        }
     }
 
     /**
@@ -62,10 +85,47 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        if ($data['usertype'] == "Admin") {
+            return User::create([
+                'email' => $data['email'],
+                'username' => $data['usertype'],
+                'password' => bcrypt($data['password']),
+                'score' => null,
+                'blocked' => null,
+                'type' => "Admin",
+            ]);
+        } else {
+            $filename = null;
+            if (!empty($_FILES['photo']['name'])) {
+                $file = $data['photo'];
+                $filename = '_'.time().'.'.$file->getClientOriginalExtension();
+                $data['photo']->storeAs('users', $filename, 'images_uploads');
+            }
+
+            if ($data['usertype'] == "Teacher") {
+                return User::create([
+                    'email' => $data['email'],
+                    'username' => $data['username'],
+                    'password' => bcrypt($data['password']),
+                    'name' => $data['name'],
+                    'about' => $data['about'],
+                    'photo' => $filename,
+                    'birthdate' => $data['birthdate'],
+                    'type' => "Teacher",
+                ]);
+            } else { // ($data['usertype'] == "Student")
+                return User::create([
+                    'email' => $data['email'],
+                    'username' => $data['username'],
+                    'password' => bcrypt($data['password']),
+                    'name' => $data['name'],
+                    'about' => $data['about'],
+                    'photo' => $filename,
+                    'birthdate' => $data['birthdate'],
+                    'entry_year' => $data['entryyear'],
+                    'type' => "Student",
+                ]);
+            }
+        }
     }
 }

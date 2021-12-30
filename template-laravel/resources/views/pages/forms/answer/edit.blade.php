@@ -7,7 +7,7 @@
     {{ csrf_field() }}
 
     <div class="mb-3 col-12">
-        <label for="text" class="form-label">Texto</label>
+        <label for="text" class="form-label required">Texto</label>
         <textarea rows="20" class="form-control text-editor" name="text">{{ $answer->text }}</textarea>
         @if ($errors->has('text'))
             @include('layouts.error', ['error' => $errors->first('text')])

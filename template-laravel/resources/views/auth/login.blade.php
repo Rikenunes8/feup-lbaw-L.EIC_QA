@@ -7,7 +7,7 @@
     {{ csrf_field() }}
 
     <div class="mb-3 col-12">
-        <label for="email" class="form-label">E-mail</label>
+        <label for="email" class="form-label required">E-mail</label>
         <input type="email" id="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
         @if ($errors->has('email'))
             @include('layouts.error', ['error' => $errors->first('email')])
@@ -15,7 +15,7 @@
     </div>
     
     <div class="mb-3 col-12">
-        <label for="password" class="form-label">Password</label>
+        <label for="password" class="form-label required">Password</label>
         <input type="password" id="password" class="form-control" name="password" required>
         @if ($errors->has('password'))
             @include('layouts.error', ['error' => $errors->first('password')])
