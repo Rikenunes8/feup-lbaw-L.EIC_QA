@@ -7,7 +7,7 @@
     {{ csrf_field() }}
     
     <div class="mb-3 col-12">
-        <label for="title" class="form-label">Titulo</label>
+        <label for="title" class="form-label required">Titulo</label>
         <input type="text" id="title" class="form-control" name="title" required>
         @if ($errors->has('title'))
             @include('layouts.error', ['error' => $errors->first('title')])
@@ -15,7 +15,7 @@
     </div>
 
     <div class="mb-3 col-12">
-        <label for="text" class="form-label">Texto</label>
+        <label for="text" class="form-label required">Texto</label>
         <textarea rows="15" class="form-control text-editor" name="text"></textarea>
         @if ($errors->has('text'))
             @include('layouts.error', ['error' => $errors->first('text')])
@@ -23,7 +23,7 @@
     </div>
     
     <div class="mb-3 col-12">
-        <label for="category" class="form-label">Unidade Curricular</label>
+        <label for="category" class="form-label required">Unidade Curricular</label>
         <select id="category" class="form-select" name="category" aria-label="category" required>
           @foreach ($ucs as $uc)
             <option value="{{ $uc->id }}">[ {{ $uc->code }} ] {{ $uc->name }}</option>

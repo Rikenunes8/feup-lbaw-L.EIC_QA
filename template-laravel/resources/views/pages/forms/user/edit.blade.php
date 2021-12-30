@@ -7,12 +7,12 @@
     {{ csrf_field() }}
 
     <div class="mb-3 col-12 col-lg-6">
-        <label for="email" class="form-label">Email</label>
-        <input type="text" id="email" class="form-control" name="email" value='{{ $user->email }}' disabled>
+        <label for="email" class="form-label required">Email</label>
+        <input type="email" id="email" class="form-control" name="email" value='{{ $user->email }}' disabled>
     </div>
     
     <div class="mb-3 col-12 col-lg-6">
-        <label for="username" class="form-label">Username</label>
+        <label for="username" class="form-label required">Username</label>
         <input type="text" id="username" class="form-control" name="username" value='{{ $user->username }}' required>
         @if ($errors->has('username'))
             @include('layouts.error', ['error' => $errors->first('username')])
@@ -39,7 +39,7 @@
     <div class="col-12 col-lg-6">
         <div class="mb-3 row">
             <div class="col-12">
-                <label for="name" class="form-label">Nome</label>
+                <label for="name" class="form-label required">Nome</label>
                 <input type="text" id="name" class="form-control" name="name" value='{{ $user->name }}' required>
                 @if ($errors->has('name'))
                     @include('layouts.error', ['error' => $errors->first('name')])

@@ -34,14 +34,13 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        // if (!Auth::check()) return redirect('/login');
         $user = User::find($id);
         if (is_null($user)) return App::abort(404);
-        // $this->authorize('show', $user);
-        $questions = $user->interventions()->questions()->orderBy('votes', 'DESC')->paginate(4, ['*'], 'questionsPage');
-        $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->paginate(4, ['*'], 'answersPage');
+        $questions = $user->interventions()->questions()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'questionsPage');
+        $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'answersPage');
+        $validatedAnswers = $user->validates()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'validatedAnswersPage');;
 
-        return view('pages.user', compact('user', 'questions', 'answers'));
+        return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers'));
     }
 
     /**
