@@ -243,6 +243,11 @@ function userBlockedHandler() {
 }
 
 function interventionDeletedHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Eliminação não autorizada"));
+    return;
+  } 
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
   let element = document.querySelector('section.intervention-detail[data-id="' + intervention.id + '"]');
@@ -254,7 +259,11 @@ function interventionDeletedHandler() {
 }
 
 function interventionVotedHandler() {
-  if (this.status == 403) return;
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Votação não autorizada"));
+    return;
+  } 
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
 
@@ -263,6 +272,11 @@ function interventionVotedHandler() {
 }
 
 function answerValidatedHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Validação não autorizada"));
+    return;
+  } 
   if (this.status != 200) window.location = '/';
   let ret = JSON.parse(this.responseText);
 
