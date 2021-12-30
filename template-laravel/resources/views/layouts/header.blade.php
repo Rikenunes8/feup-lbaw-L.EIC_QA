@@ -6,8 +6,8 @@
     </a>
     
     <div class="d-flex align-items-center">
-      <form class="w-100 me-3">
-        <input type="search" class="form-control" placeholder="Pesquisa..." aria-label="Search">
+      <form class="w-100 me-3" action="/search">
+        <input type="search" class="form-control" placeholder="Pesquisa..." aria-label="Search" name="q">
       </form>
 
       @if (Auth::check())

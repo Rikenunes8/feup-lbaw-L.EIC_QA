@@ -39,7 +39,7 @@ Route::post('api/interventions/{id}/validate' , 'InterventionController@valid');
 
 Route::post('api/ucs/follow/{uc_id}', 'UcController@follow');
 
-Route::post('api/notifications/read/{not_id}', 'NotificationController@read');
+// Route::post('api/notifications/read/{not_id}', 'NotificationController@read');
 
 
 // Interventions - Questions
@@ -67,7 +67,7 @@ Route::get('users/{id}/edit'  , 'UserController@showEditForm');
 Route::post('users/{id}/edit' , 'UserController@update')->name('users.edit');
 
 Route::post('api/users/{id}/block'    , 'UserController@block');
-Route::delete('api/users/{id}/delete' , 'UserController@delete'); // ??
+Route::delete('api/users/{id}/delete' , 'UserController@delete');
 
 // Notifications
 /*
@@ -89,7 +89,7 @@ Route::put('api/ucs/{uc_id}/teachers/{user_id}/add'       , 'UcController@addTea
 Route::delete('api/ucs/{uc_id}/teachers/{user_id}/delete' , 'UcController@deleteTeacher');
 
 // Search
-Route::get('search', 'InterventionController@list');
+Route::get('search', 'InterventionController@searchList');
 
 
 // Admin
