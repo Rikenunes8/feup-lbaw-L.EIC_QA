@@ -450,4 +450,3 @@ CREATE TRIGGER generate_notification_validation
 AFTER INSERT OR UPDATE OF valid ON "validation"
 FOR EACH ROW
 EXECUTE PROCEDURE generate_notification_validation();
-

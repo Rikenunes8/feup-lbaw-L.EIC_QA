@@ -29,7 +29,12 @@
             @endif
           </div>
           <div class="col-md-8 mb-2">
-            <h4>{{ $user->username }}</h4> 
+            <h4>
+              {{ $user->username }}
+              @if ((Auth::user()->isAdmin() || Auth::user()->id == $user->id) && ($user->blocked))
+              <i class="fas fa-user-lock"></i>
+              @endif 
+            </h4> 
             @php 
               $bg = 'bg-info text-dark';
               if ($user->isTeacher()) $bg = 'bg-warning text-dark';
@@ -38,7 +43,7 @@
             <span class="badge {{ $bg }} me-2">{{ $user->type }}</span>
             <span class="text-muted">Aderiu a {{ date('d/m/Y', strtotime($user->registry_date)); }}</span>
             
-            @if (!is_null($user->about) || !is_null($user->birthdate))
+            @if (!is_null($user->about) || !is_null($user->birthdate) || $user->isStudent())
             <h5 class="mt-4">Sobre mim</h5>
             <div class="ms-3"> 
               @if (!is_null($user->about))
@@ -47,6 +52,9 @@
               @if (!is_null($user->birthdate))
               <p><i class="fas fa-birthday-cake me-2"></i>Aniversário: {{ date('d/m/Y', strtotime($user->birthdate)); }}</p>
               @endif
+              @if ($user->isStudent()) 
+              <p><i class="fas fa-user-graduate me-2"></i>Ano de Ingresso: {{ $user->entry_year }}</p>
+              @endif 
             </div>
             @endif
 
@@ -75,7 +83,7 @@
         
         @if ( count($questions) != 0 )
         <div class="row mt-4  clear">
-          @each('partials.question', $questions, 'question') <!-- TODO: 4th argument to view no elements -->
+          @each('partials.question', $questions, 'question') 
         </div>
         
         <div class="row">
@@ -98,7 +106,7 @@
 
         @if ( count($questions) != 0 )
         <div class="row mt-2">
-          @each('partials.answer', $answers, 'answer') <!-- TODO: 4th argument to view no elements -->
+          @each('partials.answer', $answers, 'answer') 
         </div>
 
         <div class="row">
