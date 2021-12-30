@@ -37,7 +37,7 @@
                   <div class="text-start mx-auto mt-3 filter-parameter">
                     <p>Filtrar por:</p>
                     <div>
-                      <input type="radio" id="none" name="filter" value="none" checked >
+                      <input type="radio" id="none" name="filter" value="none" >
                       <label class="form-check-label" for="none">Nenhum filtro</label>
                     </div>
                     <div>
@@ -73,7 +73,7 @@
                     <label class="form-check-label" for="asc">&#8593; Ascendente</label>
                   </div>
                   <div>
-                    <input type="radio" id="desc" name="order" value="desc" checked>
+                    <input type="radio" id="desc" name="order" value="desc" >
                     <label class="form-check-label" for="desc">&#8595; Descendente</label>
                   </div>
                 </div>

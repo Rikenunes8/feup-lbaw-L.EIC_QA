@@ -10,7 +10,7 @@
         <li><a class="nav-link pt-0" href="{{ url('/questions') }}"><i class="fas fa-question"></i> Questões</a></li>
         <li><a class="nav-link pt-0" href="{{ url('/ucs') }}"><i class="fas fa-book"></i> Unidades Curriculares</a></li>
         <li><a class="nav-link pt-0" href="{{ url('/users') }}"><i class="fas fa-user-circle"></i> Utilizadores</a></li>
-        <li><a class="nav-link pt-0" href="{{ url('/...') }}"><i class="fas fa-search"></i> Pesquisar</a></li>
+        <li><a class="nav-link pt-0" href="#" onclick="focusSearchInput()"><i class="fas fa-search"></i> Pesquisar</a></li>
       </ul>
           
       @if (Auth::check() && Auth::user()->isAdmin()) 
