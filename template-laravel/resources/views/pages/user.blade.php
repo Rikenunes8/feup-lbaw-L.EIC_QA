@@ -68,7 +68,6 @@
 
       @if (!$user->isAdmin())
       <hr>
-
       <section class="mt-4">
         @if ( Auth::check() && Auth::user()->id == $user->id )
           <div>
@@ -95,8 +94,8 @@
         <p>Não existem Questões</p>
         @endif
       </section>
+
       <hr>
-        
       <section class="mt-4">
         @if ( Auth::check() && Auth::user()->id == $user->id )
           <h5>As minhas Respostas</h5>
@@ -118,6 +117,33 @@
         <p>Não existem Respostas</p>
         @endif
       </section>
+
+
+      @if ($user->isTeacher()) 
+        <hr>
+        <section class="mt-4">
+          @if ( Auth::check() && Auth::user()->id == $user->id )
+            <h5>As minhas Respostas Validadas</h5>
+          @else
+            <h5>Respostas Validadas</h5> 
+          @endif
+
+          @if ( count($validatedAnswers) != 0 )
+          <div class="row mt-2">
+            @each('partials.answer', $validatedAnswers, 'answer') 
+          </div>
+
+          <div class="row">
+            <div class="col-12 d-flex justify-content-end">
+              {!! $validatedAnswers->links() !!}
+            </div>
+          </div>
+          @else 
+          <p>Não existem Respostas Validadas</p>
+          @endif
+        </section>
+      @endif
+
       @endif
       
     </div>
