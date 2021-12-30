@@ -26,17 +26,17 @@ class InterventionController extends Controller
         $order = $request->query('order') == 'asc'? 'ASC' : 'DESC';
         $tags = $request->query('tags');
         
-        if ($filter == 'noAnswers') {
-
-        } else if ($filter == 'noValidations') {
-
-        } else {
-
-        }
-
         if ($tags) {
             $questions = $questions->whereIn('category', $tags);
         }
+        
+        if ($filter == 'noAnswers') {
+            $questionsWithAnswers = Intervention::answers()->pluck('id_intervention')->all();
+            $questions = $questions->whereNotIn('id', $questionsWithAnswers);
+        } else if ($filter == 'noValidations') {
+            // TODO: query
+        }
+
 
         if ($sort == 'date') {
             $questions = $questions->orderBy('date', $order);
