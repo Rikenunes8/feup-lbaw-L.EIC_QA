@@ -118,7 +118,6 @@ class InterventionController extends Controller
         if (is_null($request['text']))
             return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
         $question->text = $request->input('text');
-        $question->category = $request->category;
         $question->save();
 
         return redirect('questions/'.$question->id);
