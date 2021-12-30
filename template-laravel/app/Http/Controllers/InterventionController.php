@@ -31,10 +31,15 @@ class InterventionController extends Controller
         }
         
         if ($filter == 'noAnswers') {
-            $questionsWithAnswers = Intervention::answers()->pluck('id_intervention')->all();
-            $questions = $questions->whereNotIn('id', $questionsWithAnswers);
+            $questions = $questions->has('childs', '=', 0);
         } else if ($filter == 'noValidations') {
-            // TODO: query
+            $questionsValidated = Intervention::questions()->whereHas('childs', function ($q1) {
+                $q1->whereHas('valid', function ($q2) {
+                    $q2->where('valid', true);
+                });
+            });
+
+            $questions = $questions->whereNotIn('id', $questionsValidated->pluck('id')->all());
         }
 
 
@@ -55,7 +60,7 @@ class InterventionController extends Controller
      */
     public function list(Request $request)
     {   
-        $questions = InterventionController::listFilter($request, Intervention::questions())->paginate(15);
+        $questions = $this::listFilter($request, Intervention::questions())->paginate(15);
         $ucs = Uc::orderBy('name')->get();
 
         return view('pages.questions', ['questions' => $questions, 'ucs' => $ucs]);
