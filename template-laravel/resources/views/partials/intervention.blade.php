@@ -75,13 +75,13 @@
     
     <section id="comment-answer-form-{{ $intervention->id }}" class="comment-detail mt-2 d-none">
       <div class="row">
-        <div class="col-1">
-        </div>
+        <div class="col-1"></div>
         <div class="col-11">
-        <hr>
-        <button type="button" class="btn-close btn-sm float-end" data-value="{{ $intervention->id }}" onclick="showCommentCreateForm(this)"><i class="fas fa-close"></i></button>
-        @include('pages.forms.comment.create', ['answer' => $intervention])
-        <hr>  
+          <hr>
+          <button type="button" class="btn-close btn-sm float-end" data-value="{{ $intervention->id }}" onclick="showCommentCreateForm(this)"></button>
+          @include('pages.forms.comment.create', ['answer' => $intervention])
+          <hr>  
+        </div>
       </div>
     </section>
   @endif
