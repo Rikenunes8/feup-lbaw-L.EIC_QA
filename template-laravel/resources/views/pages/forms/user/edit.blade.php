@@ -8,7 +8,7 @@
 
     <div class="mb-3 col-12 col-lg-6">
         <label for="email" class="form-label">Email</label>
-        <input type="text" id="email" class="form-control" name="email" value='{{ $user->email }}' disabled>
+        <input type="email" id="email" class="form-control" name="email" value='{{ $user->email }}' disabled>
     </div>
     
     <div class="mb-3 col-12 col-lg-6">
