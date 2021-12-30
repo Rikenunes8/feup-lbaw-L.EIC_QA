@@ -354,8 +354,8 @@ function showRegisterFormFields() {
 }
 
 function showCommentCreateForm(btn) {
-  let id = btn.value;
-  let form = document.querySelector('section.comment-answer-form-'+ id);
+  let id = btn.getAttribute("data-value");
+  let form = document.querySelector('section#comment-answer-form-'+ id);
 
   if (form.classList.contains('d-none')) {
     form.classList.replace('d-none', 'd-flex');
