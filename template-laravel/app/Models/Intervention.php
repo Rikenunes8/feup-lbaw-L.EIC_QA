@@ -95,4 +95,21 @@ class Intervention extends Model
     public function scopeComments($query) {
         return $query->whereType('comment');
     }
+
+    public function scopeSearch($query, $search) {
+      if (!$search) {
+        return $query;
+      }
+      
+      $search = str_replace("\\", "\\\\", $search);
+      $search = str_replace("|", "\|", $search);
+      $search = str_replace("&", "\&", $search);
+      $search = str_replace("!", "\!", $search);
+
+      $search = explode(" ", $search);
+      $search = implode(" | ", $search);
+
+      return $query->whereRaw('tsvectors @@ to_tsquery(\'portuguese\', ?)', [$search])
+        ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'portuguese\', ?)) DESC', [$search]);
+    }
 }

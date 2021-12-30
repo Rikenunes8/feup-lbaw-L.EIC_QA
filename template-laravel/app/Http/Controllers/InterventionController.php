@@ -25,6 +25,28 @@ class InterventionController extends Controller
     }
 
     /**
+     * Shows all questions.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function searchList(Request $request)
+    {
+        $questions = Intervention::questions();
+        if ($request->input('q')) {
+            $search = $request->input('q');
+        }
+        else {
+            $questions = $questions->orderBy('votes', 'DESC')->paginate(15);
+            return view('pages.questions', ['questions' => $questions]);    
+        }
+
+        $questions = $questions->search($search);
+        $questions = $questions->paginate(15);
+        return view('pages.search', ['questions' => $questions]);
+    }
+
+    /**
      * Display the specified questions.
      *
      * @param  int  $id
