@@ -51,7 +51,7 @@
               @if ($intervention->isQuestion())
                 <a href="#answer-form" class="btn btn-primary text-white me-1"><i class="fas fa-reply"></i></a>
               @else
-                <button class="btn btn-primary text-white me-1" onclick="showCommentCreateForm(this)" value="{{ $intervention->id }}"><i class="fas fa-reply"></i></button>
+                <a href="#comment-answer-form-{{ $intervention->id }}" class="btn btn-primary text-white me-1" data-value="{{ $intervention->id }}" onclick="showCommentCreateForm(this)"><i class="fas fa-reply"></i></a>
               @endif
             @endif
             @if ( Auth::user()->id == $intervention->id_author )
@@ -73,14 +73,15 @@
 
   @if ($intervention->isAnswer())
     
-    <section class="comment-detail mt-2 d-none comment-answer-form-{{ $intervention->id }}">
+    <section id="comment-answer-form-{{ $intervention->id }}" class="comment-detail mt-2 d-none">
       <div class="row">
-        <div class="col-1">
-        </div>
+        <div class="col-1"></div>
         <div class="col-11">
-        <hr>
-        @include('pages.forms.comment.create', ['answer' => $intervention])
-        <hr>  
+          <hr>
+          <button type="button" class="btn-close btn-sm float-end" data-value="{{ $intervention->id }}" onclick="showCommentCreateForm(this)"></button>
+          @include('pages.forms.comment.create', ['answer' => $intervention])
+          <hr>  
+        </div>
       </div>
     </section>
   @endif

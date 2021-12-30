@@ -6,6 +6,8 @@
 
 <section id="uc-page">
   <div class="row uc-card" data-id="{{ $uc->id }}"> 
+    <section class="error-msg"></section>
+
     <div class="col-12 position-relative">
       <h2 class="me-4">{{ $uc->name }}</h2> 
       <span class="badge bg-info text-dark mt-1 mb-2">{{ $uc->code }}</span>
