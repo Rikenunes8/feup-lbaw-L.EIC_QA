@@ -20,7 +20,7 @@
         @endforeach
       </p>
 
-      @if ( Auth::check() && Auth::user()->isStudent() ) <!-- TODO e nao admin-->
+      @if ( Auth::check() && Auth::user()->isStudent() )
       <p class="uc-card-icon p-4">
         
         <a href="#" class="card-link uc-card-icon-follow">

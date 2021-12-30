@@ -7,6 +7,9 @@
 <section id="ucs-page">
   <h2>Unidades Curriculares</h2> 
 
+  <section class="error-msg">
+  </section>
+
   @if (count($ucs) != 0)
   <div class="row"> 
     @each('partials.uc', $ucs, 'uc')

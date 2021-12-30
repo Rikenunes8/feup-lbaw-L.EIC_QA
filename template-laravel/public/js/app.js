@@ -157,6 +157,11 @@ function sendNoneAnswerRequest() {
 }
 
 function ucFollowHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Ação não autorizada"));
+    return;
+  } 
   if (this.status != 200) window.location = '/';
   let uc = JSON.parse(this.responseText);
   let element = document.querySelector('div.uc-card[data-id="' + uc.id + '"] a.uc-card-icon-follow i');
@@ -308,6 +313,23 @@ function showCommentCreateForm(btn) {
     form.classList.remove('flex-row-reverse');
     form.classList.replace('d-flex', 'd-none');
   }
+}
+
+function createError(msg) {
+  let error_div = document.createElement('div');
+  error_div.classList.add('mt-1', 'py-2', 'alert', 'alert-danger', 'alert-dismissible', 'fade', 'show');
+
+  let close_btn = document.createElement('button');
+  close_btn.setAttribute('type', 'button');
+  close_btn.setAttribute('data-bs-dismiss', 'alert');
+  close_btn.classList.add('h-auto','btn-close','btn-sm');
+
+  let error_txt = document.createTextNode(`${msg}`);
+
+  error_div.appendChild(close_btn);
+  error_div.appendChild(error_txt);
+
+  return error_div;
 }
 
 addEventListeners();
