@@ -93,7 +93,7 @@
       <div class="mb-3 row">
           <div class="col-12">
               <label for="birthdate" class="form-label">Aniversário</label>
-              <input type="datetime-local" id="birthdate" class="form-control" name="birthdate" value="{{ old('birthdate') }}">
+              <input type="date" id="birthdate" class="form-control" name="birthdate" value="{{ old('birthdate') }}">
               @if ($errors->has('birthdate'))
                   @include('layouts.error', ['error' => $errors->first('birthdate')])
               @endif
