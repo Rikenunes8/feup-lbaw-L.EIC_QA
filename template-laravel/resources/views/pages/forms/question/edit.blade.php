@@ -24,7 +24,7 @@
     
     <div class="mb-3 col-12">
         <label for="category" class="form-label">Unidade Curricular</label>
-        <select id="category" class="form-select" name="category" aria-label="category" required>
+        <select id="category" class="form-select" name="category" aria-label="category" disabled>
           @foreach ($ucs as $uc)
             <option value="{{ $uc->id }}" {{ $question->category==$uc->id?'selected':'' }}>[ {{ $uc->code }} ] {{ $uc->name }}</option>
           @endforeach
