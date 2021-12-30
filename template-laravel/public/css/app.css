@@ -9,6 +9,10 @@
   object-fit: cover;
 }
 
+.navbar-nav {
+  min-height: calc(100vh - 110px);
+}
+
 /*TODO improve links colors*/
 /* SIDEBAR ADD APP LINKS*/
 .nav-link, .navbar-text, .app-link {
@@ -144,6 +148,16 @@ td.admin-table-uc-actions, td.admin-table-user-actions {
 .form-label.required:after {
   content:" *";
   color:red;
+}
+
+.filter-form .filter-parameter {
+  width:fit-content;
+}
+
+.dropdown-keep-open .dropdown-menu {
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: 450px;
 }
 
 /* FOOTER */

@@ -1,4 +1,4 @@
-<div class="col-12 mb-2 px-1">
+<div class="col-12 mb-2">
   <div class="card question-card h-100" data-id="{{ $answer->id }}">
     <div class="card-body">
       

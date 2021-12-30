@@ -405,3 +405,9 @@ $(document).ready(function () {
   showRegisterFormFields();
 });
 
+$('.dropdown.dropdown-keep-open').on('hide.bs.dropdown', function (e) {
+  if (!e.clickEvent) { return true; }
+  var target = $(e.clickEvent.target);
+  return !(target.hasClass('dropdown-keep-open') || target.parents('.dropdown-keep-open').length);
+});
+

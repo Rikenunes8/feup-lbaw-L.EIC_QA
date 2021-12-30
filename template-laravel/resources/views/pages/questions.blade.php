@@ -23,64 +23,86 @@
   @if ( $nQuestions != 0 )
   <div class="row">
     <div class="col-12">
+      <button class="btn btn-info text-white me-3" onclick="showFilterForm(this)">Filtrar<i class="fas fa-filter ms-2"></i></button>
       <span>{{ $nQuestions }} Questões</span>
-      <button class="btn btn-info text-white mx-5" onclick="showFilterForm(this)"><i class="fas fa-filter"></i></button>
     </div>
-    <div class="col-12 card filter-card bg-info my-3 d-none">
-      <form class="filter-form">
-        <div class="d-flex justify-content-around my-3">
-          <div>
-            <p>Filtrar por:</p>
-            <div>
-              <input type="radio" name="filter" value="none" checked>
-              <label>Nenhum filtro</label>
-            </div>
-            <div>
-              <input type="radio" name="filter" value="noAnswers">
-              <label>Sem respostas</label>
-            </div>
-            <div>
-              <input type="radio" name="filter" value="noValidations">
-              <label>Sem validadações</label>
-            </div>
-          </div>
-          
-          <div>
-            <p>Ordenar por:</p>
-            <div>
-              <input type="radio" name="sort" value="votes" checked>
-              <label>Votos</label>
-            </div>
-            <div>
-              <input type="radio" name="sort" value="date">
-              <label>Data</label>
-            </div>
-            <div>
-              <input type="radio" name="order" value="asc">
-              <label>&#8593;</label>
-              <input type="radio" name="order" value="desc" checked>
-              <label>&#8595;</label>
-            </div>
-          </div>
-          
-          <div>
-            <p>Escolher UCs:</p>
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownTags" data-bs-toggle="dropdown">UCs</button>
-              <ul class="dropdown-menu">
-                @foreach ( $ucs as $uc )
-                <li class="dropdown-item"><label><input type="checkbox" name="tags[]" class="mx-2" value="{{ $uc->id }}">{{ $uc->name }}</label></li>
-                @endforeach
-              </ul>
-            </div>
-          </div>
-        </div>
+    <div class="col-12">
+      <div class="card filter-card bg-light my-3 d-none">
+        <div class="card-body">
+          <form class="filter-form">
+            <button type="button" class="btn-close btn-sm float-end" onclick="showFilterForm(this)"></button>
 
-        <div class="d-flex justify-content-between my-3 mx-5">
-          <input type="submit" class="btn btn-success" value="Apply">
-          <div class="btn btn-danger text-white me-1" onclick="showFilterForm(this)"> <i class="fas fa-times"></i></div>
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-3 text-center">
+                  <div class="text-start mx-auto mt-3 filter-parameter">
+                    <p>Filtrar por:</p>
+                    <div>
+                      <input type="radio" id="none" name="filter" value="none" checked >
+                      <label class="form-check-label" for="none">Nenhum filtro</label>
+                    </div>
+                    <div>
+                      <input type="radio" id="noAnswers" name="filter" value="noAnswers" >
+                      <label class="form-check-label" for="noAnswers">Sem respostas</label>
+                    </div>
+                    <div>
+                      <input type="radio" id="noValidations" name="filter" value="noValidations" >
+                      <label class="form-check-label" for="noValidations">Sem validadações</label>
+                    </div>
+                  </div>
+              </div>
+           
+              <div class="col-12 col-sm-6 col-md-3 text-center">
+                <div class="text-start mx-auto mt-3 filter-parameter">
+                  <p>Ordenar por:</p>
+                  <div>
+                    <input type="radio" id="votes" name="sort" value="votes" >
+                    <label class="form-check-label" for="votes">Votos</label>
+                  </div>
+                  <div>
+                    <input type="radio" id="date" name="sort" value="date" >
+                    <label class="form-check-label" for="date">Data</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3 text-center">
+                <div class="text-start mx-auto mt-3 filter-parameter">
+                  <p>Ordem:</p>
+                  <div>
+                    <input type="radio" id="asc" name="order" value="asc" >
+                    <label class="form-check-label" for="asc">&#8593; Ascendente</label>
+                  </div>
+                  <div>
+                    <input type="radio" id="desc" name="order" value="desc" checked>
+                    <label class="form-check-label" for="desc">&#8595; Descendente</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-12 col-sm-6 col-md-3 text-center">
+                <div class="text-start mx-auto mt-3 filter-parameter">
+                  <p>Escolher UCs:</p>
+                  <div class="dropdown dropdown-keep-open">
+                    <button class="btn btn-white dropdown-toggle" type="button" id="dropdownTags" data-bs-toggle="dropdown">UCs</button>
+                    <ul class="dropdown-menu">
+                      @foreach ( $ucs as $uc )
+                        <li class="dropdown-item">
+                          <input type="checkbox" id="uc-{{ $uc->id }}" name="tags[]" class="mx-2" value="{{ $uc->id }}">
+                          <label for="uc-{{ $uc->id }}" class="w-100">{{ $uc->name }}</label>
+                        </li>
+                      @endforeach
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <input type="submit" class="btn btn-success" value="Aplicar">
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   </div>
   <hr>
