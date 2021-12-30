@@ -315,6 +315,16 @@ function showCommentCreateForm(btn) {
   }
 }
 
+function showFilterForm() {
+  let form = document.querySelector('div.filter-card');
+
+  if (form.classList.contains('d-none')) {
+    form.classList.replace('d-none', 'd-block');
+  } else {
+    form.classList.replace('d-block', 'd-none');
+  }
+}
+
 function createError(msg) {
   let error_div = document.createElement('div');
   error_div.classList.add('mt-1', 'py-2', 'alert', 'alert-danger', 'alert-dismissible', 'fade', 'show');
@@ -342,3 +352,4 @@ $(document).ready(function () {
 
   tinymce.init({selector:'textarea.text-editor'});
 });
+

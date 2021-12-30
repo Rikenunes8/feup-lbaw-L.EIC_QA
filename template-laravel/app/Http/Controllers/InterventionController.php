@@ -12,18 +12,55 @@ use Illuminate\Support\Facades\Redirect;
 
 class InterventionController extends Controller
 {
-    /**
-     * Shows all questions.
-     *
-     * @return Response
-     */
-    public function list()
-    {
-        $questions = Intervention::questions()->orderBy('votes', 'DESC')->paginate(15);
 
-        return view('pages.questions', ['questions' => $questions]);
+    /**
+     * Filter query questions according to url query request.
+     * 
+     * @param Request $request
+     * @param $questions
+     * @return $query
+     */
+    private function listFilter(Request $request, $questions) {
+        $filter = $request->query('filter');
+        $sort = $request->query('sort');
+        $order = $request->query('order') == 'asc'? 'ASC' : 'DESC';
+        $tags = $request->query('tags');
+        
+        if ($filter == 'noAnswers') {
+
+        } else if ($filter == 'noValidations') {
+
+        } else {
+
+        }
+
+        if ($tags) {
+            $questions = $questions->whereIn('category', $tags);
+        }
+
+        if ($sort == 'date') {
+            $questions = $questions->orderBy('date', $order);
+        } else {
+            $questions = $questions->orderBy('votes', $order);
+        }
+
+        return $questions;
     }
 
+    /**
+     * Shows all questions.
+     * 
+     * @param Request $request
+     * @return Response
+     */
+    public function list(Request $request)
+    {   
+        $questions = InterventionController::listFilter($request, Intervention::questions())->paginate(15);
+        $ucs = Uc::orderBy('name')->get();
+
+        return view('pages.questions', ['questions' => $questions, 'ucs' => $ucs]);
+    }
+    
     /**
      * Shows all questions.
      *
@@ -33,16 +70,15 @@ class InterventionController extends Controller
     public function searchList(Request $request)
     {
         $questions = Intervention::questions();
-        if ($request->input('q')) {
+        if ($request->query('q')) {
             $search = $request->input('q');
+            
+            $questions = $questions->search($search);
+            $questions = $questions->paginate(15);
         }
         else {
             $questions = $questions->orderBy('votes', 'DESC')->paginate(15);
-            return view('pages.questions', ['questions' => $questions]);    
         }
-
-        $questions = $questions->search($search);
-        $questions = $questions->paginate(15);
         return view('pages.search', ['questions' => $questions]);
     }
 

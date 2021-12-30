@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Questões')
+@section('title', 'Pesquisa')
 
 @section('content')
 
@@ -16,8 +16,14 @@
       @endif
     </div>
   </div>
+  @php
+    $nQuestions = count($questions);
+  @endphp
+  @if ( $nQuestions != 0 )
+  <div class="my-3">
+    <span>{{ $nQuestions }} Resultados</span>
+  </div>
 
-  @if (count($questions) != 0)
   <div class="row"> 
     @each('partials.question', $questions, 'question')
   </div>
