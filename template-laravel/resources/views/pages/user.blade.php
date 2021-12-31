@@ -7,12 +7,14 @@
 <section id="user-profile-page">
   <div class="row user-profile" data-id="{{ $user->id }}"> 
     <div class="col-12 position-relative">
-      @if ( Auth::check() && Auth::user()->id == $user->id )
+      @if ( Auth::check() && (Auth::user()->id == $user->id || Auth::user()->isAdmin()) )
         <div class="float-end">
           <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-primary text-white">Editar<i class="far fa-edit ms-2"></i></a>
         </div>
+      @endif
+      @if (Auth::check() && Auth::user()->id == $user->id)
         <h2 class="me-4">O meu Perfil</h2> 
-      @else
+      @else 
         <h2>{{ $user->name }}</h2> 
       @endif
       
