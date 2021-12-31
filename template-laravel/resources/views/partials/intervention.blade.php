@@ -12,7 +12,7 @@
 
         <p>{!! $intervention->text !!}</p>
         @if (!$intervention->isQuestion())
-        <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($intervention->date)); }}, por {{ $intervention->author->username }}</p>
+        <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($intervention->date)); }}, por {{ is_null($intervention->author)?'Anónimo':$intervention->author->username }}</p>
         @endif
         
         @if ( Auth::check() )

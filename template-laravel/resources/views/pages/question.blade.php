@@ -16,7 +16,7 @@
       @endif
       <h2 class="me-4">{{ $question->title }}</h2> 
       <span class="badge bg-info text-dark mt-1 mb-2">{{ $question->uc->code }}</span>
-      <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ $question->author->username }}</span>
+      <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ is_null($question->author)?'Anónimo':$question->author->username }}</span>
       
 
       @include('partials.intervention', ['intervention' => $question])

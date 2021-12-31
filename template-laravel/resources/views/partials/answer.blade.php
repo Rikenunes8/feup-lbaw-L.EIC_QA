@@ -11,11 +11,11 @@
           <h5 class="card-title me-4"><a href="{{ url('/questions/'.$answer->parent->id) }}" class="app-link">{{ $answer->parent->title }}</a></h5>
           <h6 class="card-subtitle mt-1 mb-2">
             <span class="badge bg-info text-dark">{{ $answer->parent->uc->code }}</span>
-            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($answer->parent->date)); }}, por {{ $answer->parent->author->username }}</span>
+            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($answer->parent->date)); }}, por {{ is_null($answer->parent->author)?'Anónimo':$answer->parent->author->username }}</span>
           </h6>
           <h6 class="card-subtitle mt-3 mb-2">
             <b>Resposta:</b><br>
-            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($answer->date)); }}, por {{ $answer->author->username }}</span>
+            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($answer->date)); }}, por {{ is_null($answer->parent->author)?'Anónimo':$answer->parent->author->username }}</span>
           </h6>
           <p class="card-text">
             {!! substr($answer->text, 0, 70) !!}
