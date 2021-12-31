@@ -35,7 +35,7 @@
         @endif
     </div>
    
-    @if (!Auth::user()->isAdmin())
+    @if (!$user->isAdmin())
     <div class="col-12 col-lg-6">
         <div class="mb-3 row">
             <div class="col-12">

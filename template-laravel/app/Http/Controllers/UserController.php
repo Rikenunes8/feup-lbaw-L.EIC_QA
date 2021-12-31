@@ -82,7 +82,7 @@ class UserController extends Controller
             $user->password = Hash::make($password);
         }
 
-        if (!Auth::user()->isAdmin()) {
+        if (!$user->isAdmin()) {
             $user->name = $request->input('name');
             $user->about = $request->input('about');         
             $user->birthdate = date("Y-m-d H:i:s", strtotime($request->input('birthdate')));

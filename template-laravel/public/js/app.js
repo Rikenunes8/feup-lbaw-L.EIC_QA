@@ -225,18 +225,20 @@ function userBlockedHandler() {
   
   input.disabled = user.blocked;
   if (!user.blocked)
-    input.setAttribute('value', '');
+    input.value = '';
   
   let element = document.querySelector('tr[data-id="' + user.id + '"] td.admin-table-user-actions a.admin-table-block');
   let icon = element.querySelector('i');
   let span = element.querySelector('span');
 
   if (user.blocked) {
-    element.classList.replace('btn-info', 'btn-warning');
+    element.classList.replace('btn-info', 'btn-dark');
+    element.classList.replace('text-dark', 'text-white');
     icon.classList.replace('fa-lock', 'fa-unlock');
     span.innerHTML = "Unlock";
   } else {
-    element.classList.replace('btn-warning', 'btn-info');
+    element.classList.replace('btn-dark', 'btn-info');
+    element.classList.replace('text-white', 'text-dark');
     icon.classList.replace('fa-unlock', 'fa-lock');
     span.innerHTML = "Lock";
   }

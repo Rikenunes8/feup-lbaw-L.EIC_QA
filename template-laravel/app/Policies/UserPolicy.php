@@ -31,7 +31,7 @@ class UserPolicy
      */
     public function update(User $user, User $user2)
     {
-        return $user->id == $user2->id && !$user->blocked;
+        return ($user->id == $user2->id || $user->isAdmin()) && !$user->blocked;
     }
 
     /**
