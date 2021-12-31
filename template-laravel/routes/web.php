@@ -23,10 +23,10 @@ Route::get('faq'     , function () { return view('pages.static.faq'     ); });
 Route::get('contact' , function () { return view('pages.static.contact' ); });
 
 // Authentication
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+Route::get('login'    , 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login'   , 'Auth\LoginController@login');
+Route::get('logout'   , 'Auth\LoginController@logout')->name('logout');
+Route::get('register' , 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
 // Missing Password Recovery Routes : recover
 
@@ -45,18 +45,22 @@ Route::post('api/ucs/follow/{uc_id}', 'UcController@follow');
 // Interventions - Questions
 Route::get('questions'                , 'InterventionController@list');
 Route::get('questions/create'         , 'InterventionController@showCreateQuestionForm');
-Route::post('questions/create'         , 'InterventionController@createQuestion')->name('questions.create');
+Route::post('questions/create'        , 'InterventionController@createQuestion')->name('questions.create');
 Route::get('questions/{id}'           , 'InterventionController@show');
 Route::get('questions/{id}/edit'      , 'InterventionController@showEditQuestionForm');
 Route::post('questions/{id}/edit'     , 'InterventionController@updateQuestion')->name('questions.edit');
 
 // Interventions - Answers
+Route::get('/answers'                     , function () { return redirect()->back(); });
+Route::get('/answers/{id}'                , function () { return redirect()->back(); });
 Route::post('questions/{id}/answers/create', 'InterventionController@createAnswer')->name('answers.create');
 Route::get('answers/{id}/edit'            , 'InterventionController@showEditAnswerForm');
 Route::post('answers/{id}/edit'           , 'InterventionController@updateAnswer')->name('answers.edit');
 
 // Interventions - Comments
-Route::post('answers/{id}/comments/create' , 'InterventionController@createComment')->name('comments.create');
+Route::get('/comments'                    , function () { return redirect()->back(); });
+Route::get('/comments/{id}'               , function () { return redirect()->back(); });
+Route::post('answers/{id}/comments/create', 'InterventionController@createComment')->name('comments.create');
 Route::get('comments/{id}/edit'           , 'InterventionController@showEditCommentForm');
 Route::post('comments/{id}/edit'          , 'InterventionController@updateComment')->name('comments.edit');
 
@@ -93,6 +97,9 @@ Route::get('search', 'InterventionController@searchList');
 
 
 // Admin
+Route::get('admin'                      , function () { return redirect('/users'.'/'.Auth::user()->id); });
+Route::get('admin/ucs/{id}'             , function ($id) { return redirect('/ucs'.'/'.$id); });
+
 Route::get('admin/users'                , 'AdminController@listUsers');
 Route::get('admin/ucs'                  , 'AdminController@listUcs');
 Route::get('admin/ucs/{id}/teachers'    , 'AdminController@listTeachers');
