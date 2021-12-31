@@ -133,10 +133,13 @@ class InterventionController extends Controller
         $question = new Intervention();
         $this->authorize('create', $question);
 
+        $request->validate([
+            'title' => 'required|max:255',
+            'text' => 'required',
+        ]);
+
         $question->id_author = Auth::user()->id;
         $question->title = $request->input('title');
-        if (is_null($request['text']))
-            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
         $question->text = $request['text'];
         $question->category = $request->category;
         $question->type = 'question';
@@ -177,9 +180,13 @@ class InterventionController extends Controller
         $question =  Intervention::questions()->find($id);
         if (is_null($question)) return App::abort(404);
         $this->authorize('update', $question);
+
+        $request->validate([
+            'title' => 'required|max:255',
+            'text' => 'required',
+        ]);
+
         $question->title = $request->input('title');
-        if (is_null($request['text']))
-            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
         $question->text = $request->input('text');
         $question->save();
 
@@ -202,9 +209,12 @@ class InterventionController extends Controller
         $question = Intervention::questions()->find($id);
         if (is_null($question)) return App::abort(404);
         $this->authorize('create', $answer);
-        $answer->id_author = Auth::user()->id;
-        if (is_null($request['text']))
-            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
+
+        $request->validate([
+            'text' => 'required', 
+        ]);
+
+        $answer->id_author = Auth::user()->id; 
         $answer->text = $request['text'];
         $answer->id_intervention = $question->id;
         $answer->type = 'answer';
@@ -244,8 +254,11 @@ class InterventionController extends Controller
         $answer =  Intervention::answers()->find($id);
         if (is_null($answer)) return App::abort(404);
         $this->authorize('update', $answer);
-        if (is_null($request['text']))
-            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
+
+        $request->validate([
+            'text' => 'required', 
+        ]);
+
         $answer->text = $request['text'];
         $answer->save();
 
@@ -269,8 +282,11 @@ class InterventionController extends Controller
         $this->authorize('create', $comment);
         $answer = Intervention::answers()->find($id);
         if (is_null($answer)) return App::abort(404);
-        if (is_null($request['text']))
-            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']);
+
+        $request->validate([
+            'text' => 'required', 
+        ]);
+
         $comment->id_author = Auth::user()->id;
         $comment->text = $request['text'];
         $comment->id_intervention = $answer->id;
@@ -311,8 +327,11 @@ class InterventionController extends Controller
         $comment =  Intervention::comments()->find($id);
         if (is_null($comment)) return App::abort(404);
         $this->authorize('update', $comment);
-        if (is_null($request['text']))
-            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']);
+
+        $request->validate([
+            'text' => 'required', 
+        ]);
+
         $answer = $comment->parent()->get();
         $comment->text = $request['text'];
         $comment->save(); 

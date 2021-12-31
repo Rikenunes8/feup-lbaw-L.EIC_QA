@@ -83,7 +83,7 @@ class UserController extends Controller
         $confirm = $request->input('confirm');
         if ($password != '') {
             if ($password != $confirm)
-                return Redirect::back()->withErrors(['confirm' => 'Password não corresponde']); 
+                return Redirect::back()->withErrors(['confirm' => 'The Password confirmation does not match.']); 
             $user->password = Hash::make($password);
         }
 
@@ -105,7 +105,7 @@ class UserController extends Controller
                 $rules = array('file' => 'image');
                 $validator = Validator::make($image, $rules);
                 if ($validator->fails())
-                    return Redirect::back()->withErrors(['photo' => 'Não é uma imagem']); 
+                    return Redirect::back()->withErrors(['photo' => 'The photo must be an image.']); 
 
                 $filename = $user->id.'_'.time().'.'.$file->getClientOriginalExtension();
                 $request->photo->storeAs('users', $filename, 'images_uploads');
