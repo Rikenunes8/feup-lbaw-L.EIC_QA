@@ -13,6 +13,19 @@ class Intervention extends Model
    */
   protected $table = 'intervention';
 
+
+  public function isQuestion() {
+    return $this->type == 'question';
+  }
+
+  public function isAnswer() {
+    return $this->type == 'answer';
+  }
+
+  public function isComment() {
+    return $this->type == 'comment';
+  }
+
   /**
    * The user this intervention belongs to.
    */
@@ -64,7 +77,7 @@ class Intervention extends Model
      * Filter query by question type.
      */
     public function scopeQuestions($query) {
-      return $query->whereType('question')->get();
+      return $query->whereType('question');
     }
     
 
@@ -72,7 +85,7 @@ class Intervention extends Model
      * Filter query by answer type.
      */
     public function scopeAnswers($query) {
-        return $query->whereType('answer')->get();
+        return $query->whereType('answer');
     }
     
 
@@ -80,6 +93,23 @@ class Intervention extends Model
      * Filter query by comment type.
      */
     public function scopeComments($query) {
-        return $query->whereType('comment')->get();
+        return $query->whereType('comment');
+    }
+
+    public function scopeSearch($query, $search) {
+      if (!$search) {
+        return $query;
+      }
+      
+      $search = str_replace("\\", "\\\\", $search);
+      $search = str_replace("|", "\|", $search);
+      $search = str_replace("&", "\&", $search);
+      $search = str_replace("!", "\!", $search);
+
+      $search = explode(" ", $search);
+      $search = implode(" | ", $search);
+
+      return $query->whereRaw('tsvectors @@ to_tsquery(\'portuguese\', ?)', [$search])
+        ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'portuguese\', ?)) DESC', [$search]);
     }
 }

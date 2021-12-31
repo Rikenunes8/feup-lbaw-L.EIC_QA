@@ -12,18 +12,6 @@ class InterventionPolicy
 
 
     /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Intervention  $intervention
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function forceDelete(User $user, Intervention $intervention)
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -43,18 +31,31 @@ class InterventionPolicy
      */
     public function show(User $user, Intervention $intervention)
     {
-        return $intervention->type == 'question';
+        return $intervention->isQuestion();
     }
 
     /**
      * Determine whether the user can create models.
      *
      * @param  User  $user
+     * @param  Intervention  $intervention
      * @return Response|bool
      */
-    public function create(User $user)
+    public function showCreate(User $user)
     {
-        return $user->type != 'Admin' && !user->blocked;
+        return !$user->isAdmin() && !$user->blocked;
+    }
+
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  User  $user
+     * @param  Intervention  $intervention
+     * @return Response|bool
+     */
+    public function create(User $user, Intervention $intervention)
+    {
+        return !$user->isAdmin() && !$user->blocked;
     }
 
     /**
@@ -66,7 +67,7 @@ class InterventionPolicy
      */
     public function update(User $user, Intervention $intervention)
     {
-        return $user->id == $intervention->id_author && !user->blocked;
+        return $user->id == $intervention->id_author && !$user->blocked;
     }
 
 
@@ -79,6 +80,31 @@ class InterventionPolicy
      */
     public function delete(User $user, Intervention $intervention)
     {
-        return $user->type == 'Admin';
+        return ($user->isAdmin() || $user->id == $intervention->id_author) && !$user->blocked;
+    }
+
+    /**
+     * Determine whether the user can vote the intervention.
+     *
+     * @param  User  $user
+     * @param  Intervention  $intervention
+     * @return Response|bool
+     */
+    public function vote(User $user, Intervention $intervention)
+    {
+        return !$user->isAdmin() && $user->id != $intervention->id_author && !$user->blocked && !$intervention->isComment();
+    }
+
+    /**
+     * Determine whether the user can validate the intervention.
+     *
+     * @param  User  $user
+     * @param  Intervention  $intervention
+     * @return Response|bool
+     */
+    public function valid(User $user, Intervention $intervention)
+    {
+        return $user->isTeacher() && $user->id != $intervention->id_author 
+                && !$user->blocked && $intervention->isAnswer();
     }
 }

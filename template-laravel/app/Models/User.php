@@ -18,7 +18,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+      'name', 'email', 'password', 'username', 'about', 'birthdate', 'photo', 
+      'score', 'blocked', 'type', 'entry_year',
     ];
 
     /**
@@ -27,18 +28,20 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
-    ];
-
-    /**
-     * The cards this user owns.
-     */
-     public function cards() {
-      return $this->hasMany('App\Models\Card');
+      'password',
+  ];
+    
+    public function isAdmin() {
+      return $this->type == 'Admin';
     }
 
+    public function isTeacher() {
+      return $this->type == 'Teacher';
+    }
 
-    // --------------- L.EIC Q&A -----------------
+    public function isStudent() {
+      return $this->type == 'Student';
+    }
 
     /**
      * The interventions this user is author of.
@@ -83,27 +86,23 @@ class User extends Authenticatable
     /**
      * Filter query by Admin type.
      */
-    /*
     public function scopeAdmins($query) {
-        return $query->whereType('Admin')->get();
+        return $query->whereType('Admin');
     }
-    */
  
     /**
      * Filter query by Teacher type.
      */
-    /*
     public function scopeTeachers($query) {
-        return $query->whereType('Teacher')->get();
+        return $query->whereType('Teacher');
     }
-    */
+    
     
     /**
      * Filter query by Student type.
      */
-    /*
     public function scopeStudents($query) {
-        return $query->whereType('Student')->get();
+        return $query->whereType('Student');
     }
-    */
+    
 }

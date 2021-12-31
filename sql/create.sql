@@ -21,9 +21,9 @@ CREATE TYPE "type_validation" AS ENUM ('acceptance', 'rejection');
 -- Tables
 -----------------------------------------
 
-CREATE TABLE "user" (
+CREATE TABLE "users" (
     id             SERIAL PRIMARY KEY,
-    mail           TEXT NOT NULL CONSTRAINT mail_uk UNIQUE ,
+    email          TEXT NOT NULL CONSTRAINT email_uk UNIQUE ,
     username       TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
     password       TEXT NOT NULL,
     registry_date  TIMESTAMP  NOT NULL DEFAULT now(),
@@ -43,8 +43,8 @@ CREATE TABLE "user" (
     CONSTRAINT birthdate_NN     CHECK ((type='Admin' AND birthdate IS NULL) OR (type<>'Admin')),
     CONSTRAINT blocked_NN       CHECK ((type='Admin' AND blocked IS NULL) OR (type<>'Admin' AND blocked IS NOT NULL)),
     CONSTRAINT score_NN         CHECK ((type='Admin' AND score IS NULL) OR (type<>'Admin' AND score IS NOT NULL)),
-    CONSTRAINT block_reason_NN  CHECK (((blocked IS NULL OR NOT blocked) AND block_reason IS NULL) OR (blocked AND block_reason IS NOT NULL))
-    CONSTRAINT entry_year_NN    CHECK ((type<>'Student' AND entry_year IS NULL) OR (type='Student' AND entry_year IS NOT NULL AND entry_year > 0)),
+    CONSTRAINT block_reason_NN  CHECK (((blocked IS NULL OR NOT blocked) AND block_reason IS NULL) OR (blocked AND block_reason IS NOT NULL)),
+    CONSTRAINT entry_year_NN    CHECK ((type<>'Student' AND entry_year IS NULL) OR (type='Student' AND entry_year IS NOT NULL AND entry_year > 0))
 );
 
 CREATE TABLE "uc" (
@@ -55,20 +55,20 @@ CREATE TABLE "uc" (
 );
 
 CREATE TABLE "teacher_uc" (
-    id_teacher  INTEGER REFERENCES "user" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_teacher  INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
     id_uc       INTEGER REFERENCES "uc" ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id_teacher, id_uc)
 );
 
 CREATE TABLE "follow_uc" (
-    id_student  INTEGER REFERENCES "user" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_student  INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
     id_uc       INTEGER REFERENCES "uc" ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id_student, id_uc)
 );
 
 CREATE TABLE "intervention" (
     id              SERIAL PRIMARY KEY,
-    id_author       INTEGER REFERENCES "user" ON DELETE SET NULL ON UPDATE CASCADE,
+    id_author       INTEGER REFERENCES "users" ON DELETE SET NULL ON UPDATE CASCADE,
     text            TEXT NOT NULL,
     date            TIMESTAMP NOT NULL DEFAULT now(),
     votes           INTEGER NOT NULL DEFAULT 0,
@@ -83,7 +83,7 @@ CREATE TABLE "intervention" (
 );
 
 CREATE TABLE "voting" (
-    id_user         INTEGER REFERENCES "user" ON DELETE SET NULL ON UPDATE CASCADE,
+    id_user         INTEGER REFERENCES "users" ON DELETE SET NULL ON UPDATE CASCADE,
     id_intervention INTEGER REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
     vote            BOOLEAN NOT NULL,
     PRIMARY KEY (id_user, id_intervention)
@@ -91,7 +91,7 @@ CREATE TABLE "voting" (
 
 CREATE TABLE "validation" (
     id_answer   INTEGER PRIMARY KEY REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
-    id_teacher  INTEGER REFERENCES "user" ON DELETE SET NULL ON UPDATE CASCADE, 
+    id_teacher  INTEGER REFERENCES "users" ON DELETE SET NULL ON UPDATE CASCADE, 
     valid       BOOLEAN NOT NULL
 );
 
@@ -111,7 +111,7 @@ CREATE TABLE "notification" (
 
 CREATE TABLE "receive_not" (
     id_notification INTEGER REFERENCES "notification" ON DELETE CASCADE ON UPDATE CASCADE,
-    id_user         INTEGER REFERENCES "user" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_user         INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
     read            BOOLEAN NOT NULL,
     PRIMARY KEY (id_notification, id_user)
 );
@@ -203,10 +203,10 @@ BEGIN
       RAISE EXCEPTION 'A comment cannot be voted on';
     ELSEIF NEW.vote=TRUE THEN
       UPDATE "intervention" SET votes=votes+1 WHERE id=NEW.id_intervention;
-      UPDATE "user" SET score=score+1 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
+      UPDATE "users" SET score=score+1 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
     ELSE
       UPDATE "intervention" SET votes=votes-1 WHERE id=NEW.id_intervention;
-      UPDATE "user" SET score=score-1 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
+      UPDATE "users" SET score=score-1 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
     END IF;
     RETURN NEW;
 END
@@ -224,10 +224,10 @@ $BODY$
 BEGIN
     IF NEW.vote=TRUE AND OLD.vote=FALSE THEN
       UPDATE "intervention" SET votes=votes+2 WHERE id=NEW.id_intervention;
-      UPDATE "user" SET score=score+2 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
+      UPDATE "users" SET score=score+2 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
     ELSEIF NEW.vote=FALSE AND OLD.vote=TRUE THEN
       UPDATE "intervention" SET votes=votes-2 WHERE id=NEW.id_intervention;
-      UPDATE "user" SET score=score-2 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
+      UPDATE "users" SET score=score-2 WHERE id=(SELECT id_author FROM "intervention" AS I WHERE I.id=NEW.id_intervention);
     END IF;
     RETURN NEW;
 END
@@ -243,7 +243,7 @@ EXECUTE PROCEDURE update_votes();
 CREATE FUNCTION check_teacher_uc() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF 'Teacher' <> (SELECT type FROM "user" WHERE id=NEW.id_teacher) THEN
+    IF 'Teacher' <> (SELECT type FROM "users" WHERE id=NEW.id_teacher) THEN
         RAISE EXCEPTION 'Only users of the type Teacher can be associated with a uc';
     END IF;
     RETURN NEW;
@@ -260,7 +260,7 @@ EXECUTE PROCEDURE check_teacher_uc();
 CREATE FUNCTION check_follow_uc() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF 'Student' <> (SELECT type FROM "user" WHERE id=NEW.id_student) THEN
+    IF 'Student' <> (SELECT type FROM "users" WHERE id=NEW.id_student) THEN
         RAISE EXCEPTION 'Only users of the type Student can follow a uc';
     END IF;
     RETURN NEW;
@@ -277,7 +277,7 @@ EXECUTE PROCEDURE check_follow_uc();
 CREATE FUNCTION check_author_intervention() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF 'Admin' = (SELECT type FROM "user" WHERE id=NEW.id_author) THEN
+    IF 'Admin' = (SELECT type FROM "users" WHERE id=NEW.id_author) THEN
         RAISE EXCEPTION 'Administrators cannot be authors of interventions';
     END IF;
     RETURN NEW;
@@ -294,7 +294,7 @@ EXECUTE PROCEDURE check_author_intervention();
 CREATE FUNCTION check_vote_intervention() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF 'Admin' = (SELECT type FROM "user" WHERE id=NEW.id_user) THEN
+    IF 'Admin' = (SELECT type FROM "users" WHERE id=NEW.id_user) THEN
         RAISE EXCEPTION 'Administrators cannot vote on any intervention';
     END IF;
     RETURN NEW;
@@ -450,4 +450,3 @@ CREATE TRIGGER generate_notification_validation
 AFTER INSERT OR UPDATE OF valid ON "validation"
 FOR EACH ROW
 EXECUTE PROCEDURE generate_notification_validation();
-

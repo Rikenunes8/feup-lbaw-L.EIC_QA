@@ -2,22 +2,89 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Models\Intervention;
+use App\Models\Uc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class InterventionController extends Controller
 {
+
+    /**
+     * Filter query questions according to url query request.
+     * 
+     * @param Request $request
+     * @param $questions
+     * @return $query
+     */
+    private function listFilter(Request $request, $questions) {
+        $filter = $request->query('filter');
+        $sort = $request->query('sort');
+        $order = $request->query('order') == 'asc'? 'ASC' : 'DESC';
+        $tags = $request->query('tags');
+        
+        if ($tags) {
+            $questions = $questions->whereIn('category', $tags);
+        }
+        
+        if ($filter == 'noAnswers') {
+            $questions = $questions->has('childs', '=', 0);
+        } else if ($filter == 'noValidations') {
+            $questionsValidated = Intervention::questions()->whereHas('childs', function ($q1) {
+                $q1->whereHas('valid', function ($q2) {
+                    $q2->where('valid', true);
+                });
+            });
+
+            $questions = $questions->whereNotIn('id', $questionsValidated->pluck('id')->all());
+        }
+
+
+        if ($sort == 'date') {
+            $questions = $questions->orderBy('date', $order);
+        } else {
+            $questions = $questions->orderBy('votes', $order);
+        }
+
+        return $questions;
+    }
+
+    /**
+     * Shows all questions.
+     * 
+     * @param Request $request
+     * @return Response
+     */
+    public function list(Request $request)
+    {   
+        $questions = $this::listFilter($request, Intervention::questions())->paginate(15);
+        $ucs = Uc::orderBy('name')->get();
+
+        return view('pages.questions', ['questions' => $questions, 'ucs' => $ucs]);
+    }
+    
     /**
      * Shows all questions.
      *
+     * @param Request $request
      * @return Response
      */
-    public function list()
+    public function searchList(Request $request)
     {
-        $this->authorize('show', Intervention::class);
-        $questions = Intervention::questions()->orderBy('votes', 'DESC')->get();
-        // $questions = DB::table('intervention')->where('type', 'question')->orderBy('votes')->get();
-        return view('pages.questions', ['questions' => $questions]); // TODO: this view doesn't exists yet
+        $questions = Intervention::questions();
+        if ($request->query('q')) {
+            $search = $request->input('q');
+            
+            $questions = $questions->search($search);
+            $questions = $questions->paginate(15);
+        }
+        else {
+            $questions = $questions->orderBy('votes', 'DESC')->paginate(15);
+        }
+        return view('pages.search', ['questions' => $questions]);
     }
 
     /**
@@ -28,9 +95,16 @@ class InterventionController extends Controller
      */
     public function show($id)
     {
-        $question = Intervention::questions()::find($id);
+        $intervention = Intervention::find($id);
+        while (!is_null($intervention) && !$intervention->isQuestion()) {
+            $intervention = $intervention->parent();
+        }
+        if (is_null($intervention)) return redirect('/questions');
+
+        $question = $intervention;
         $this->authorize('show', $question);
-        return view('pages.question', ['question' => $question]); // TODO: this view doesn't exists yet
+        
+        return view('pages.question', ['question' => $question]);
     }
 
     /**
@@ -41,31 +115,34 @@ class InterventionController extends Controller
     public function showCreateQuestionForm()
     {
         if (!Auth::check()) return redirect('/login');
-        $this->authorize('create', Intervention::class);
-        return view('pages.questionCreateForm'); // TODO: this view doesn't exists yet
+        $this->authorize('showCreate', Intervention::class);
+        $ucs = Uc::orderBy('name')->get();
+        return view('pages.forms.question.create', ['ucs' => $ucs]);
     }
 
     /**
      * Create a resource in storage.
      *
      * @param  Request  $request
-     * @return Intervention The question created.
+     * @return Response
      */
     public function createQuestion(Request $request)
     {
         if (!Auth::check()) return redirect('/login');
 
         $question = new Intervention();
-        $this->authorize('create', Intervention::class);
+        $this->authorize('create', $question);
 
         $question->id_author = Auth::user()->id;
         $question->title = $request->input('title');
-        $question->text = $request->input('text');
-        $question->category = $request->input('category');
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
+        $question->text = $request['text'];
+        $question->category = $request->category;
         $question->type = 'question';
         $question->save();
 
-        return redirect('qustions/{{ $question->id }}');
+        return redirect('questions/'.$question->id);
     }
 
     /**
@@ -77,9 +154,13 @@ class InterventionController extends Controller
     public function showEditQuestionForm($id)
     {
         if (!Auth::check()) return redirect('/login');
-        $intervention = Intervention::find($id);
-        $this->authorize('update', $intervention);
-        return view(); // TODO: this view doesn't exists yet
+
+        $question = Intervention::questions()->find($id);
+        if (is_null($question)) return App::abort(404);
+        $this->authorize('update', $question);
+        $ucs = Uc::orderBy('name')->get();
+
+        return view('pages.forms.question.edit', ['question' => $question, 'ucs' => $ucs]);
     }
 
     /**
@@ -87,66 +168,49 @@ class InterventionController extends Controller
      *
      * @param  Request  $request
      * @param  int  $id
-     * @return Intervention The intervention updated.
+     * @return Response
      */
     public function updateQuestion(Request $request, $id)
     {
-        $intervention =  Intervention::find($id);
-        $this->authorize('update', $intervention);
+        if (!Auth::check()) return redirect('/login');
 
-        $intervention->text = $request->input('text');
-        $intervention->save(); // TODO: Is this right?
+        $question =  Intervention::questions()->find($id);
+        if (is_null($question)) return App::abort(404);
+        $this->authorize('update', $question);
+        $question->title = $request->input('title');
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
+        $question->text = $request->input('text');
+        $question->save();
 
-        return $intervention;
+        return redirect('questions/'.$question->id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Intervention  $intervention
-     * @return Intervention The question deleted.
-     */
-    public function deleteQuestion(Request $request, $id)
-    {
-        $intervention =  Intervention::find($id);
-
-        $this->authorize('delete', $intervention);
-        $intervention->delete();
-
-        return $intervention;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function showCreateAnswerForm()
-    {
-        $this->authorize('create', Intervention::class);
-        return view(); // TODO: this view doesn't exists yet
-    }
 
     /**
      * Create a resource in storage.
      * 
      * @param  Request  $request
-     * @param  int  $parent_id
-     * @return Intervention The answer created.
+     * @param  int  $id
+     * @return Response
      */
     public function createAnswer(Request $request, $id)
     {
-        $intervention = new Intervention();
+        if (!Auth::check()) return redirect('/login');
 
-        $this->authorize('create', $intervention);
+        $answer = new Intervention();
+        $question = Intervention::questions()->find($id);
+        if (is_null($question)) return App::abort(404);
+        $this->authorize('create', $answer);
+        $answer->id_author = Auth::user()->id;
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
+        $answer->text = $request['text'];
+        $answer->id_intervention = $question->id;
+        $answer->type = 'answer';
+        $answer->save();
 
-        $intervention->text = $request->input('text');
-        $intervention->id_author = Auth::user()->id;
-        $intervention->id_intervention = $parent_id;
-        $intervention->type = 'answer';
-        $intervention->save();
-
-        return $intervention;
+        return redirect('questions/'.$question->id);
     }
 
     /**
@@ -157,9 +221,13 @@ class InterventionController extends Controller
      */
     public function showEditAnswerForm($id)
     {
-        $intervention = Intervention::find($id);
-        $this->authorize('update', $intervention);
-        return view(); // TODO: this view doesn't exists yet
+        if (!Auth::check()) return redirect('/login');
+
+        $answer = Intervention::answers()->find($id);
+        if (is_null($answer)) return App::abort(404);
+        $this->authorize('update', $answer);
+
+        return view('pages.forms.answer.edit', ['answer' => $answer]);
     }
 
     /**
@@ -167,66 +235,49 @@ class InterventionController extends Controller
      *
      * @param  Request  $request
      * @param  int  $id
-     * @return Intervention The intervention updated.
+     * @return Response
      */
     public function updateAnswer(Request $request, $id)
     {
-        $intervention =  Intervention::find($id);
-        $this->authorize('update', $intervention);
+        if (!Auth::check()) return redirect('/login');
 
-        $intervention->text = $request->input('text');
-        $intervention->update(); // TODO: Is this right?
+        $answer =  Intervention::answers()->find($id);
+        if (is_null($answer)) return App::abort(404);
+        $this->authorize('update', $answer);
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']); 
+        $answer->text = $request['text'];
+        $answer->save();
 
-        return $intervention;
+        return redirect('questions/'.$answer->id_intervention);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Intervention  $intervention
-     * @return Intervention The question deleted.
-     */
-    public function deleteAnswer(Request $request, $id)
-    {
-        $intervention =  Intervention::find($id);
-
-        $this->authorize('delete', $intervention);
-        $intervention->delete();
-
-        return $intervention;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function showCreateCommentForm()
-    {
-        $this->authorize('create');
-        return view(); // TODO: this view doesn't exists yet
-    }
+    
 
     /**
      * Create a resource in storage.
      * 
      * @param  Request  $request
-     * @param  int  $parent_id
-     * @return Intervention The comment created.
+     * @param  int  $id
+     * @return Response
      */
-    public function createComment(Request $request, $parent_id)
+    public function createComment(Request $request, $id)
     {
-        $intervention = new Intervention();
+        if (!Auth::check()) return redirect('/login');
 
-        $this->authorize('create', $intervention);
+        $comment = new Intervention();
+        $this->authorize('create', $comment);
+        $answer = Intervention::answers()->find($id);
+        if (is_null($answer)) return App::abort(404);
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']);
+        $comment->id_author = Auth::user()->id;
+        $comment->text = $request['text'];
+        $comment->id_intervention = $answer->id;
+        $comment->type = 'comment';
+        $comment->save();
 
-        $intervention->text = $request->input('text');
-        $intervention->id_author = Auth::user()->id;
-        $intervention->id_intervention = $parent_id;
-        $intervention->type = 'comment';
-        $intervention->save();
-
-        return $intervention;
+        return redirect('questions/'.$answer->id_intervention);
     }
 
     /**
@@ -237,9 +288,13 @@ class InterventionController extends Controller
      */
     public function showEditCommentForm($id)
     {
-        $intervention = Intervention::find($id);
-        $this->authorize('update', $intervention);
-        return view(); // TODO: this view doesn't exists yet
+        if (!Auth::check()) return redirect('/login');
+
+        $comment = Intervention::comments()->find($id);
+        if (is_null($comment)) return App::abort(404);
+        $this->authorize('update', $comment);
+
+        return view('pages.forms.comment.edit', ['comment' => $comment]);
     }
 
     /**
@@ -247,47 +302,111 @@ class InterventionController extends Controller
      *
      * @param  Request  $request
      * @param  int  $id
-     * @return Intervention The intervention updated.
+     * @return Response
      */
     public function updateComment(Request $request, $id)
     {
-        $intervention =  Intervention::find($id);
-        $this->authorize('update', $intervention);
+        if (!Auth::check()) return redirect('/login');
 
-        $intervention->text = $request->input('text');
-        $intervention->save(); // TODO: Is this right?
+        $comment =  Intervention::comments()->find($id);
+        if (is_null($comment)) return App::abort(404);
+        $this->authorize('update', $comment);
+        if (is_null($request['text']))
+            return Redirect::back()->withErrors(['text' => 'É obrigatório ter uma mensagem de texto!']);
+        $answer = $comment->parent()->get();
+        $comment->text = $request['text'];
+        $comment->save(); 
 
-        return $intervention;
+        return redirect('questions/'.$answer[0]->id_intervention);
     }
+
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Intervention  $intervention
-     * @return Intervention The question deleted.
+     * @param  Request $request
+     * @param  int  $id
+     * @return Response
      */
-    public function deleteComment(Request $request, $id)
+    public function delete(Request $request, $id)
     {
-        $intervention =  Intervention::find($id);
+        if (!Auth::check()) return redirect('/login');
 
+        $intervention =  Intervention::find($id);
+        if (is_null($intervention)) return App::abort(404);
         $this->authorize('delete', $intervention);
         $intervention->delete();
 
         return $intervention;
     }
 
-    public function report($id)
+    public function report(Request $request, $id)
     {
+        $intervention = Intervention::find($id);
+        // TODO: notification
         return true;
     }
 
-    public function vote($id)
+    /**
+     * Vote an intervention.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function vote(Request $request, $id)
     {
-        return true;
-    }
+        
+        if (!Auth::check()) return redirect('/login');
 
-    public function validate($id)
+        $intervention = Intervention::find($id);
+        $user = Auth::user();
+        $vote = $request->input('vote');
+        $vote = $vote=='true'? true : false;
+
+        $this->authorize('vote', $intervention);
+        $association = $intervention->votes()->where('id_user', $user->id);
+
+        if (!$association->exists()) {
+            $intervention->votes()->attach($user->id, ['vote' => $vote]);
+        }
+        else if ($association->first()->pivot->vote !== $vote) {
+            $intervention->votes()->updateExistingPivot($user->id, ['vote' => $vote]);
+        }
+        
+        $intervention = Intervention::find($id);
+
+        return $intervention;
+    }
+    
+    /**
+     * Validate an answer.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function valid(Request $request, $id)
     {
-        return true;
+        if (!Auth::check()) return redirect('/login');
+
+        $intervention = Intervention::answers()->find($id);
+        $user = Auth::user();
+        $validAux = $request->input('valid');
+        $valid = null;
+        if ($validAux == 'true') $valid = true;
+        else if ($validAux == 'false') $valid = false;
+
+        $this->authorize('valid', $intervention);
+
+        
+        if (is_null($valid)) {
+            $oldUserValidation = $intervention->valid()->first();
+            $intervention->valid()->detach($oldUserValidation->id_teacher);
+        }
+        else {
+            $intervention->valid()->attach($user->id, ['valid' => $valid]);
+        }
+        return [$intervention, $valid];
     }
 }
