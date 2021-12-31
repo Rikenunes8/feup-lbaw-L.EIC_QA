@@ -13,7 +13,7 @@
     
     <div class="mb-3 col-12 col-lg-6">
         <label for="username" class="form-label required">Username</label>
-        <input type="text" id="username" class="form-control" name="username" value='{{ $user->username }}' required>
+        <input type="text" id="username" class="form-control" name="username" value="{{ is_null(old('username'))?$user->username:old('username') }}" required>
         @if ($errors->has('username'))
             @include('layouts.error', ['error' => $errors->first('username')])
         @endif
@@ -40,7 +40,7 @@
         <div class="mb-3 row">
             <div class="col-12">
                 <label for="name" class="form-label required">Nome</label>
-                <input type="text" id="name" class="form-control" name="name" value='{{ $user->name }}' required>
+                <input type="text" id="name" class="form-control" name="name" value="{{ is_null(old('name'))?$user->name:old('name') }}" required>
                 @if ($errors->has('name'))
                     @include('layouts.error', ['error' => $errors->first('name')])
                 @endif
@@ -70,7 +70,7 @@
     
     <div class="mb-3 col-12 col-lg-6">
         <label for="about" class="form-label">Sobre mim</label>
-        <textarea rows="8" id="about" class="form-control" name="about">{{ $user->about }}</textarea>
+        <textarea rows="8" id="about" class="form-control" name="about">{{ is_null(old('about'))?$user->about:old('about') }}</textarea>
         @if ($errors->has('about'))
             @include('layouts.error', ['error' => $errors->first('about')])
         @endif

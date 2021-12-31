@@ -8,7 +8,7 @@
     
     <div class="mb-3 col-12">
         <label for="title" class="form-label required">Titulo</label>
-        <input type="text" id="title" class="form-control" name="title" value="{{ $question->title }}" required>
+        <input type="text" id="title" class="form-control" name="title" value="{{ is_null(old('title'))?$question->title:old('title') }}" required>
         @if ($errors->has('title'))
             @include('layouts.error', ['error' => $errors->first('title')])
         @endif
@@ -16,7 +16,7 @@
 
     <div class="mb-3 col-12">
         <label for="text" class="form-label required">Texto</label>
-        <textarea rows="15" class="form-control text-editor" name="text">{{ $question->text }}</textarea>
+        <textarea rows="15" class="form-control text-editor" name="text">{{ is_null(old('text'))?$question->text:old('text') }}</textarea>
         @if ($errors->has('text'))
             @include('layouts.error', ['error' => $errors->first('text')])
         @endif

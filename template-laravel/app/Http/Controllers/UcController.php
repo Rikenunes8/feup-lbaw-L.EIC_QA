@@ -77,6 +77,12 @@ class UcController extends Controller
         $uc = new Uc();
         $this->authorize('create', $uc);
 
+        $request->validate([
+            'name' => 'required|unique:uc,name|max:255',
+            'code' => 'required|unique:uc,code',
+            'description' => 'required',
+        ]);
+
         $uc->name = $request->input('name');
         $uc->code = $request->input('code');
         $uc->description = $request->input('description');
@@ -114,13 +120,13 @@ class UcController extends Controller
         $uc = Uc::find($id);
         $this->authorize('update', $uc);
 
+        $request->validate([
+            'name' => 'required|unique:uc,name|max:255',
+            'code' => 'required|unique:uc,code',
+            'description' => 'required',
+        ]);
+
         $uc->update($request->all());
-        /*
-        $uc->name = $request->input('name');
-        $uc->code = $request->input('code');
-        $uc->description = $request->input('description');
-        $uc->save();
-        */
 
         return redirect('/admin/ucs'); 
     }

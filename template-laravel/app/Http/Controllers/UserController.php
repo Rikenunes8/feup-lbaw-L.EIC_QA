@@ -72,6 +72,11 @@ class UserController extends Controller
         $user = User::find($id);
         $this->authorize('update', $user);
 
+        $request->validate([
+            'username' => 'required|string|max:20|unique:users,username',
+            'password' => 'nullable|string|min:6',
+        ]);
+
         $user->username = $request->input('username');
 
         $password = $request->input('password');
@@ -83,6 +88,12 @@ class UserController extends Controller
         }
 
         if (!$user->isAdmin()) {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'about' => 'nullable|string|max:500',
+                'birthdate' => 'nullable|date_format:Y-m-d',
+            ]);
+
             $user->name = $request->input('name');
             $user->about = $request->input('about');         
             $user->birthdate = date("Y-m-d H:i:s", strtotime($request->input('birthdate')));
