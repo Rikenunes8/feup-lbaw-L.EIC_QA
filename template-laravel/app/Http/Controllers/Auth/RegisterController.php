@@ -61,7 +61,7 @@ class RegisterController extends Controller
                 'name' => 'required|string|max:255',
                 'about' => 'nullable|string|max:500',
                 'photo' => 'nullable|image|mimes:jpeg,jpg,png,bmp,tiff,gif|max:4096',
-                'birthdate' => 'nullable|date_format:Y-m-d\TH:i',
+                'birthdate' => 'nullable|date_format:Y-m-d',
             ]);
         } else { // ($data['usertype'] == "Student")
             return Validator::make($data, [
@@ -71,7 +71,7 @@ class RegisterController extends Controller
                 'name' => 'required|string|max:255',
                 'about' => 'nullable|string|max:500',
                 'photo' => 'nullable|image|mimes:jpeg,jpg,png,bmp,tiff,gif|max:4096',
-                'birthdate' => 'nullable|date_format:Y-m-d\TH:i',
+                'birthdate' => 'nullable|date_format:Y-m-d',
                 'entryyear' => 'required|numeric|min:0',
             ]);
         }
