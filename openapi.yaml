@@ -15,15 +15,13 @@ servers:
 
 tags:
   - name: 'M01: Autenticação e Perfil Individual'
-  - name: 'M02: Questões'
-  - name: 'M03: Respostas'
-  - name: 'M04: Comentários'
-  - name: 'M05: Pesquisa de Intervenções'
-  - name: 'M06: Pesquisa de Unidades Curriculares'
-  - name: 'M07: Pesquisa de Utilizadores'
-  - name: 'M08: Notificações'
-  - name: 'M09: Páginas estáticas'
-  - name: 'M10: Páginas de administração'
+  - name: 'M02: Intervenções [DOING]'
+  - name: 'M03: Pesquisa de Questões [DONE]'
+  - name: 'M04: Unidades Curriculares [DOING]'
+  - name: 'M05: Utilizadores'
+  - name: 'M06: Notificações'
+  - name: 'M07: Páginas estáticas [DONE]'
+  - name: 'M08: Páginas de administração [DONE]' 
 
 paths:
 
@@ -383,18 +381,103 @@ paths:
 
 
 
-  #################
-  # M02: Questões #
-  #################  
-  
-  /questions/{id}: 
+  #####################
+  # M02: Intervenções #
+  ##################### 
+
+  /questions:
     get:
       operationId: R201
-      summary: 'R201: Visualizar detalhes de questão'
-      description: 'Mostra o detalhe de uma questão, dados, repostas e comentários associados. Acesso: USR.
-                    Permite as seguintes funcionalidades: criar nova questão, votar numa intervenção, ....'
+      summary: 'R201: Listar Questões.'
+      description: 'Lista questões segundo determinados parâmetros. Acesso: PUB.'
+  
+      tags: 
+        - M02: Intervenções'
+
+      parameters:
+        - in: query
+          name: filter
+          description: Filtros a ser usados na listagem.
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: sort
+          description: Método de ordenação usado na listagem.
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: order
+          description: Sentido da ordenação da listagem.
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: tags
+          description: Unidades Curriculares usadas para a filtragem da listagem.
+          schema:
+            type: string
+          required: false
+
+  /questions/create:
+    get:
+      operationId: R202
+      summary: 'R202: Formulário de Nova Questão'
+      description: 'Acesso ao formulário de Nova Questão. Acesso: USR. \n'
       tags:
-        - 'M02: Questões'
+        - 'M02: Intervenções'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Nova Questão UI'
+    
+    post:
+      operationId: R203
+      summary: 'R203: Ação de criação de questão.'
+      description: 'Acesso à submissão do formulário de Nova Questão. Acesso: USR'
+      tags: 
+        - 'M02: Intervenções'
+    
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title: 
+                  type: string
+                text:
+                  type: string
+                category:
+                  type: string
+              required: 
+                - title
+                - text
+                - categoria
+      responses:
+        '302':
+          description: 'Redirecionar após o processamento da criação da Nova Questão.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Criação com sucesso. Redirecionar para o detalhe da questão criada.'
+                  value: '/questions/{id}'
+                302Error:
+                  description: 'Criação sem sucesso. Redirecionar para o formulário de criação de Nova Questão.'
+                  value: '/questions/crete'
+
+  /questions/{id}: 
+    get:
+      operationId: R203
+      summary: 'R203: Visualizar detalhes de questão'
+      description: 'Mostra o detalhe de uma questão: contéudo da questão, respostas e comentários associados. Acesso: PUB.
+                    Funcionalidades: criar nova questão, votar, validar, responder, editar, denunciar, apagar'
+      tags:
+        - 'M02: Intervenções'
         
       parameters:
         - in: path
@@ -405,56 +488,9 @@ paths:
 
       responses:
         '200':
-          description: 'Ok. Mostrar a UI do detalhes de questão'
+          description: 'Ok. Mostrar a UI do detalhe de questão'
           
-  /questions/create:
-    get:
-      operationId: R202
-      summary: 'R202: Formulário de Nova Questão'
-      description: 'Acesso ao formulário de Nova Questão. Acesso: USR'
-      tags:
-        - 'M02: Questões'
-      responses:
-        '200':
-          description: 'Ok. Mostrar Nova Questão UI'
-    put:
-      operationId: R203
-      summary: 'R203: Ação de criação de questão.'
-      description: 'Acesso à submissão do formulário de Nova Questão. Acesso: USR'
-      tags: 
-        - 'M02: Questões'
-      
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                titulo: 
-                  type: string
-                texto:
-                  type: string
-                categoria:
-                  type: string
-              required: 
-                - titulo
-                - texto
-                - categoria
-      response:
-        '302':
-          description: 'Redirecionar após o processamento da criação da Nova Questão.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Criação com sucesso. Redirecionar para o detalhe da questão criada.'
-                  value: '/questao/{id}'
-                302Error:
-                  description: 'Criação sem sucesso. Redirecionar para o formulário de criação de Nova Questão.'
-                  value: '/questao/criar'
+  
 
   /questions/{id}/edit:
     get:
@@ -971,58 +1007,163 @@ paths:
   # M05: Pesquisa de Intervenções #
   #################################
   
-  /questions:
+  /search:
     get:
-      operationId: R501
-      summary: 'R501: Pesquisar Intervenções API.'
-      description: 'Procura por intervenções e retorna o resultado como JSON. Acesso: USR.'
+      operationId: R301
+      summary: 'R301: Pesquisar Intervenções.'
+      description: 'Procura por intervenções e redireciona para uma página com as questões selecionadas pela pesquisa. Acesso: PUB.'
   
       tags: 
-        - 'M05: Pesquisa de Intervenções'
+        - 'M03: Pesquisa de Intervenções'
 
       parameters:
         - in: query
-          name: keyword
-          description: Palavra chave a ser usada para pesquisa full-text
+          name: q
+          description: Palavras chave a ser usadas para pesquisa full-text
           schema:
             type: string
-          required: false
-        - in: query
-          name: uc
-          description: Unidade curricular a ser usada para pesquisa 
-          schema:
-            type: array
-            items:
-              type: string
-          required: false
+          required: false    
 
 
-  ##########################################
-  # M06: Pesquisa de Unidades Curriculares #
-  ##########################################
+  ##############################
+  # M04: Unidades Curriculares #
+  ##############################
 
   /ucs:
     get:
-      operationId: R601
-      summary: 'R601: Pesquisar Unidades Curriculares API.'
-      description: 'Procura de unidades curriculares e retorna o resultado como JSON. Acesso: USR.'
-  
+      operationId: R401
+      summary: 'R401: Catálogo de Unidades Curriculares.'
+      description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: USR. \nFuncionalidades: visitar em detalhe uma UC, seguir uma UC.'
       tags: 
-        - 'M06: Pesquisa de Unidades Curriculares'
+        - 'M04: Unidades Curriculares'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página de Unidades Curriculares UI'
 
+  /ucs/{id}:
+    get:
+      operationId: R402
+      summary: 'R402: Detalhe de uma Unidades Curricular.'
+      description: 'Mostra em detalhe uma Unidade Curricular do sitema. Acesso: USR. \nFuncionalidades: visitar o perfil de um docente seu, visitar uma das suas top questões, seguir uma UC.'
+      tags: 
+        - 'M04: Unidades Curriculares'
       parameters:
-        - in: query
-          name: nome
-          description: Palavra chave a ser usada para pesquisa pelo nome da uc
+        - in: path
+          name: id
+          description: Identificador da Unidade Curricular
           schema:
-            type: string
-          required: false
-        - in: query
-          name: sigla
-          description: Palavra chave a ser usada para pesquisa pela sigla da uc 
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página de Detalhe de Unidade Curricular UI'
+
+  /ucs/create:
+    get:
+      operationId: R403
+      summary: 'R403: Formulário de criação de Unidade Curricular.'
+      description: 'Acesso ao formulário de criação de Unidade Curricular. Acesso: ADM.'
+      tags: 
+        - 'M04: Unidades Curriculares'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Criação de Unidade Curricular UI'
+    post:
+      operationId: R404
+      summary: 'R404: Ação de criação de Unidade Curricular'
+      description: 'Acesso à submissão de criação de Unidade Curricular. Acesso: ADM.'
+      tags: 
+        - 'M04: Unidades Curriculares'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:       
+                  type: string
+                code:    
+                  type: string
+                description:       
+                  type: string
+              required:
+                - name
+                - code
+                - description
+      responses:
+        '302':
+          description: 'Redirecionar após o processamento da criação de Unidade Curricular.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Criação bem sucedida. Redirecionar para o Catálogo de UCs do administrador.'
+                  value: '/admin/ucs'
+                302Error:
+                  description: 'Criação falhada. Redirecionar para o formulário de criação de uma UC.'
+                  value: '/ucs/create'
+      
+  /ucs/{id}/edit:
+    get:
+      operationId: R405
+      summary: 'R405: Formulário de edição de Unidade Curricular.'
+      description: 'Acesso ao formulário de edição de Unidade Curricular. Acesso: ADM.'
+      tags: 
+        - 'M04: Unidades Curriculares'
+      parameters:
+        - in: path
+          name: id
+          description: Identificador da Unidade Curricular
           schema:
-            type: string
-          required: false
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Mostrar Edição de Unidade Curricular UI'
+    post:
+      operationId: R406
+      summary: 'R406: Ação de edição de Unidade Curricular'
+      description: 'Acesso à submissão de edição de Unidade Curricular. Acesso: ADM.'
+      tags: 
+        - 'M04: Unidades Curriculares'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:       
+                  type: string
+                code:    
+                  type: string
+                description:       
+                  type: string
+              required:
+                - name
+                - code
+                - description
+      responses:
+        '302':
+          description: 'Redirecionar após o processamento da edição de Unidade Curricular.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Edição bem sucedida. Redirecionar para o Catálogo de UCs do administrador.'
+                  value: '/admin/ucs'
+                302Error:
+                  description: 'Edição falhada. Redirecionar para o formulário de edição da UC.'
+                  value: '/ucs/{id}/edit'
+
+  # /api/ucs/{id}/delete
+  # /api/ucs/{uc_id}/teachers/{user_id}/add
+  # /api/ucs/{uc_id}/teachers/{user_id}/delete
 
 
   #################################
@@ -1081,109 +1222,109 @@ paths:
 
 
   ###########################
-  # M09 - Páginas estáticas #
+  # M07 - Páginas estáticas #
   ###########################
 
   /home:
     get:
-      operationId: R901
-      summary: 'R901: Página Inicial'
+      operationId: R701
+      summary: 'R701: Página Inicial'
       description: 'Acesso à Página Inicial. Acesso: PUB'
       tags:
-        - 'M09: Páginas estáticas'
+        - 'M07: Páginas estáticas'
       responses:
         '200':
           description: 'Ok. Mostrar Página Inicial UI'
 
-  /sobre:
+  /about:
     get:
-      operationId: R902
-      summary: 'R902: Página Sobre'
+      operationId: R702
+      summary: 'R702: Página Sobre'
       description: 'Acesso à Página Sobre. Acesso: PUB'
       tags:
-        - 'M09: Páginas estáticas'
+        - 'M07: Páginas estáticas'
       responses:
         '200':
           description: 'Ok. Mostrar Página Sobre UI'
 
-  /contactos:
-    get:
-      operationId: R903
-      summary: 'R903: Página Contactos'
-      description: 'Acesso à Página Contactos. Acesso: PUB'
-      tags:
-        - 'M09: Páginas estáticas'
-      responses:
-        '200':
-          description: 'Ok. Mostrar Página Contactos UI'
-
   /faq:
     get:
-      operationId: R904
-      summary: 'R904: Página FAQ'
+      operationId: R703
+      summary: 'R703: Página FAQ'
       description: 'Acesso à Página FAQ. Acesso: PUB'
       tags:
-        - 'M09: Páginas estáticas'
+        - 'M07: Páginas estáticas'
       responses:
         '200':
           description: 'Ok. Mostrar Página FAQ UI'
 
-
-  ##################################
-  # M10 - Páginas de administração # 
-  ##################################
-
-  # /admin/users: # -> todos os users ? ()
-  
-  # /admin/ucs: # -> gerir e associar a docentes
-
-  /admin/reports:
+  /contact:
     get:
-      operationId: R1001
-      summary: 'R1001: Catálogo de Denúncias'
-      description: 'Mostra todas denúncias recebidas. Acesso: ADM'
+      operationId: R704
+      summary: 'R704: Página Contactos'
+      description: 'Acesso à Página Contactos. Acesso: PUB'
       tags:
-        - 'M10: Páginas de administração'
-        
-      response:
+        - 'M07: Páginas estáticas'
+      responses:
         '200':
-          description: 'OK. Mostrar UI com todas as denúncias.'
-  
-  # admin/users/{id}/delete
+          description: 'Ok. Mostrar Página Contactos UI'
 
-  /admin/users/{id}/block:
-    post:
-      operationId: R1017
-      summary: 'R1017: Ação de Alterar Estado de Conta'
-      description: 'Ação de eliminar, bloquear ou reativar uma conta a partir do perfil da mesma. Acesso: ADM'
+
+  ##################################
+  # M08: Páginas de administração  # 
+  ##################################
+
+  /admin/users: 
+    get:
+      operationId: R801
+      summary: 'R801: Catálogo de Utilizadores'
+      description: 'Mostra todos os utilizadores do sitema. Acesso: ADM. \nFuncionalidades: visitar, bloquear/desbloquear, editar e eliminar utilizadores.'
       tags:
-        - 'M10: Páginas de administração'
-      
+        - 'M08: Páginas de administração'
+      responses:
+        '200':
+          description: 'OK. Mostrar Página do Administrador de Utilizadores UI.'
+  
+  /admin/ucs:
+    get:
+      operationId: R802
+      summary: 'R802: Catálogo de Unidades Curriculares'
+      description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: ADM. \nFuncionalidades: criar, visitar, ver docentes associados, editar e eliminar UCs.'
+      tags:
+        - 'M08: Páginas de administração'
+      responses:
+        '200':
+          description: 'OK. Mostrar Página do Administrador de Unidades Curriculares UI.'
+  
+  /admin/ucs/{id}/teachers:
+    get:
+      operationId: R803
+      summary: 'R803: Catálogo de Docentes'
+      description: 'Mostra todos os Docentes do sistema, indicando os que se encontram associados à UC específica a inspecionar. Acesso: ADM. \nFuncionalidades: visitar perfil do Docente; associar e dessaciar Docentes à UC.'
+      tags:
+        - 'M08: Páginas de administração'
       parameters:
         - in: path
           name: id
+          description: Identificador da Unidade Curricular
           schema:
             type: integer
           required: true
-
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                id:     # id de uma intervenção
-                  type: integer
-                estado: # bloqueio ou eliminação
-                  type: string
-              required:
-                - id
-                - estado
-      response:
+      responses:
         '200':
-          description: 'Estado da conta alterado com sucesso.'  
+          description: 'OK. Mostrar Página do Administrador de Docentes da UC UI.'
 
+  /admin/reports:
+    get:
+      operationId: R804
+      summary: 'R804: Catálogo de Denúncias'
+      description: 'Mostra todas denúncias de intervenções recebidas. Acesso: ADM. \nFuncionalidades: visitar e eliminar intervenções.'
+      tags:
+        - 'M08: Páginas de administração'
+      responses:
+        '200':
+          description: 'OK. Mostrar Página do Administrador de Denúncias UI.'
+  
 
       
     
