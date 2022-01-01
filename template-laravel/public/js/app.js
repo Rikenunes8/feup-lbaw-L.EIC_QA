@@ -79,10 +79,11 @@ function sendAjaxRequest(method, url, data, handler) {
 }
 
 function sendFollowUcRequest() {
-  let id = this.closest('div.uc-card').getAttribute('data-id');
-  let element = document.querySelector('div.uc-card[data-id="' + id + '"] a.uc-card-icon-follow i');
+  let user_id = this.closest('section#ucs-page, div.user-profile').getAttribute('data-id');
+  let uc_id = this.closest('div.uc-card').getAttribute('data-id');
+  let element = document.querySelector('div.uc-card[data-id="' + uc_id + '"] a.uc-card-icon-follow i');
   
-  sendAjaxRequest('post', '/api/ucs/follow/' + id, {follow: element.classList.contains('far')}, ucFollowHandler);
+  sendAjaxRequest('post', '/api/users/' + user_id + '/follow/' + uc_id, {follow: element.classList.contains('far')}, ucFollowHandler);
 }
 
 function sendDeleteUcRequest(event) {

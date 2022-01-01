@@ -31,18 +31,12 @@ Route::post('register', 'Auth\RegisterController@register');
 // Route::get('recover'  , 'X@showRecoverForm')->name('recover');
 // Route::post('recover' , 'X@recover');
 
-// Missing Password Recovery Routes : recover
 
 // API
-
 Route::delete('api/interventions/{id}/delete' , 'InterventionController@delete');
 Route::post('api/interventions/{id}/vote'     , 'InterventionController@vote');
 Route::post('api/interventions/{id}/validate' , 'InterventionController@valid');
 Route::post('api/interventions/{id}/report'   , 'InterventionController@report');
-
-Route::post('api/ucs/follow/{uc_id}', 'UcController@follow');
-
-// Route::post('api/notifications/read/{not_id}', 'NotificationController@read');
 
 
 // Interventions - Questions
@@ -65,8 +59,12 @@ Route::post('answers/{id}/comments/create', 'InterventionController@createCommen
 Route::get('comments/{id}/edit'           , 'InterventionController@showEditCommentForm');
 Route::post('comments/{id}/edit'          , 'InterventionController@updateComment')->name('comments.edit');
 
+
 // Users
-Route::get('user'        , function () { return redirect('/users/'.(!is_null(Auth::user())? Auth::user()->id : '')); });
+Route::get('user' , function () { 
+  if (!Auth::check()) return redirect('/login');
+  return redirect('/users'.'/'.Auth::user()->id); 
+});
 Route::get('users'       , 'UserController@list');
 Route::get('users/{id}'  , 'UserController@show');
 Route::get('users/{id}/edit'  , 'UserController@showEditForm');
@@ -74,6 +72,8 @@ Route::post('users/{id}/edit' , 'UserController@update')->name('users.edit');
 
 Route::post('api/users/{id}/block'    , 'UserController@block');
 Route::delete('api/users/{id}/delete' , 'UserController@delete');
+Route::post('api/users/{user_id}/follow/{uc_id}', 'UserController@follow');
+
 
 // Notifications
 /*
@@ -81,7 +81,9 @@ Route::get('notifications'                   , 'NotificationController@list');
 Route::get('notifications/{not_id}'          , 'NotificationController@show');
 Route::delete('notifications/{not_id}/delete', 'NotificationController@delete');
 Route::get('notifications/{not_id}/read'     , 'NotificationController@read');
+Route::post('api/notifications/read/{not_id}', 'NotificationController@read');
 */
+
 
 // UCs
 Route::get('ucs'                , 'UcController@list');
@@ -94,6 +96,7 @@ Route::delete('api/ucs/{id}/delete' , 'UcController@delete');
 
 Route::put('api/ucs/{uc_id}/teachers/{user_id}/add'       , 'UcController@addTeacher');
 Route::delete('api/ucs/{uc_id}/teachers/{user_id}/delete' , 'UcController@deleteTeacher');
+
 
 // Search
 Route::get('search', 'InterventionController@searchList');

@@ -35,23 +35,6 @@ class UcController extends Controller
         return view('pages.uc', ['uc' => $uc]);
     }
 
-    public function follow(Request $request, $id) 
-    {
-        if (!Auth::check()) return redirect('/login');
-        
-        $uc = Uc::find($id);
-        $this->authorize('follow', $uc);
-        
-        $follow = $request->input('follow');
-        if ($follow == 'true') {
-            $uc->followers()->attach(Auth::user()->id);
-        } else {
-            $uc->followers()->detach(Auth::user()->id);
-        }
-
-        return $uc;
-    }
-
     /**
      * Show the form for creating a new resource.
      *

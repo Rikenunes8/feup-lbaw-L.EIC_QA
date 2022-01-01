@@ -14,7 +14,7 @@ servers:
 #  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
 
 tags:
-  - name: 'M01: Autenticação e Perfil Individual' # [DOING]
+  - name: 'M01: Autenticação'             # [DONE] MISS a TODO about new-password
   - name: 'M02: Intervenções'             # [DONE] MISS api/.../report
   - name: 'M03: Pesquisa de Questões'     # [DONE]
   - name: 'M04: Unidades Curriculares'    # [DOING]
@@ -26,7 +26,7 @@ tags:
 paths:
 
   #########################################
-  # M01: Autenticação e Perfil Individual #
+  # M01: Autenticação #
   #########################################
 
   /login:
@@ -35,7 +35,7 @@ paths:
       summary: 'R101: Formulário de Autenticação'
       description: 'Acesso ao formulário de autenticação. Acesso: PUB'
       tags:
-        - 'M01: Autenticação e Perfil Individual'
+        - 'M01: Autenticação'
       responses:
         '200':
           description: 'Ok. Mostrar Início de sessão UI'
@@ -44,7 +44,7 @@ paths:
       summary: 'R102: Ação de Autenticação'
       description: 'Acesso à submissão do formulário de autenticação. Acesso: PUB'
       tags:
-        - 'M01: Autenticação e Perfil Individual'
+        - 'M01: Autenticação'
  
       requestBody:
         required: true
@@ -82,7 +82,7 @@ paths:
       summary: 'R103: Ação de Terminar Sessão'
       description: 'Terminar sessão do utilizador autenticado. Acesso: USR, ADM'
       tags:
-        - 'M01: Autenticação e Perfil Individual'
+        - 'M01: Autenticação'
       responses:
         '302':
           description: 'Redirecionar após o processo de terminar sessão.'
@@ -101,7 +101,7 @@ paths:
       summary: 'R104: Formulário de Registo'
       description: 'Acesso ao formulário de novo registo. Acesso: PUB'
       tags:
-        - 'M01: Autenticação e Perfil Individual'
+        - 'M01: Autenticação'
       responses:
         '200':
           description: 'Ok. Mostrar Formulário de Registo.'
@@ -111,7 +111,7 @@ paths:
       summary: 'R105: Ação de Registo'
       description: 'Processa a submissão de registo do novo utilizador. Acesso: PUB'
       tags:
-        - 'M01: Autenticação e Perfil Individual'
+        - 'M01: Autenticação'
 
       requestBody:
         required: true
@@ -177,7 +177,7 @@ paths:
       summary: 'R106: Formulário de Recuperação de Password'
       description: 'Acesso ao formulário de recuperação de passowrd. Acesso: PUB'
       tags:
-        - 'M01: Autenticação e Perfil Individual'
+        - 'M01: Autenticação'
       responses:
         '200':
           description: 'Ok. Mostrar Formulário de Recuperação de Password.'
@@ -187,7 +187,7 @@ paths:
       summary: 'R107: Ação de Recuperação de Password'
       description: 'Processa a submissão de recuperação de password de um utilizador. Acesso: PUB'
       tags:
-        - 'M01: Autenticação e Perfil Individual'
+        - 'M01: Autenticação'
 
       requestBody:
         required: true
@@ -222,7 +222,7 @@ paths:
       summary: 'R108: Formulário de Configuração de Nova Password'
       description: 'Acesso ao formulário de configuração de nova passowrd. Acesso: OWN' # Qual seria o acesso? OWN não parece fazer sentido porque a pessoa não está logada acho eu
       tags:
-        - 'M01: Autenticação e Perfil Individual'
+        - 'M01: Autenticação'
       parameters:
         - in: path
           name: id
@@ -238,7 +238,7 @@ paths:
       summary: 'R109: Ação de Configuração de Nova Password'
       description: 'Processa a submissão de nova password de um utilizador. Acesso: OWN' # Idem
       tags:
-        - 'M01: Autenticação e Perfil Individual'
+        - 'M01: Autenticação'
       
       parameters:
         - in: path
@@ -273,124 +273,6 @@ paths:
                 302Failure:
                   description: 'Recuperação de Password falhada. Redirecionar para o formulário de Configuração de Nova Password.'
                   value: '/users/{id}/new-password'
-
-
-  /users/{id}:
-    get:
-      operationId: R110
-      summary: 'R110: Visualizar perfil de utilizador'
-      description: 'Mostra o perfil do utilizador. Acesso: USR'
-      tags:
-        - 'M01: Autenticação e Perfil Individual'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-
-      responses:
-        '200':
-          description: 'Ok. Mostrar a UI do perfil de utilizador'
-
-  /users/{id}/edit:
-    get:
-      operationId: R111
-      summary: 'R11:  Formulário de Editar Perfil do Utilizador'
-      description: 'Acesso ao formulário de Editar Perfil do Utilizador. Acesso: OWN'
-      tags:
-        - 'M01: Autenticação e Perfil Individual'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: 'Ok. Mostrar Editar Perfil do Utilizador UI'
-    post:
-      operationId: R112
-      summary: 'R112: Ação de Editar Perfil do Utilizador'
-      description: 'Acesso à submissão do formulário de Editar Perfil do Utilizador. Acesso: OWN'
-      tags:
-        - 'M01: Autenticação e Perfil Individual'
-
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                password:
-                  type: string
-                nome:
-                  type: string
-                sobre: 
-                  type: string
-                data_nascimento:
-                  type: string
-                  format: date
-                ano_ingresso:
-                  type: integer
-                  minimum: 0
-                foto_perfil:
-                  type: string
-                  format: binary
-                       
-      response:
-        '302':
-          description: 'Redirecionar após o processamento da edição do Perfil do Utilizador.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Edição com sucesso. Redirecionar para o Perfil do Utilizador.'
-                  value: '/users/{id}'
-                302Error:
-                  description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
-                  value: '/users/{id}/edit'
-
-  /api/users/{id}/follow/{uc}:
-    post:
-      operationId: R113
-      summary: 'R113: Ação de Seguir uma Unidade Curricular'
-      description: 'Ação de fazer um aluno seguir uma unidade curricular. Acesso: OWN'
-      tags:
-        - 'M01: Autenticação e Perfil Individual'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: uc
-          schema:
-            type: integer
-          required: true
-
-      response:
-        '302':
-          description: 'Redirecionar após o processamento de seguir uma UC.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Ação com sucesso. Redirecionar para a página de Unidades Curriculares.'
-                  value: '/ucs'
-                302Error:
-                  description: 'Edição sem sucesso. Redirecionar para a página de Unidades Curriculares.'
-                  value: '/ucs'
-
-
 
   #####################
   # M02: Intervenções #
@@ -1055,10 +937,32 @@ paths:
   # M05: Utilizadores #
   #####################
 
-  /users:
+  /user:
     get:
       operationId: R501
-      summary: 'R501: Catálogo de Utilizadores.'
+      summary: 'R501: Redirecionar para Perfil do Utilizador.'
+      description: 'Redirecionar para Perfil do Utilizador se estiver autenticado ou para a página de login caso não esteja.'
+  
+      tags: 
+        - 'M05: Utilizadores'
+      responses:
+        '302':
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Auth:
+                  description: 'Utilizador Autenticado. Redirecionar para o Perfil do Utilizador.'
+                  value: '/users/{id}'
+                302NotAuth:
+                  description: 'Utilizador não autenticado. Redirecionar para a página de login.'
+                  value: '/login'
+
+  /users:
+    get:
+      operationId: R502
+      summary: 'R502: Catálogo de Utilizadores.'
       description: 'Mostra todos os Utilizadores do sistema. Acesso: PUB.'
       tags: 
         - 'M05: Utilizadores'
@@ -1066,6 +970,143 @@ paths:
         '200':
           description: 'Ok. Mostrar Página de Utilizadores UI'
    
+  /users/{id}:
+    get:
+      operationId: R503
+      summary: 'R503: Visualizar Perfil de Utilizador'
+      description: 'Mostra o perfil do utilizador. Acesso: USR'
+      tags:
+        - 'M05: Utilizadores'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Mostrar a UI do perfil de utilizador'
+
+  /users/{id}/edit:
+    get:
+      operationId: R504
+      summary: 'R504: Formulário de Editar Perfil do Utilizador'
+      description: 'Acesso ao formulário de Editar Perfil do Utilizador. Acesso: OWN'
+      tags:
+        - 'M05: Utilizadores'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Mostrar Editar Perfil do Utilizador UI'
+    post:
+      operationId: R505
+      summary: 'R505: Ação de Editar Perfil do Utilizador'
+      description: 'Acesso à submissão do formulário de Editar Perfil do Utilizador. Acesso: OWN'
+      tags:
+        - 'M05: Utilizadores'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+                name:
+                  type: string
+                  nullable: true
+                photo:
+                  type: string
+                  format: binary
+                  nullable: true
+                about: 
+                  type: string
+                  nullable: true
+                birthdate:
+                  type: string
+                  format: date-time
+                  nullable: true
+                entryyear:
+                  type: integer
+                  minimum: 1990
+                  nullable: true
+              required:
+                - username
+                - email
+                       
+      response:
+        '302':
+          description: 'Redirecionar após o processamento da edição do Perfil do Utilizador.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Edição com sucesso. Redirecionar para o Perfil do Utilizador.'
+                  value: '/users/{id}'
+                302Error:
+                  description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
+                  value: '/users/{id}/edit'
+
+  /api/users/{user_id}/follow/{uc_id}:
+    post:
+      operationId: R506
+      summary: 'R506: Ação de Seguir uma Unidade Curricular'
+      description: 'Ação de fazer um aluno seguir uma unidade curricular. Acesso: OWN'
+      tags:
+        - 'M01: Autenticação'
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: uc_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                follow:
+                  type: boolean
+              required:
+                - follow
+
+      response:
+        '202':
+          description: 'Ok. Seguir ou deixar de seguir UC e atualizar uc-card na página em concordância.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uc'
+        '403':
+          description: 'Mostrar mensagem de erro.'
+        'XXX':
+          description: 'Redirecionar para '/''
+
 
   #####################
   # M06: Notificações #
@@ -1287,6 +1328,17 @@ components:
         - email
         - password
 
+    Uc:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
 
     
 #---exemplo--

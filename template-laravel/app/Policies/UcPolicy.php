@@ -23,18 +23,6 @@ class UcPolicy
     }
 
     /**
-     * Determine whether the user can follow the model.
-     *
-     * @param  User   $user
-     * @param  Uc   $uc
-     * @return Response|bool
-     */
-    public function follow(User $user, Uc $uc)
-    {
-        return $user->isStudent() && !$user->blocked;
-    }
-
-    /**
      * Determine whether the user can view model's create form.
      *
      * @param  User   $user

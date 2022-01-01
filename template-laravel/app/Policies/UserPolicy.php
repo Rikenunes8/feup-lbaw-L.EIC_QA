@@ -57,4 +57,16 @@ class UserPolicy
     {
         return $user->isAdmin();
     }
+
+    /**
+     * Determine whether the user can follow the model.
+     *
+     * @param  User   $user
+     * @param  User   $user2
+     * @return Response|bool
+     */
+    public function follow(User $user, User $user2)
+    {
+        return $user->isStudent() && !$user->blocked && $user->id == $user2->id;
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use App\Models\Uc;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -165,5 +166,25 @@ class UserController extends Controller
         $user->delete();
 
         return $user;
+    }
+
+    public function follow(Request $request, $user_id, $uc_id) 
+    {
+        if (!Auth::check()) return redirect('/login');
+        
+        $user = User::find($user_id);
+        $uc = Uc::find($uc_id);
+
+        if (is_null($user) || is_null($uc)) return App::abort(404);
+        $this->authorize('follow', $user);
+        
+        $follow = $request->input('follow');
+        if ($follow == 'true') {
+            $user->follows()->attach($uc->id);
+        } else {
+            $user->follows()->detach($uc->id);
+        }
+
+        return $uc;
     }
 }
