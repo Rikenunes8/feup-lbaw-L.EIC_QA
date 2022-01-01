@@ -5,7 +5,7 @@
 @section('content')
 
 <section id="admin-uc-teachers-page">
-  <h2>Docentes de <span class="badge bg-info text-dark">{{ $uc->code }}</span></h2> 
+  <h2>Docentes de <a href="{{ url('ucs/'.$uc->id) }}" class="badge bg-info text-dark">{{ $uc->code }}</a></h2> 
 
   <p>Gestão de Docentes da Unidade Curricular: {{ $uc->name }}</p>
 
@@ -31,7 +31,7 @@
                 <th scope="row"><a href="{{ url('/users/'.$teacher->id) }}" class="app-link">{{ $teacher->name }}</a></th>
                 <td>{{ $teacher->email }}</td>
                 <td class="text-center admin-table-teacher-actions">
-                  <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="far fa-trash-alt"></i> <span class="d-none">Eliminar</span></a>
+                  <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="fas fa-minus"></i> <span class="d-none">Eliminar</span></a>
                 </td>
               </tr>
               @endforeach

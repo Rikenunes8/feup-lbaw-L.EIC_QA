@@ -10,8 +10,14 @@
         <div class="col-11 p-relative">
           <h5 class="card-title me-4"><a href="{{ url('/questions/'.$question->id) }}" class="app-link">{{ $question->title }}</a></h5>
           <h6 class="card-subtitle mt-1 mb-2">
-            <span class="badge bg-info text-dark">{{ $question->uc->code }}</span>
-            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ is_null($question->author)?'Anónimo':$question->author->username }}</span>
+            <a href="{{ url('ucs/'.$question->uc->id) }}" class="badge bg-info text-dark">{{ $question->uc->code }}</a>
+            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por 
+              @if (is_null($question->author))
+                Anónimo
+              @else
+                <a href="{{ url('users/'.$question->author->id) }}" class="app-link">{{ $question->author->username }}</a>
+              @endif
+            </span>
           </h6>
           <p class="card-text">
             {!! substr($question->text, 0, 70) !!}

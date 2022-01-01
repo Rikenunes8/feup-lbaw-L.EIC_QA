@@ -12,7 +12,13 @@
 
         <p>{!! $intervention->text !!}</p>
         @if (!$intervention->isQuestion())
-        <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($intervention->date)); }}, por {{ is_null($intervention->author)?'Anónimo':$intervention->author->username }}</p>
+        <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($intervention->date)); }}, por 
+          @if (is_null($intervention->author))
+            Anónimo
+          @else
+            <a href="{{ url('users/'.$intervention->author->id) }}" class="app-link">{{ $intervention->author->username }}</a>
+          @endif
+        </p>
         @endif
         
         @if ( Auth::check() )

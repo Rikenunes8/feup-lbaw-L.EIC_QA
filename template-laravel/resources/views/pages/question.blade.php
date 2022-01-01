@@ -15,9 +15,14 @@
       </div>
       @endif
       <h2 class="me-4">{{ $question->title }}</h2> 
-      <span class="badge bg-info text-dark mt-1 mb-2">{{ $question->uc->code }}</span>
-      <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por {{ is_null($question->author)?'Anónimo':$question->author->username }}</span>
-      
+      <a href="{{ url('ucs/'.$question->uc->id) }}" class="badge bg-info text-dark mt-1 mb-2">{{ $question->uc->code }}</a>
+      <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por 
+        @if (is_null($question->author))
+          Anónimo
+        @else
+          <a href="{{ url('users/'.$question->author->id) }}" class="app-link">{{ $question->author->username }}</a>
+        @endif
+      </span>
 
       @include('partials.intervention', ['intervention' => $question])
 

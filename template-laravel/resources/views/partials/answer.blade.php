@@ -10,12 +10,24 @@
         <div class="col-11 p-relative">
           <h5 class="card-title me-4"><a href="{{ url('/questions/'.$answer->parent->id) }}" class="app-link">{{ $answer->parent->title }}</a></h5>
           <h6 class="card-subtitle mt-1 mb-2">
-            <span class="badge bg-info text-dark">{{ $answer->parent->uc->code }}</span>
-            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($answer->parent->date)); }}, por {{ is_null($answer->parent->author)?'Anónimo':$answer->parent->author->username }}</span>
+            <a href="{{ url('ucs/'.$answer->parent->uc->id) }}" class="badge bg-info text-dark">{{ $answer->parent->uc->code }}</a>
+            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($answer->parent->date)); }}, por 
+              @if (is_null($answer->parent->author))
+                Anónimo
+              @else
+                <a href="{{ url('users/'.$answer->parent->author->id) }}" class="app-link">{{ $answer->parent->author->username }}</a>
+              @endif
+            </span>
           </h6>
           <h6 class="card-subtitle mt-3 mb-2">
             <b>Resposta:</b><br>
-            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($answer->date)); }}, por {{ is_null($answer->parent->author)?'Anónimo':$answer->parent->author->username }}</span>
+            <span class="text-muted">{{ date('d/m/Y H:i', strtotime($answer->date)); }}, por 
+              @if (is_null($answer->author))
+                Anónimo
+              @else
+                <a href="{{ url('users/'.$answer->author->id) }}" class="app-link">{{ $answer->author->username }}</a>
+              @endif
+            </span>
           </h6>
           <p class="card-text">
             {!! substr($answer->text, 0, 70) !!}
