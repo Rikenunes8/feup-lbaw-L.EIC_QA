@@ -31,7 +31,7 @@
                 <th scope="row"><a href="{{ url('/users/'.$teacher->id) }}" class="app-link">{{ $teacher->name }}</a></th>
                 <td>{{ $teacher->email }}</td>
                 <td class="text-center admin-table-teacher-actions">
-                  <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="fas fa-minus"></i> <span class="d-none">Eliminar</span></a>
+                  <a href="#" class="btn btn-danger text-white admin-table-remove"><i class="fas fa-minus"></i> <span class="d-none">Remover</span></a>
                 </td>
               </tr>
               @endforeach

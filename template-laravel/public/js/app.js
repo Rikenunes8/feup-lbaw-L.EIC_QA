@@ -11,9 +11,9 @@ function addEventListeners() {
     deleter.addEventListener('click', sendDeleteUcRequest);
   });
 
-  let ucTeacherDeleters = document.querySelectorAll('td.admin-table-teacher-actions a.admin-table-delete');
-  [].forEach.call(ucTeacherDeleters, function(deleter) {
-    deleter.addEventListener('click', sendDeleteUcTeacherRequest);
+  let ucTeacherRemovers = document.querySelectorAll('td.admin-table-teacher-actions a.admin-table-remove');
+  [].forEach.call(ucTeacherRemovers, function(remover) {
+    remover.addEventListener('click', sendRemoveUcTeacherRequest);
   });
 
   let ucTeacherAdders = document.querySelectorAll('td.admin-table-teacher-actions a.admin-table-add');
@@ -85,17 +85,21 @@ function sendFollowUcRequest() {
   sendAjaxRequest('post', '/api/ucs/follow/' + id, {follow: element.classList.contains('far')}, ucFollowHandler);
 }
 
-function sendDeleteUcRequest() {
+function sendDeleteUcRequest(event) {
   let id = this.closest('tr').getAttribute('data-id');
+  
+  const flag = confirm('Tem a certeza que quer eliminar permanentemente esta Unidade Curricular?');
+  if (flag)
+    sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler)
 
-  sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler);
+  event.preventDefault();
 }
 
-function sendDeleteUcTeacherRequest() {
+function sendRemoveUcTeacherRequest() {
   let uc_id = this.closest('table').getAttribute('data-id');
   let teacher_id = this.closest('tr').getAttribute('data-id');
 
-  sendAjaxRequest('delete', '/api/ucs/' + uc_id + '/teachers/' + teacher_id + '/delete', null, ucTeacherDeletedHandler);
+  sendAjaxRequest('delete', '/api/ucs/' + uc_id + '/teachers/' + teacher_id + '/delete', null, ucTeacherRemovedHandler);
 }
 
 function sendAddUcTeacherRequest() {
@@ -105,10 +109,14 @@ function sendAddUcTeacherRequest() {
   sendAjaxRequest('put', '/api/ucs/' + uc_id + '/teachers/' + teacher_id + '/add', null, ucTeacherAddedHandler);
 }
 
-function sendDeleteUserRequest() {
+function sendDeleteUserRequest(event) {
   let id = this.closest('tr').getAttribute('data-id');
+  
+  const flag = confirm('Tem a certeza que quer eliminar permanentemente este Utilizador?');
+  if (flag)
+    sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
 
-  sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
+  event.preventDefault();
 }
 
 function sendBlockUserRequest(event) {
@@ -116,16 +124,23 @@ function sendBlockUserRequest(event) {
   let id = user.getAttribute('data-id');
   let reason = user.querySelector('input[name=reason]').value;
 
-  if (reason != '')
-    sendAjaxRequest('post', '/api/users/' + id + '/block', {block_reason: reason}, userBlockedHandler);
+  if (reason != '') {
+    const flag = confirm('Tem a certeza que quer alterar o estado de bloqueio deste Utilizador?');
+    if (flag)
+      sendAjaxRequest('post', '/api/users/' + id + '/block', {block_reason: reason}, userBlockedHandler);
+  }
 
   event.preventDefault();
 }
 
-function sendDeleteInterventionRequest() {
+function sendDeleteInterventionRequest(event) {
   let id = this.closest('section').getAttribute('data-id');
 
-  sendAjaxRequest('delete', '/api/interventions/' + id + '/delete', null, interventionDeletedHandler);
+  const flag = confirm('Tem a certeza que quer eliminar permanentemente esta Intervenção?');
+  if (flag)
+    sendAjaxRequest('delete', '/api/interventions/' + id + '/delete', null, interventionDeletedHandler);
+
+  event.preventDefault();
 }
 
 function sendUpVoteInterventionRequest() {
@@ -177,9 +192,11 @@ function ucDeletedHandler() {
   let uc = JSON.parse(this.responseText);
   let element = document.querySelector('tr[data-id="' + uc.id + '"]');
   element.remove();
+
+  admin_table.row(element).remove().draw(false);
 }
 
-function ucTeacherDeletedHandler() {
+function ucTeacherRemovedHandler() {
   if (this.status != 200) window.location = '/';
   let teacher = JSON.parse(this.responseText);
   let element = document.querySelector('tr[data-id="' + teacher.id + '"] td.admin-table-teacher-actions');
@@ -189,10 +206,13 @@ function ucTeacherDeletedHandler() {
   new_a.classList.add('btn','btn-primary','text-white', 'admin-table-add');
   new_a.setAttribute('href', '#');
   new_a.innerHTML = `<i class="fas fa-plus"></i> <span class="d-none">Adicionar</span>`;
-
   new_a.addEventListener('click', sendAddUcTeacherRequest);
 
   element.appendChild(new_a);
+
+  // Try to reload sort - this works but send us back to the first page..
+  // $('#admin-table').DataTable().destroy();
+  // $('#admin-table').DataTable().draw(false);
 }
 
 function ucTeacherAddedHandler() {
@@ -202,13 +222,16 @@ function ucTeacherAddedHandler() {
   element.removeChild(element.lastElementChild);
 
   let new_a = document.createElement('a');
-  new_a.classList.add('btn','btn-danger','text-white', 'admin-table-delete');
+  new_a.classList.add('btn','btn-danger','text-white', 'admin-table-remove');
   new_a.setAttribute('href', '#');
-  new_a.innerHTML = `<i class="far fa-trash-alt"></i> <span class="d-none">Eliminar</span>`;
-
-  new_a.addEventListener('click', sendDeleteUcTeacherRequest);
+  new_a.innerHTML = `<i class="fas fa-minus"></i> <span class="d-none">Remover</span>`;
+  new_a.addEventListener('click', sendRemoveUcTeacherRequest);
 
   element.appendChild(new_a);
+
+  // Try to reload sort - this works but send us back to the first page..
+  // $('#admin-table').DataTable().destroy();
+  // $('#admin-table').DataTable().draw(false);
 }
 
 function userDeletedHandler() {
@@ -216,6 +239,8 @@ function userDeletedHandler() {
   let user = JSON.parse(this.responseText);
   let element = document.querySelector('tr[data-id="' + user.id + '"]');
   element.remove();
+
+  admin_table.row(element).remove().draw(false);
 }
 
 function userBlockedHandler() {
@@ -401,9 +426,11 @@ function createError(msg) {
 
 addEventListeners();
 
+var admin_table;
 $(document).ready(function () {
-  $('#admin-table').DataTable({
-    "pagingType": "simple_numbers"
+  admin_table = $('#admin-table').DataTable({
+    "page": 1,
+    "pagingType": "simple_numbers",
   });
   $('.dataTables_length').addClass('bs-select');
 
@@ -416,4 +443,3 @@ $('.dropdown.dropdown-keep-open').on('hide.bs.dropdown', function (e) {
   var target = $(e.clickEvent.target);
   return !(target.hasClass('dropdown-keep-open') || target.parents('.dropdown-keep-open').length);
 });
-
