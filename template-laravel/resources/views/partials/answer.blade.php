@@ -26,8 +26,9 @@
           
           @php
             $icon = '';
-            foreach ($answer->valid as $validation) {
-              if ($validation->pivot->valid) $icon = 'fa-check question-valid-icon';
+            $validations = DB::table('validation')->where('id_answer', $answer->id)->get();
+            foreach ($validations as $validation) {
+              if ($validation->valid) $icon = 'fa-check question-valid-icon';
               else $icon = 'fa-times question-invalid-icon';
             }
           @endphp

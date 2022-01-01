@@ -24,9 +24,11 @@
                 $times = 'fa-times';
                 $isTeacherResponsible = $intervention->parent->uc->teachers()->wherePivot('id_teacher', '=', Auth::user()->id)->exists();
                 
+                $validations = DB::table('validation')->where('id_answer', $intervention->id)->get();
+
                 $valid = null;
-                foreach ($intervention->valid as $validation) {
-                  if ($validation->pivot->valid) $valid = true;
+                foreach ($validations as $validation) {
+                  if ($validation->valid) $valid = true;
                   else $valid = false;
                 }
               @endphp

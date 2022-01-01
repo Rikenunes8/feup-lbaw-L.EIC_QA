@@ -23,8 +23,9 @@
           @php
             $valid = false;
             foreach ($question->childs as $answer) {
-              foreach ($answer->valid as $validation) {
-                if ($validation->pivot->valid) $valid = true;
+              $validations = DB::table('validation')->where('id_answer', $answer->id)->get();
+              foreach ($validations as $validation) {
+                if ($validation->valid) $valid = true;
               }
             }
           @endphp

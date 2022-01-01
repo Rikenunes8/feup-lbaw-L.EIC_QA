@@ -418,14 +418,13 @@ class InterventionController extends Controller
 
         $this->authorize('valid', $intervention);
 
-        
         if (is_null($valid)) {
-            $oldUserValidation = $intervention->valid()->first();
-            $intervention->valid()->detach($oldUserValidation->id_teacher);
+            DB::table('validation')->where('id_answer', $intervention->id)->delete();
         }
         else {
             $intervention->valid()->attach($user->id, ['valid' => $valid]);
         }
+
         return [$intervention, $valid];
     }
 }
