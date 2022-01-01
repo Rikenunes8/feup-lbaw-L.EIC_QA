@@ -758,9 +758,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  0:
+                  _0:
                     $ref: '#/components/schemas/Intervention'
-                  1:
+                  _1:
                     type: boolean
                     nullable: true
         '403':
