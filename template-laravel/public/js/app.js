@@ -79,7 +79,7 @@ function sendAjaxRequest(method, url, data, handler) {
 }
 
 function sendFollowUcRequest() {
-  let user_id = this.closest('section#ucs-page, div.user-profile').getAttribute('data-id');
+  let user_id = this.closest('section#ucs-page, section#uc-page, div.user-profile').getAttribute('data-id');
   let uc_id = this.closest('div.uc-card').getAttribute('data-id');
   let element = document.querySelector('div.uc-card[data-id="' + uc_id + '"] a.uc-card-icon-follow i');
   
