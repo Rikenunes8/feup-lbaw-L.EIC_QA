@@ -285,7 +285,7 @@ paths:
       description: 'Lista questões segundo determinados parâmetros. Acesso: PUB.'
   
       tags: 
-        - M02: Intervenções'
+        - M02: 'Intervenções'
 
       parameters:
         - in: query
@@ -770,9 +770,9 @@ paths:
 
   # TODO /api/interventions/{id}/report:
 
-  #################################
-  # M03: Pesquisa de Intervenções #
-  #################################
+  #############################
+  # M03: Pesquisa de Questões #
+  #############################
   
   /search:
     get:
@@ -781,7 +781,7 @@ paths:
       description: 'Procura por intervenções e redireciona para uma página com as questões selecionadas pela pesquisa. Acesso: PUB.'
   
       tags: 
-        - 'M03: Pesquisa de Intervenções'
+        - 'M03: Pesquisa de Questões'
 
       parameters:
         - in: query
@@ -1070,7 +1070,7 @@ paths:
       summary: 'R506: Ação de Seguir uma Unidade Curricular'
       description: 'Ação de fazer um aluno seguir uma unidade curricular. Acesso: OWN'
       tags:
-        - 'M01: Autenticação'
+        - 'M05: Utilizadores'
 
       parameters:
         - in: path
@@ -1118,7 +1118,7 @@ paths:
       summary: 'R801: UI de Notitificações do Utilizador.'
       description: 'Mostra as Notificações de um Utilizador. Acesso: OWN.'
       tags: 
-        - 'M08: Notificações'
+        - 'M06: Notificações'
 
       parameters:
         - in: path
