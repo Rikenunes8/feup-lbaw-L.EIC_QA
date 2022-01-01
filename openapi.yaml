@@ -688,7 +688,7 @@ paths:
         '403':
           description: 'Mostrar mensagem de erro.'
         'XXX':
-          description: 'Redirecionar para '/''
+          description: 'Redirecionar para /'
           
   /api/interventions/{id}/vote:
     post:
