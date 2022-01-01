@@ -63,6 +63,7 @@ Route::get('comments/{id}/edit'           , 'InterventionController@showEditComm
 Route::post('comments/{id}/edit'          , 'InterventionController@updateComment')->name('comments.edit');
 
 // Users
+Route::get('user'        , function () { return redirect('/users/'.(!is_null(Auth::user())? Auth::user()->id : '')); });
 Route::get('users'       , 'UserController@list');
 Route::get('users/{id}'  , 'UserController@show');
 Route::get('users/{id}/edit'  , 'UserController@showEditForm');
