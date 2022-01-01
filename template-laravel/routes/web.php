@@ -34,8 +34,8 @@ Route::post('register', 'Auth\RegisterController@register');
 
 Route::delete('api/interventions/{id}/delete' , 'InterventionController@delete');
 Route::post('api/interventions/{id}/vote'     , 'InterventionController@vote');
-Route::post('api/interventions/{id}/report'   , 'InterventionController@report');
 Route::post('api/interventions/{id}/validate' , 'InterventionController@valid');
+Route::post('api/interventions/{id}/report'   , 'InterventionController@report');
 
 Route::post('api/ucs/follow/{uc_id}', 'UcController@follow');
 
