@@ -92,8 +92,8 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Terminar sessão bem sucedida. Redirecionar para o formulário de inicio de sessão'
-                  value: '/login'
+                  description: 'Terminar sessão bem sucedida. Redirecionar para Página Inicial'
+                  value: '/'
 
   /register:
     get:
@@ -120,30 +120,42 @@ paths:
             schema:
               type: object
               properties:
+                usertype:
+                  type: string
                 email:
                   type: string
                 username:
                   type: string
                 password:
                   type: string
-                nome:
+                password_confirmation:
                   type: string
-                sobre: 
+                name:
                   type: string
-                data_nascimento:
-                  type: string
-                  format: date-time
-                ano_ingresso:
-                  type: integer
-                  minimum: 0
-                foto_perfil:
+                  nullable: true
+                photo:
                   type: string
                   format: binary
+                  nullable: true
+                about: 
+                  type: string
+                  nullable: true
+                birthdate:
+                  type: string
+                  format: date-time
+                  nullable: true
+                entryyear:
+                  type: integer
+                  minimum: 1990
+                  nullable: true
               required:
+                - type
                 - username
                 - email
                 - password
+                - password_confirmation
 
+              
       responses:
         '302':
           description: 'Redirecionar após processar a informação do novo utilizador.'
@@ -157,10 +169,9 @@ paths:
                   value: '/users/{id}'
                 302Failure:
                   description: 'Autenticação falhada. Redirecionar para o formulário de Registo.'
-                  value: '/registar'
+                  value: '/register'
 
-  # M01: recuperação de password  
-  /recuperar-password:
+  /recover:
     get:
       operationId: R106
       summary: 'R106: Formulário de Recuperação de Password'
@@ -204,8 +215,8 @@ paths:
                   description: 'Email ausente do sistema. Redirecionar para o formulário de Registo.'
                   value: '/registar'
   
-  # Isto faz sentido? Normalmente a página de recuperar password é só para escolher o email para onde vão mandar o link para recuperar a password e só a partir desse link é que se altera a password
-  /user/{id}/nova-password:
+  # TODO Isto faz sentido? Normalmente a página de recuperar password é só para escolher o email para onde vão mandar o link para recuperar a password e só a partir desse link é que se altera a password
+  /users/{id}/new-password:
     get:
       operationId: R108
       summary: 'R108: Formulário de Configuração de Nova Password'
@@ -261,7 +272,7 @@ paths:
                   value:  '/users/{id}'
                 302Failure:
                   description: 'Recuperação de Password falhada. Redirecionar para o formulário de Configuração de Nova Password.'
-                  value: '/user/{id}/nova-password'
+                  value: '/users/{id}/new-password'
 
 
   /users/{id}:
@@ -1226,6 +1237,55 @@ components:
           nullable: true
         type:
           type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        registry_date:
+          type: string
+          format: date-time
+        name:
+          type: string
+          nullable: true
+        photo:
+          type: string
+          format: binary
+          nullable: true
+        about: 
+          type: string
+          nullable: true
+        birthdate:
+          type: string
+          format: date-time
+          nullable: true
+        score: 
+          type: integer
+          nullable: true
+        blocked:
+          type: boolean
+          nullable: true
+        block_reason:
+          type: boolean
+          nullable: true
+        entry_year:
+          type: integer
+          minimum: 0
+          nullable: true
+        type:
+          type: string
+      required:
+        - type
+        - username
+        - email
+        - password
 
 
     

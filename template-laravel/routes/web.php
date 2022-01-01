@@ -28,6 +28,9 @@ Route::post('login'   , 'Auth\LoginController@login');
 Route::get('logout'   , 'Auth\LoginController@logout')->name('logout');
 Route::get('register' , 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
+// Route::get('recover'  , 'X@showRecoverForm')->name('recover');
+// Route::post('recover' , 'X@recover');
+
 // Missing Password Recovery Routes : recover
 
 // API
@@ -77,6 +80,7 @@ Route::delete('api/users/{id}/delete' , 'UserController@delete');
 Route::get('notifications'                   , 'NotificationController@list');
 Route::get('notifications/{not_id}'          , 'NotificationController@show');
 Route::delete('notifications/{not_id}/delete', 'NotificationController@delete');
+Route::get('notifications/{not_id}/read'     , 'NotificationController@read');
 */
 
 // UCs
