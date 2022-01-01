@@ -285,7 +285,7 @@ paths:
       description: 'Lista questões segundo determinados parâmetros. Acesso: PUB.'
   
       tags: 
-        - M02: 'Intervenções'
+        - 'M02: Intervenções'
 
       parameters:
         - in: query
