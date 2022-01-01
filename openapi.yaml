@@ -451,7 +451,7 @@ paths:
       summary: 'R207: Redirecionar para Questões.'
   
       tags: 
-        - M02: Intervenções'
+        - 'M02: Intervenções'
       responses:
         '302':
           description: Redirect to '/questions'
@@ -462,7 +462,7 @@ paths:
       summary: 'R208: Ação de criação de resposta.'
       description: 'Ação de submissão do formulário de Nova Resposta. Acesso: USR'
       tags: 
-        - M02: Intervenções'
+        - 'M02: Intervenções'
       
       parameters:
         - in: path
@@ -503,7 +503,7 @@ paths:
       summary: 'R209: Formulário de Editar Resposta'
       description: 'Acesso ao formulário de Editar Resposta. Acesso: OWN'
       tags:
-        - M02: Intervenções'
+        - 'M02: Intervenções'
       parameters:
         - in: path
           name: id
@@ -519,7 +519,7 @@ paths:
       summary: 'R210: Ação de Editar Resposta'
       description: 'Acesso à submissão do formulário de Editar Resposta. Acesso: OWN'
       tags:
-        - M02: Intervenções'
+        - 'M02: Intervenções'
 
       parameters:
         - in: path
@@ -561,7 +561,7 @@ paths:
       summary: 'R211: Redirecionar para Questões.'
   
       tags: 
-        - M02: Intervenções'
+        - 'M02: Intervenções'
       responses:
         '302':
           description: Redirect to '/questions'
@@ -572,7 +572,7 @@ paths:
       summary: 'R212: Ação de criação de comentário.'
       description: 'Ação de submissão do formulário de Novo Comentário. Acesso: USR'
       tags: 
-        - M02: Intervenções'
+        - 'M02: Intervenções'
       
       parameters:
         - in: path
@@ -613,7 +613,7 @@ paths:
       summary: 'R213: Formulário de Editar Resposta'
       description: 'Acesso ao formulário de Editar Resposta. Acesso: OWN'
       tags:
-        - M02: Intervenções'
+        - 'M02: Intervenções'
       parameters:
         - in: path
           name: id
@@ -629,7 +629,7 @@ paths:
       summary: 'R214: Ação de Editar Comentário'
       description: 'Acesso à submissão do formulário de Editar Comentário. Acesso: OWN'
       tags:
-        - M02: Intervenções'
+        - 'M02: Intervenções'
 
       parameters:
         - in: path
