@@ -14,14 +14,14 @@ servers:
 #  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
 
 tags:
-  - name: 'M01: Autenticação e Perfil Individual'
-  - name: 'M02: Intervenções [DOING]'
-  - name: 'M03: Pesquisa de Questões [DONE]'
-  - name: 'M04: Unidades Curriculares [DOING]'
-  - name: 'M05: Utilizadores'
+  - name: 'M01: Autenticação e Perfil Individual' # [DOING]
+  - name: 'M02: Intervenções'             # [DONE] MISS api/.../report
+  - name: 'M03: Pesquisa de Questões'     # [DONE]
+  - name: 'M04: Unidades Curriculares'    # [DOING]
+  - name: 'M05: Utilizadores'             # [DONE]
   - name: 'M06: Notificações'
-  - name: 'M07: Páginas estáticas [DONE]'
-  - name: 'M08: Páginas de administração [DONE]' 
+  - name: 'M07: Páginas estáticas'        # [DONE]
+  - name: 'M08: Páginas de administração' # [DONE]
 
 paths:
 
@@ -53,9 +53,9 @@ paths:
             schema:
               type: object
               properties:
-                email:       # <!--- form field name
+                email: 
                   type: string
-                password:    # <!--- form field name
+                password:
                   type: string
               required:
                 - email
@@ -209,7 +209,7 @@ paths:
     get:
       operationId: R108
       summary: 'R108: Formulário de Configuração de Nova Password'
-      description: 'Acesso ao formulário de configuração de nova passowrd. Acesso: PRT' # Qual seria o acesso? PRT não parece fazer sentido porque a pessoa não está logada acho eu
+      description: 'Acesso ao formulário de configuração de nova passowrd. Acesso: OWN' # Qual seria o acesso? OWN não parece fazer sentido porque a pessoa não está logada acho eu
       tags:
         - 'M01: Autenticação e Perfil Individual'
       parameters:
@@ -225,7 +225,7 @@ paths:
     post:
       operationId: R109
       summary: 'R109: Ação de Configuração de Nova Password'
-      description: 'Processa a submissão de nova password de um utilizador. Acesso: PRT' # Idem
+      description: 'Processa a submissão de nova password de um utilizador. Acesso: OWN' # Idem
       tags:
         - 'M01: Autenticação e Perfil Individual'
       
@@ -287,7 +287,7 @@ paths:
     get:
       operationId: R111
       summary: 'R11:  Formulário de Editar Perfil do Utilizador'
-      description: 'Acesso ao formulário de Editar Perfil do Utilizador. Acesso: PRT'
+      description: 'Acesso ao formulário de Editar Perfil do Utilizador. Acesso: OWN'
       tags:
         - 'M01: Autenticação e Perfil Individual'
       parameters:
@@ -302,7 +302,7 @@ paths:
     post:
       operationId: R112
       summary: 'R112: Ação de Editar Perfil do Utilizador'
-      description: 'Acesso à submissão do formulário de Editar Perfil do Utilizador. Acesso: PRT'
+      description: 'Acesso à submissão do formulário de Editar Perfil do Utilizador. Acesso: OWN'
       tags:
         - 'M01: Autenticação e Perfil Individual'
 
@@ -321,7 +321,7 @@ paths:
                   type: string
                 data_nascimento:
                   type: string
-                  format: date-time
+                  format: date
                 ano_ingresso:
                   type: integer
                   minimum: 0
@@ -342,13 +342,13 @@ paths:
                   value: '/users/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
-                  value: '/users/{id}/editar'
+                  value: '/users/{id}/edit'
 
   /api/users/{id}/follow/{uc}:
     post:
       operationId: R113
       summary: 'R113: Ação de Seguir uma Unidade Curricular'
-      description: 'Ação de fazer um aluno seguir uma unidade curricular. Acesso: PRT'
+      description: 'Ação de fazer um aluno seguir uma unidade curricular. Acesso: OWN'
       tags:
         - 'M01: Autenticação e Perfil Individual'
 
@@ -450,7 +450,7 @@ paths:
                 text:
                   type: string
                 category:
-                  type: string
+                  type: integer
               required: 
                 - title
                 - text
@@ -468,14 +468,14 @@ paths:
                   value: '/questions/{id}'
                 302Error:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de Nova Questão.'
-                  value: '/questions/crete'
+                  value: '/questions/create'
 
   /questions/{id}: 
     get:
-      operationId: R203
-      summary: 'R203: Visualizar detalhes de questão'
+      operationId: R204
+      summary: 'R204: Visualizar detalhes de questão'
       description: 'Mostra o detalhe de uma questão: contéudo da questão, respostas e comentários associados. Acesso: PUB.
-                    Funcionalidades: criar nova questão, votar, validar, responder, editar, denunciar, apagar'
+                    Funcionalidades: criar nova questão, votar, validar, responder, editar, denunciar, apagar (varia com o utilizador)'
       tags:
         - 'M02: Intervenções'
         
@@ -490,15 +490,13 @@ paths:
         '200':
           description: 'Ok. Mostrar a UI do detalhe de questão'
           
-  
-
   /questions/{id}/edit:
     get:
-      operationId: R204
-      summary: 'R204: Formulário de Editar Questão'
-      description: 'Acesso ao formulário de Editar Questão. Acesso: PRT'
+      operationId: R205
+      summary: 'R205: Formulário de Editar Questão'
+      description: 'Acesso ao formulário de Editar Questão. Acesso: OWN'
       tags:
-        - 'M02: Questões'
+        - 'M02: Intervenções'
       parameters:
         - in: path
           name: id
@@ -510,17 +508,17 @@ paths:
           description: 'Ok. Mostrar Editar Questão UI'
 
     post:
-      operationId: R205
-      summary: 'R205: Ação de Editar Questão'
-      description: 'Acesso à submissão do formulário de Editar Questão. Acesso: PRT'
+      operationId: R206
+      summary: 'R206: Ação de Editar Questão'
+      description: 'Acesso à submissão do formulário de Editar Questão. Acesso: OWN'
       tags:
-        - 'M02: Questões'
+        - 'M02: Intervenções'
       parameters:
         - in: path
           name: id
-          required: true
           schema:
             type: integer
+          required: true
       requestBody:
         required: true
         content:
@@ -528,16 +526,16 @@ paths:
             schema:
               type: object
               properties:
-                titulo: 
+                title: 
                   type: string
-                texto:
+                text:
                   type: string
-                categoria:
-                  type: string
+                category:
+                  type: integer
               required: 
-                - titulo
-                - texto
-                - categoria
+                - title
+                - text
+                - category
       response:
         '302':
           description: 'Redirecionar após o processamento da edição da questão.'
@@ -548,130 +546,38 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão editada.'
-                  value: '/questao/{id}'
+                  value: '/questions/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma questão.'
-                  value: '/questao/{id}/editar'
+                  value: '/questions/{id}/edit'
 
 
-  # M02: votacao e eliminicao e reporte de questões ?? é uma acção por isso nao deve ser incluída??
-  /api/questions/{id}/vote:
-    post:
-      operationId: R206
-      summary: 'R206: Ação de Votar numa Questão.'
-      description: 'Ação de votar numa questão, acessível a qualquer utilizador autenticado exceto ao próprio autor. Acesso: USR - PRT' # Como se diz isto?
-      tags: 
-        - 'M02: Questões'
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer   
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: boolean # Voto positivo ou negativo
-              required: true  
-      response:
-        '302':
-          description: 'Redirecionar após o processamento do voto.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Votação com sucesso. Redirecionar para o detalhe da questão que foi votada.'
-                  value: '/questao/{id}'
-                302Error:
-                  description: 'Votação sem sucesso. Redirecionar para o detalhe da questão que foi votada.'
-                  value: '/questao/{id}'
-
-  /questions/{id}/delete:
-    delete:
+  /answers:
+    get:
       operationId: R207
-      summary: 'R207: Ação de Eliminar uma Questão.'
-      description: 'Ação de eliminar uma questão. Acesso: PRT, ADM'
+      summary: 'R207: Redirecionar para Questões.'
+  
       tags: 
-        - 'M02: Questões'
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer   
-      response:
+        - M02: Intervenções'
+      responses:
         '302':
-          description: 'Redirecionar após a eliminação da questão.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Eliminação com sucesso. Redirecionar para a página inicial.'
-                  value: '/home'
-                302Error:
-                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão que seria eliminada.'
-                  value: '/questao/{id}'
-
-  /api/questions/{id}/report:
+          description: Redirect to '/questions'
+  
+  /questions/{id}/answers/create:
     post:
       operationId: R208
-      summary: 'R208: Ação de Reportar uma Questão.'
-      description: 'Ação de reportar uma questão. Acesso: USR'
+      summary: 'R208: Ação de criação de resposta.'
+      description: 'Ação de submissão do formulário de Nova Resposta. Acesso: USR'
       tags: 
-        - 'M02: Questões'
+        - M02: Intervenções'
+      
       parameters:
         - in: path
           name: id
-          required: true
           schema:
-            type: integer   
-      response:
-        '302':
-          description: 'Redirecionar após a denúncia de uma questão.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão reportada.'
-                  value: '/questao/{id}'
-                302Error:
-                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão reportada.'
-                  value: '/questao/{id}'
+            type: integer
+          required: true
 
-  # user stories -> experiencia para dar aos utilizadores -> para acoes precisamos de coisas que 
-  # o que acontece no end point 
-  # homepage -> experiencia do utilizador : o que tem disponível ai -> endpoint por exemplo para onde os formularios 
-  # esta pagina vai fazer isto e permite tal. acoes nao na descrisao da pagina mas endpoints onde se realizam a ação 
-
-  ##################
-  # M03: Respostas #
-  ##################
-
-  /answers/create:
-    get:
-      operationId: R301
-      summary: 'R301: Formulário de Nova Resposta'
-      description: 'Acesso ao formulário de Nova Resposta. Acesso: USR'
-      tags:
-        - 'M03: Respostas'
-      responses:
-        '200':
-          description: 'Ok. Mostrar Nova Resposta UI'
-    put:
-      operationId: R302
-      summary: 'R302: Ação de criação de resposta.'
-      description: 'Ação de submissão do formulário de Nova Resposta. Acesso: USR'
-      tags: 
-        - 'M03: Respostas'
-      
       requestBody:
         required: true
         content:
@@ -679,11 +585,11 @@ paths:
             schema:
               type: object
               properties:
-                texto:
+                text:
                   type: string                
               required: 
-                - texto
-      response:
+                - text
+      responses:
         '302':
           description: 'Redirecionar após o processamento da criação da nova resposta.'
           headers:
@@ -693,34 +599,34 @@ paths:
               examples:
                 302Success:
                   description: 'Criação com sucesso. Redirecionar para o detalhe da questão que foi respondida.'
-                  value: '/questao/{id}'
+                  value: '/questions/{id}'
                 302Error:
-                  description: 'Criação sem sucesso. Redirecionar para o formulário de criação de nova resposta.'
-                  value: '/resposta/criar'
-
+                  description: 'Criação sem sucesso. Redirecionar para o detalhe da questão que foi respondida.'
+                  value: '/questions/{id}'
+  
   /answers/{id}/edit:
     get:
-      operationId: R303
-      summary: 'R303: Formulário de Editar Resposta'
-      description: 'Acesso ao formulário de Editar Resposta. Acesso: PRT'
+      operationId: R209
+      summary: 'R209: Formulário de Editar Resposta'
+      description: 'Acesso ao formulário de Editar Resposta. Acesso: OWN'
       tags:
-        - 'M03: Respostas'
+        - M02: Intervenções'
       parameters:
         - in: path
           name: id
-          required: true
           schema:
             type: integer
+          required: true
       responses:
         '200':
           description: 'Ok. Mostrar Editar Resposta UI'
           
     post:
-      operationId: R304
-      summary: 'R304: Ação de Editar Resposta'
-      description: 'Acesso à submissão do formulário de Editar Resposta. Acesso: PRT'
+      operationId: R210
+      summary: 'R210: Ação de Editar Resposta'
+      description: 'Acesso à submissão do formulário de Editar Resposta. Acesso: OWN'
       tags:
-        - 'M03: Resposta'
+        - M02: Intervenções'
 
       parameters:
         - in: path
@@ -736,10 +642,11 @@ paths:
             schema:
               type: object
               properties:
-                texto:
+                text:
                   type: string
-                  required: true
-      response:
+              required:
+                - text
+      responses:
         '302':
           description: 'Redirecionar após o processamento da edição da resposta.'
           headers:
@@ -749,133 +656,38 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão respondida'
-                  value: '/questão/{id}'
+                  value: '/questions/{question_id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma resposta.'
-                  value: '/resposta/{id}/editar'
+                  value: '/answers/{id}/edit'
 
 
-  # M03: votacao, validacao, eliminicao e reporte de respostas ?? é uma acção por isso nao deve ser incluída??
-  /answers/{id}/vote:
-    post:
-      operationId: R305
-      summary: 'R305: Ação de votar num comentário.'
-      description: 'Ação de votar num comentário, acessível a qualquer utilizador autenticado exceto ao próprio autor. Acesso: USR - PRT' # Como se diz isto?
-      tags: 
-        - 'M03: Respostas'
-
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer    
-
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: boolean # Voto positivo ou negativo
-              required: true  
-      
-      response:
-        '302':
-          description: 'Redirecionar após o processamento do voto.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Votação com sucesso. Redirecionar para o detalhe da questão correspondente à resposta votada.'
-                  value: '/questao/{id}'
-                302Error:
-                  description: 'Votação sem sucesso. Redirecionar para o detalhe da questão correspondente à resposta votada.'
-                  value: '/questao/{id}'
-
-  /answers/{id}/delete:
-    delete:
-      operationId: R306
-      summary: 'R306: Ação de Eliminar uma Resposta.'
-      description: 'Ação de eliminar uma resposta. Acesso: PRT, ADM'
-      tags: 
-        - 'M03: Respostas'
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer   
-      response:
-        '302':
-          description: 'Redirecionar após a eliminação da resposta.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correpsondente à resposta que seria eliminada.'
-                  value: '/questao/{id}'
-                302Error:
-                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correpsondente à resposta que seria eliminada.'
-                  value: '/questao/{id}'
-
-  /answers/{id}/report:
-    post:
-      operationId: R307
-      summary: 'R307: Ação de Reportar uma Resposta.'
-      description: 'Ação de reportar uma repsposta. Acesso: USR'
-      tags: 
-        - 'M03: Respostas'
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer   
-      response:
-        '302':
-          description: 'Redirecionar após a denúncia de uma resposta.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correspondente à resposta reportada.'
-                  value: '/questao/{id}'
-                302Error:
-                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correspondente à resposta reportada.'
-                  value: '/questao/{id}'
-
-  # /api/answers/{id}/validate:
-
-  # M03: as respotas são apenas visualizadas como uma componente da pagina de destalhe da questao -- falta isto... :c
-
-
-  ####################
-  # M04: Comentários #
-  ####################
-                  
-  /comments/create:
+  /comments:
     get:
-      operationId: R401
-      summary: 'R401: Formulário de Novo Comentário'
-      description: 'Acesso ao formulário de Novo Comentário. Acesso: USR'
-      tags:
-        - 'M04: Comentários'
-      responses:
-        '200':
-          description: 'Ok. Mostrar Novo Comentário UI'
-    put:
-      operationId: R402
-      summary: 'R402: Ação de criação de comentário.'
-      description: 'Acesso à submissão do formulário de Novo comentário. Acesso: USR'
+      operationId: R211
+      summary: 'R211: Redirecionar para Questões.'
+  
       tags: 
-        - 'M04: Comentários'
+        - M02: Intervenções'
+      responses:
+        '302':
+          description: Redirect to '/questions'
+  
+  /answers/{id}/comments/create:
+    post:
+      operationId: R212
+      summary: 'R212: Ação de criação de comentário.'
+      description: 'Ação de submissão do formulário de Novo Comentário. Acesso: USR'
+      tags: 
+        - M02: Intervenções'
       
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
       requestBody:
         required: true
         content:
@@ -883,10 +695,11 @@ paths:
             schema:
               type: object
               properties:
-                texto:
-                  type: string
-                  required: true
-      response:
+                text:
+                  type: string                
+              required: 
+                - text
+      responses:
         '302':
           description: 'Redirecionar após o processamento da criação do novo comentário.'
           headers:
@@ -895,28 +708,42 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Criação com sucesso. Redirecionar para o detalhe da questão comentada.'
-                  value: '/questao/{id}'
+                  description: 'Criação com sucesso. Redirecionar para o detalhe da questão que foi comentada.'
+                  value: '/questions/{id}'
                 302Error:
-                  description: 'Criação sem sucesso. Redirecionar para o formulário de criação de novo comentário.'
-                  value: '/comentario/criar'
+                  description: 'Criação sem sucesso. Redirecionar para o detalhe da questão que foi comentada.'
+                  value: '/questions/{id}'
   
   /comments/{id}/edit:
     get:
-      operationId: R403
-      summary: 'R403: Formulário de Editar comentário'
-      description: 'Acesso ao formulário de Editar comentário. Acesso: PRT'
+      operationId: R213
+      summary: 'R213: Formulário de Editar Resposta'
+      description: 'Acesso ao formulário de Editar Resposta. Acesso: OWN'
       tags:
-        - 'M04: Comentários'
+        - M02: Intervenções'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         '200':
           description: 'Ok. Mostrar Editar Comentário UI'
+          
     post:
-      operationId: R404
-      summary: 'R404: Ação de Editar Comentário'
-      description: 'Acesso à submissão do formulário de Editar Cometário. Acesso: PRT'
+      operationId: R214
+      summary: 'R214: Ação de Editar Comentário'
+      description: 'Acesso à submissão do formulário de Editar Comentário. Acesso: OWN'
       tags:
-        - 'M04: Comentários'
+        - M02: Intervenções'
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
 
       requestBody:
         required: true
@@ -925,12 +752,13 @@ paths:
             schema:
               type: object
               properties:
-                texto:
+                text:
                   type: string
-                required: true
-      response:
+              required:
+                - text
+      responses:
         '302':
-          description: 'Redirecionar após o processamento da edição do comemtário.'
+          description: 'Redirecionar após o processamento da edição do comentário.'
           headers:
             Location:
               schema:
@@ -938,73 +766,119 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão comentada'
-                  value: '/questão/{id}'
+                  value: '/questions/{question_id}'
                 302Error:
-                  description: 'Edição sem sucesso. Redirecionar para o formulário da edição de um comentário.'
-                  value: '/comentario/{id}/editar'
+                  description: 'Edição sem sucesso. Redirecionar para o formulário de edição de comentário.'
+                  value: '/comments/{id}/edit'
 
-  # M04: eliminicao e reporte de comentarios ?? é uma acção por isso nao deve ser incluída??
-  /comments/{id}/delete:
+
+  /api/interventions/{id}/delete:
     delete:
-      operationId: R405
-      summary: 'R405: Ação de Eliminar um Comentário.'
-      description: 'Ação de eliminar um comentário. Acesso: PRT, ADM'
+      operationId: R215
+      summary: 'R215: Ação de Eliminar uma Intervenção.'
+      description: 'Ação de eliminar uma intervenção. Acesso: OWN, ADM'
       tags: 
-        - 'M04: Comentários'
+        - 'M02: Intervenções'
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer   
-      response:
-        '302':
-          description: 'Redirecionar após a eliminação da resposta.'
-          headers:
-            Location:
+      responses:
+        '200':
+          description: 'OK. Apagar intervenção.'
+          content:
+            application/json:
               schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correspondente ao comentário que seria eliminada.'
-                  value: '/questao/{id}'
-                302Error:
-                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correspondente ao comentário que seria eliminada.'
-                  value: '/questao/{id}'
-
-  /api/comments/{id}/report:
+                $ref: '#/components/schemas/Intervention'
+        '403':
+          description: 'Mostrar mensagem de erro.'
+        'XXX':
+          description: 'Redirecionar para '/''
+          
+  /api/interventions/{id}/vote:
     post:
-      operationId: R406
-      summary: 'R406: Ação de Reportar um Comentário.'
-      description: 'Ação de reportar um comentário. Acesso: USR'
+      operationId: R216
+      summary: 'R216: Ação de Votar numa Intervenção.'
+      description: 'Ação de votar numa intervenção. Acesso: USR - OWN'
       tags: 
-        - 'M04: Comentários'
+        - 'M02: Intervenções'
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer   
-      response:
-        '302':
-          description: 'Redirecionar após a denúncia de um comentário.'
-          headers:
-            Location:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vote:
+                  type: boolean
+              required:
+                - vote
+      responses:
+        '200':
+          description: 'Ok. Votar na intervenção e atualizar votos na página.'
+          content:
+            application/json:
               schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Eliminação com sucesso. Redirecionar para o detalhe da questão correspondente ao comentário reportado.'
-                  value: '/questao/{id}'
-                302Error:
-                  description: 'Eliminação sem sucesso. Redirecionar para o detalhe da questão correspondente ao comentário reportado.'
-                  value: '/questao/{id}'
+                $ref: '#/components/schemas/Intervention'
+        '403':
+          description: 'Mostrar mensagem de erro.'
+        'XXX':
+          description: 'Redirecionar para '/''
 
-  # M04: os comentarios são apenas visualizados como uma componente da pagina de destalhe da questao...
+  /api/interventions/{id}/validate:
+    post:
+      operationId: R217
+      summary: 'R217: Ação de Validar uma Resposta.'
+      description: 'Ação de validar uma resposta. Acesso: TCH'
+      tags: 
+        - 'M02: Intervenções'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer   
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                valid:
+                  type: boolean
+              required:
+                - valid
+      response:
+        '200':
+          description: 'Ok. Validar a resposta e atualizar validação na página.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  0:
+                    $ref: '#/components/schemas/Intervention'
+                  1:
+                    type: boolean
+                    nullable: true
+        '403':
+          description: 'Mostrar mensagem de erro.'
+        'XXX':
+          description: 'Redirecionar para '/''
 
+  # TODO /api/interventions/{id}/report:
 
   #################################
-  # M05: Pesquisa de Intervenções #
+  # M03: Pesquisa de Intervenções #
   #################################
   
   /search:
@@ -1033,7 +907,7 @@ paths:
     get:
       operationId: R401
       summary: 'R401: Catálogo de Unidades Curriculares.'
-      description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: USR. \nFuncionalidades: visitar em detalhe uma UC, seguir uma UC.'
+      description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: PUB. \nFuncionalidades: visitar em detalhe uma UC, seguir uma UC.'
       tags: 
         - 'M04: Unidades Curriculares'
       responses:
@@ -1161,41 +1035,36 @@ paths:
                   description: 'Edição falhada. Redirecionar para o formulário de edição da UC.'
                   value: '/ucs/{id}/edit'
 
-  # /api/ucs/{id}/delete
-  # /api/ucs/{uc_id}/teachers/{user_id}/add
-  # /api/ucs/{uc_id}/teachers/{user_id}/delete
+  # TODO /api/ucs/{id}/delete
+  # TODO /api/ucs/{uc_id}/teachers/{user_id}/add
+  # TODO /api/ucs/{uc_id}/teachers/{user_id}/delete
 
 
-  #################################
-  # M07: Pesquisa de Utilizadores #
-  #################################
+  #####################
+  # M05: Utilizadores #
+  #####################
 
   /users:
     get:
-      operationId: R701
-      summary: 'R701: Pesquisar Utilizadores API.'
-      description: 'Procura utilizadores e retorna o resultado como JSON. Acesso: USR.'
+      operationId: R501
+      summary: 'R501: Catálogo de Utilizadores.'
+      description: 'Mostra todos os Utilizadores do sistema. Acesso: PUB.'
       tags: 
-        - 'M07: Pesquisa de Utilizadores'
-
-      parameters:
-        - in: query
-          name: nome
-          description: Palavra chave a ser usada para pesquisa full-text
-          schema:
-            type: string
-          required: false
+        - 'M05: Utilizadores'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página de Utilizadores UI'
    
 
   #####################
-  # M08: Notificações #
+  # M06: Notificações #
   #####################
 
   /users/{id}/notifications:
     get: 
       operationId: R801
       summary: 'R801: UI de Notitificações do Utilizador.'
-      description: 'Mostra as Notificações de um Utilizador. Acesso: PRT.'
+      description: 'Mostra as Notificações de um Utilizador. Acesso: OWN.'
       tags: 
         - 'M08: Notificações'
 
@@ -1221,9 +1090,9 @@ paths:
   # /users/{id}/notifications/{not}/read:
 
 
-  ###########################
-  # M07 - Páginas estáticas #
-  ###########################
+  ##########################
+  # M07: Páginas estáticas #
+  ##########################
 
   /home:
     get:
@@ -1270,9 +1139,9 @@ paths:
           description: 'Ok. Mostrar Página Contactos UI'
 
 
-  ##################################
-  # M08: Páginas de administração  # 
-  ##################################
+  #################################
+  # M08: Páginas de administração # 
+  #################################
 
   /admin/users: 
     get:
@@ -1328,8 +1197,37 @@ paths:
 
       
     
-    
-    
+
+components:
+  schemas:
+    Intervention:
+      type: object
+      properties:
+        id:
+          type: integer
+        id_author:
+          type: integer
+          nullable: true
+        text:
+          type: string
+        date:
+          type: string
+          format: date-time
+        votes:
+          type: integer
+        title:
+          type: string
+          nullable: true
+        category:
+          type: integer
+          nullable: true
+        id_intervention:
+          type: integer
+          nullable: true
+        type:
+          type: string
+
+
     
 #---exemplo--
 

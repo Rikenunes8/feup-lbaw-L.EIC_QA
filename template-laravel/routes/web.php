@@ -34,8 +34,8 @@ Route::post('register', 'Auth\RegisterController@register');
 
 Route::delete('api/interventions/{id}/delete' , 'InterventionController@delete');
 Route::post('api/interventions/{id}/vote'     , 'InterventionController@vote');
-Route::post('api/interventions/{id}/report'   , 'InterventionController@report');
 Route::post('api/interventions/{id}/validate' , 'InterventionController@valid');
+Route::post('api/interventions/{id}/report'   , 'InterventionController@report');
 
 Route::post('api/ucs/follow/{uc_id}', 'UcController@follow');
 
@@ -51,15 +51,13 @@ Route::get('questions/{id}/edit'      , 'InterventionController@showEditQuestion
 Route::post('questions/{id}/edit'     , 'InterventionController@updateQuestion')->name('questions.edit');
 
 // Interventions - Answers
-Route::get('/answers'                     , function () { return redirect()->back(); });
-Route::get('/answers/{id}'                , function ($id) { return redirect('/questions'.'/'.$id); });
+Route::get('answers'                       , function () { return redirect('/questions'); });
 Route::post('questions/{id}/answers/create', 'InterventionController@createAnswer')->name('answers.create');
-Route::get('answers/{id}/edit'            , 'InterventionController@showEditAnswerForm');
-Route::post('answers/{id}/edit'           , 'InterventionController@updateAnswer')->name('answers.edit');
+Route::get('answers/{id}/edit'             , 'InterventionController@showEditAnswerForm');
+Route::post('answers/{id}/edit'            , 'InterventionController@updateAnswer')->name('answers.edit');
 
 // Interventions - Comments
-Route::get('/comments'                    , function () { return redirect()->back(); });
-Route::get('/comments/{id}'               , function ($id) { return redirect('/questions'.'/'.$id); });
+Route::get('comments'                     , function () { return redirect('/questions'); });
 Route::post('answers/{id}/comments/create', 'InterventionController@createComment')->name('comments.create');
 Route::get('comments/{id}/edit'           , 'InterventionController@showEditCommentForm');
 Route::post('comments/{id}/edit'          , 'InterventionController@updateComment')->name('comments.edit');

@@ -148,7 +148,6 @@ function sendUpVoteInterventionRequest() {
 
   sendAjaxRequest('post', '/api/interventions/' + id + '/vote', {vote: true}, interventionVotedHandler);
 }
-
 function sendDownVoteInterventionRequest() {
   let id = this.closest('section').getAttribute('data-id');
 
