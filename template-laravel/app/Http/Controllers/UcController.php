@@ -121,8 +121,8 @@ class UcController extends Controller
         $this->authorize('update', $uc);
 
         $request->validate([
-            'name' => 'required|unique:uc,name|max:255',
-            'code' => 'required|unique:uc,code',
+            'name' => 'required|unique:uc,name,'.$id.'|max:255',
+            'code' => 'required|unique:uc,code,'.$id,
             'description' => 'required',
         ]);
 

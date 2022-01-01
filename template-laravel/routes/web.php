@@ -97,7 +97,10 @@ Route::get('search', 'InterventionController@searchList');
 
 
 // Admin
-Route::get('admin'                      , function () { return redirect('/users'.'/'.Auth::user()->id); });
+Route::get('admin'                      , function () { 
+  if (!Auth::check()) return redirect('/login'); 
+  return redirect('/users'.'/'.Auth::user()->id); 
+});
 Route::get('admin/ucs/{id}'             , function ($id) { return redirect('/ucs'.'/'.$id); });
 
 Route::get('admin/users'                , 'AdminController@listUsers');

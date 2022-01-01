@@ -12,11 +12,7 @@
           <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-primary text-white">Editar<i class="far fa-edit ms-2"></i></a>
         </div>
       @endif
-      @if (Auth::check() && Auth::user()->id == $user->id)
-        <h2 class="me-4">O meu Perfil</h2> 
-      @else 
-        <h2>{{ $user->name }}</h2> 
-      @endif
+      <h2 class="me-4">{{ $user->name }}</h2> 
       
       <section>
         <div class="row mt-4">
@@ -33,7 +29,7 @@
           <div class="col-md-8 mb-2">
             <h4>
               {{ $user->username }}
-              @if ((Auth::user()->isAdmin() || Auth::user()->id == $user->id) && ($user->blocked))
+              @if (Auth::check() && (Auth::user()->isAdmin() || Auth::user()->id == $user->id) && ($user->blocked))
               <i class="fas fa-user-lock"></i>
               @endif 
             </h4> 
@@ -89,11 +85,11 @@
         
         <div class="row">
           <div class="col-12 d-flex justify-content-end">
-            {!! $questions->links() !!}
+            {!! $questions->appends(['answersPage' => $answers->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage()])->links() !!}
           </div>
         </div>
         @else 
-        <p>Não existem Questões</p>
+        <p>Ainda não realizou Questões</p>
         @endif
       </section>
 
@@ -112,11 +108,11 @@
 
         <div class="row">
           <div class="col-12 d-flex justify-content-end">
-            {!! $answers->links() !!}
+            {!! $answers->appends(['questionsPage' => $questions->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage()])->links() !!}
           </div>
         </div>
         @else 
-        <p>Não existem Respostas</p>
+        <p>Ainda não realizou Respostas</p>
         @endif
       </section>
 
@@ -137,14 +133,37 @@
 
           <div class="row">
             <div class="col-12 d-flex justify-content-end">
-              {!! $validatedAnswers->links() !!}
+              {!! $validatedAnswers->appends(['questionsPage' => $questions->currentPage(), 'answersPage' => $answers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage()])->links() !!}
             </div>
           </div>
           @else 
-          <p>Não existem Respostas Validadas</p>
+          <p>Ainda não validou Respostas</p>
           @endif
         </section>
       @endif
+
+      <hr>
+      <section class="mt-4">
+        @if ($user->isStudent()) 
+          <h5>Unidades Curriculares que Segue</h5> 
+        @else
+          <h5>Unidades Curriculares que Leciona</h5> 
+        @endif
+
+        @if ( count($associatedUcs) != 0 )
+        <div class="row mt-2">
+          @each('partials.uc', $associatedUcs, 'uc') 
+        </div>
+
+        <div class="row">
+          <div class="col-12 d-flex justify-content-end">
+            {!! $associatedUcs->appends(['questionsPage' => $questions->currentPage(), 'answersPage' => $answers->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage()])->links() !!}
+          </div>
+        </div>
+        @else 
+        <p>Ainda não está associado a nenhuma UC</p>
+        @endif
+      </section>
 
       @endif
       

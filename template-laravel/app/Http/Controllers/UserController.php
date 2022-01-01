@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -38,9 +38,15 @@ class UserController extends Controller
         if (is_null($user)) return App::abort(404);
         $questions = $user->interventions()->questions()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'questionsPage');
         $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'answersPage');
-        $validatedAnswers = $user->validates()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'validatedAnswersPage');;
+        $validatedAnswers = $user->validates()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'validatedAnswersPage');
+        $associatedUcs = [];
+        if ($user->isStudent()) {
+            $associatedUcs = $user->follows()->orderBy('name')->paginate(3, ['*'], 'associatedUcsPage');
+        } else if ($user->isTeacher()) {
+            $associatedUcs = $user->teaches()->orderBy('name')->paginate(3, ['*'], 'associatedUcsPage');
+        }
 
-        return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers'));
+        return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs'));
     }
 
     /**
@@ -73,7 +79,7 @@ class UserController extends Controller
         $this->authorize('update', $user);
 
         $request->validate([
-            'username' => 'required|string|max:20|unique:users,username',
+            'username' => 'required|string|max:20|unique:users,username,'.$id,
             'password' => 'nullable|string|min:6',
         ]);
 
@@ -107,7 +113,7 @@ class UserController extends Controller
                 if ($validator->fails())
                     return Redirect::back()->withErrors(['photo' => 'The photo must be an image.']); 
 
-                $filename = $user->id.'_'.time().'.'.$file->getClientOriginalExtension();
+                $filename = $user->id.'_'.time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
                 $request->photo->storeAs('users', $filename, 'images_uploads');
                 $user->photo = $filename;
             }

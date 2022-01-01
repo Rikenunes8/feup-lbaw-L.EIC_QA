@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
+use Illuminate\Support\Str;
+
 class RegisterController extends Controller
 {
     /*
@@ -98,7 +100,7 @@ class RegisterController extends Controller
             $filename = null;
             if (!empty($_FILES['photo']['name'])) {
                 $file = $data['photo'];
-                $filename = '_'.time().'.'.$file->getClientOriginalExtension();
+                $filename = '_'.time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
                 $data['photo']->storeAs('users', $filename, 'images_uploads');
             }
 
