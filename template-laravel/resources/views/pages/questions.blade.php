@@ -45,8 +45,16 @@
                       <label class="form-check-label" for="noAnswers">Sem respostas</label>
                     </div>
                     <div>
+                      <input type="radio" id="withAnswers" name="filter" value="withAnswers" >
+                      <label class="form-check-label" for="withAnswers">Com respostas</label>
+                    </div>
+                    <div>
                       <input type="radio" id="noValidations" name="filter" value="noValidations" >
                       <label class="form-check-label" for="noValidations">Sem validadações</label>
+                    </div>
+                    <div>
+                      <input type="radio" id="withValidations" name="filter" value="withValidations" >
+                      <label class="form-check-label" for="withValidations">Com validadações</label>
                     </div>
                   </div>
               </div>

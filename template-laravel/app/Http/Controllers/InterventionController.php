@@ -32,14 +32,25 @@ class InterventionController extends Controller
         
         if ($filter == 'noAnswers') {
             $questions = $questions->has('childs', '=', 0);
-        } else if ($filter == 'noValidations') {
-            $questionsValidated = Intervention::questions()->whereHas('childs', function ($q1) {
-                $q1->whereHas('valid', function ($q2) {
-                    $q2->where('valid', true);
-                });
+        } 
+        else if ($filter == 'noValidations') {
+            $validations = DB::table('validation')->where('valid', true)->pluck('id_answer')->all();
+
+            $questionsValidated = Intervention::questions()->whereHas('childs', function ($q1) use ($validations) {
+                $q1->whereIn('id', $validations);
             });
 
             $questions = $questions->whereNotIn('id', $questionsValidated->pluck('id')->all());
+        } 
+        else if ($filter == 'withAnswers') {
+            $questions = $questions->has('childs');
+        } 
+        else if ($filter == 'withValidations') {
+            $validations = DB::table('validation')->where('valid', true)->pluck('id_answer')->all();
+
+            $questions = $questions->whereHas('childs', function ($q1) use ($validations) {
+                $q1->whereIn('id', $validations);
+            });
         }
 
 
