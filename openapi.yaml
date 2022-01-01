@@ -321,7 +321,7 @@ paths:
                   type: string
                 data_nascimento:
                   type: string
-                  format: date-time
+                  format: date
                 ano_ingresso:
                   type: integer
                   minimum: 0
@@ -342,7 +342,7 @@ paths:
                   value: '/users/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
-                  value: '/users/{id}/editar'
+                  value: '/users/{id}/edit'
 
   /api/users/{id}/follow/{uc}:
     post:
@@ -450,7 +450,7 @@ paths:
                 text:
                   type: string
                 category:
-                  type: string
+                  type: integer
               required: 
                 - title
                 - text
@@ -468,14 +468,14 @@ paths:
                   value: '/questions/{id}'
                 302Error:
                   description: 'Criação sem sucesso. Redirecionar para o formulário de criação de Nova Questão.'
-                  value: '/questions/crete'
+                  value: '/questions/create'
 
   /questions/{id}: 
     get:
-      operationId: R203
-      summary: 'R203: Visualizar detalhes de questão'
+      operationId: R204
+      summary: 'R204: Visualizar detalhes de questão'
       description: 'Mostra o detalhe de uma questão: contéudo da questão, respostas e comentários associados. Acesso: PUB.
-                    Funcionalidades: criar nova questão, votar, validar, responder, editar, denunciar, apagar'
+                    Funcionalidades: criar nova questão, votar, validar, responder, editar, denunciar, apagar (varia com o utilizador)'
       tags:
         - 'M02: Intervenções'
         
@@ -490,15 +490,13 @@ paths:
         '200':
           description: 'Ok. Mostrar a UI do detalhe de questão'
           
-  
-
   /questions/{id}/edit:
     get:
-      operationId: R204
-      summary: 'R204: Formulário de Editar Questão'
-      description: 'Acesso ao formulário de Editar Questão. Acesso: PRT'
+      operationId: R205
+      summary: 'R205: Formulário de Editar Questão'
+      description: 'Acesso ao formulário de Editar Questão. Acesso: OWN'
       tags:
-        - 'M02: Questões'
+        - 'M02: Intervenções'
       parameters:
         - in: path
           name: id
@@ -510,17 +508,17 @@ paths:
           description: 'Ok. Mostrar Editar Questão UI'
 
     post:
-      operationId: R205
-      summary: 'R205: Ação de Editar Questão'
-      description: 'Acesso à submissão do formulário de Editar Questão. Acesso: PRT'
+      operationId: R206
+      summary: 'R206: Ação de Editar Questão'
+      description: 'Acesso à submissão do formulário de Editar Questão. Acesso: OWN'
       tags:
-        - 'M02: Questões'
+        - 'M02: Intervenções'
       parameters:
         - in: path
           name: id
-          required: true
           schema:
             type: integer
+          required: true
       requestBody:
         required: true
         content:
@@ -528,16 +526,16 @@ paths:
             schema:
               type: object
               properties:
-                titulo: 
+                title: 
                   type: string
-                texto:
+                text:
                   type: string
-                categoria:
-                  type: string
+                category:
+                  type: integer
               required: 
-                - titulo
-                - texto
-                - categoria
+                - title
+                - text
+                - category
       response:
         '302':
           description: 'Redirecionar após o processamento da edição da questão.'
@@ -548,10 +546,120 @@ paths:
               examples:
                 302Success:
                   description: 'Edição com sucesso. Redirecionar para o detalhe da questão editada.'
-                  value: '/questao/{id}'
+                  value: '/questions/{id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma questão.'
-                  value: '/questao/{id}/editar'
+                  value: '/questions/{id}/edit'
+
+
+  /answers:
+    get:
+      operationId: R207
+      summary: 'R207: Redirecionar para Questões.'
+  
+      tags: 
+        - M02: Intervenções'
+      responses:
+        '302':
+          description: Redirect to '/questions'
+  
+  /questions/{id}/answers/create:
+    post:
+      operationId: R208
+      summary: 'R208: Ação de criação de resposta.'
+      description: 'Ação de submissão do formulário de Nova Resposta. Acesso: USR'
+      tags: 
+        - M02: Intervenções'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string                
+              required: 
+                - text
+      responses:
+        '302':
+          description: 'Redirecionar após o processamento da criação da nova resposta.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Criação com sucesso. Redirecionar para o detalhe da questão que foi respondida.'
+                  value: '/questions/{id}'
+                302Error:
+                  description: 'Criação sem sucesso. Redirecionar para o detalhe da questão que foi respondida.'
+                  value: '/questions/{id}'
+  
+  /answers/{id}/edit:
+    get:
+      operationId: R209
+      summary: 'R303: Formulário de Editar Resposta'
+      description: 'Acesso ao formulário de Editar Resposta. Acesso: PRT'
+      tags:
+        - M02: Intervenções'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Mostrar Editar Resposta UI'
+          
+    post:
+      operationId: R210
+      summary: 'R210: Ação de Editar Resposta'
+      description: 'Acesso à submissão do formulário de Editar Resposta. Acesso: PRT'
+      tags:
+        - M02: Intervenções'
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  required: true
+      response:
+        '302':
+          description: 'Redirecionar após o processamento da edição da resposta.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Edição com sucesso. Redirecionar para o detalhe da questão respondida'
+                  value: '/questão/{id}'
+                302Error:
+                  description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma resposta.'
+                  value: '/resposta/{id}/editar'
+
 
 
   # M02: votacao e eliminicao e reporte de questões ?? é uma acção por isso nao deve ser incluída??
@@ -655,104 +763,9 @@ paths:
   # M03: Respostas #
   ##################
 
-  /answers/create:
-    get:
-      operationId: R301
-      summary: 'R301: Formulário de Nova Resposta'
-      description: 'Acesso ao formulário de Nova Resposta. Acesso: USR'
-      tags:
-        - 'M03: Respostas'
-      responses:
-        '200':
-          description: 'Ok. Mostrar Nova Resposta UI'
-    put:
-      operationId: R302
-      summary: 'R302: Ação de criação de resposta.'
-      description: 'Ação de submissão do formulário de Nova Resposta. Acesso: USR'
-      tags: 
-        - 'M03: Respostas'
-      
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                texto:
-                  type: string                
-              required: 
-                - texto
-      response:
-        '302':
-          description: 'Redirecionar após o processamento da criação da nova resposta.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Criação com sucesso. Redirecionar para o detalhe da questão que foi respondida.'
-                  value: '/questao/{id}'
-                302Error:
-                  description: 'Criação sem sucesso. Redirecionar para o formulário de criação de nova resposta.'
-                  value: '/resposta/criar'
 
-  /answers/{id}/edit:
-    get:
-      operationId: R303
-      summary: 'R303: Formulário de Editar Resposta'
-      description: 'Acesso ao formulário de Editar Resposta. Acesso: PRT'
-      tags:
-        - 'M03: Respostas'
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: 'Ok. Mostrar Editar Resposta UI'
-          
-    post:
-      operationId: R304
-      summary: 'R304: Ação de Editar Resposta'
-      description: 'Acesso à submissão do formulário de Editar Resposta. Acesso: PRT'
-      tags:
-        - 'M03: Resposta'
 
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
 
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                texto:
-                  type: string
-                  required: true
-      response:
-        '302':
-          description: 'Redirecionar após o processamento da edição da resposta.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Edição com sucesso. Redirecionar para o detalhe da questão respondida'
-                  value: '/questão/{id}'
-                302Error:
-                  description: 'Edição sem sucesso. Redirecionar para o formulário da edição de uma resposta.'
-                  value: '/resposta/{id}/editar'
 
 
   # M03: votacao, validacao, eliminicao e reporte de respostas ?? é uma acção por isso nao deve ser incluída??
