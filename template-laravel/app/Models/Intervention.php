@@ -106,9 +106,9 @@ class Intervention extends Model
       $search = str_replace("&", "\&", $search);
       $search = str_replace("!", "\!", $search);
 
-      $search = explode(" ", $search);
-      $search = implode(" | ", $search);
+      $search = str_replace(" ", " | ", $search);
 
+      // plainto_tsquery only concatenates words with & so its not used
       return $query->whereRaw('tsvectors @@ to_tsquery(\'portuguese\', ?)', [$search])
         ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'portuguese\', ?)) DESC', [$search]);
     }
