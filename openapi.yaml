@@ -750,7 +750,7 @@ paths:
                   type: boolean
               required:
                 - valid
-      response:
+      responses:
         '200':
           description: 'Ok. Validar a resposta e atualizar validação na página.'
           content:
@@ -758,9 +758,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  intervention:
+                  0:
                     $ref: '#/components/schemas/Intervention'
-                  valid:
+                  1:
                     type: boolean
                     nullable: true
         '403':
