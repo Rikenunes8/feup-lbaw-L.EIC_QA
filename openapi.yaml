@@ -688,7 +688,7 @@ paths:
         '403':
           description: 'Mostrar mensagem de erro.'
         'XXX':
-          description: 'Redirecionar para /'
+          description: "Redirecionar para '/'"
           
   /api/interventions/{id}/vote:
     post:
@@ -724,7 +724,7 @@ paths:
         '403':
           description: 'Mostrar mensagem de erro.'
         'XXX':
-          description: 'Redirecionar para '/''
+          description: "Redirecionar para '/'"
 
   /api/interventions/{id}/validate:
     post:
@@ -766,7 +766,7 @@ paths:
         '403':
           description: 'Mostrar mensagem de erro.'
         'XXX':
-          description: 'Redirecionar para '/''
+          description: "Redirecionar para '/'"
 
   # TODO /api/interventions/{id}/report:
 
@@ -1105,7 +1105,7 @@ paths:
         '403':
           description: 'Mostrar mensagem de erro.'
         'XXX':
-          description: 'Redirecionar para '/''
+          description: "Redirecionar para '/'"
 
 
   #####################
