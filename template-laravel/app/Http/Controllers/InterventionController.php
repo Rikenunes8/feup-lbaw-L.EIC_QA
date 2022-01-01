@@ -106,13 +106,9 @@ class InterventionController extends Controller
      */
     public function show($id)
     {
-        $intervention = Intervention::find($id);
-        while (!is_null($intervention) && !$intervention->isQuestion()) {
-            $intervention = $intervention->parent();
-        }
-        if (is_null($intervention)) return redirect('/questions');
+        $question = Intervention::find($id);
+        if (is_null($question)) return redirect('/questions');
 
-        $question = $intervention;
         $this->authorize('show', $question);
         
         return view('pages.question', ['question' => $question]);
@@ -151,7 +147,7 @@ class InterventionController extends Controller
 
         $question->id_author = Auth::user()->id;
         $question->title = $request->input('title');
-        $question->text = $request['text'];
+        $question->text = $request->input('text');
         $question->category = $request->category;
         $question->type = 'question';
         $question->save();
@@ -343,11 +339,11 @@ class InterventionController extends Controller
             'text' => 'required', 
         ]);
 
-        $answer = $comment->parent()->get();
+        $answer = $comment->parent()->first();
         $comment->text = $request['text'];
         $comment->save(); 
 
-        return redirect('questions/'.$answer[0]->id_intervention);
+        return redirect('questions/'.$answer->id_intervention);
     }
 
 
