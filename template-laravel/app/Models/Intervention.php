@@ -105,11 +105,37 @@ class Intervention extends Model
       $search = str_replace("|", "\|", $search);
       $search = str_replace("&", "\&", $search);
       $search = str_replace("!", "\!", $search);
+      
+      // Exact Match Search --------------------
+      $exactMatchStrings = [];
+      $start = null;
+      $offset = -1;
+      while (true) {
+        $offset = strpos($search, '"', $offset+1);
+        if ($offset === false) break;
+        if (is_null($start)) {
+          $start = $offset;
+        }
+        else {
+          $exactMatchStrings[] = substr($search, $start+1, $offset-$start-1);
+          $start = null;
+        }
+      }
+
+      foreach($exactMatchStrings as $str) {
+        $query->where('title', 'ilike', '%'.$str.'%')
+            ->orWhere('text', 'ilike', '%'.$str.'%');
+      }
+      // ----------------------------------------
 
       $search = str_replace(" ", " | ", $search);
 
-      // plainto_tsquery only concatenates words with & so its not used
-      return $query->whereRaw('tsvectors @@ to_tsquery(\'portuguese\', ?)', [$search])
-        ->orderByRaw('ts_rank(tsvectors, to_tsquery(\'portuguese\', ?)) DESC', [$search]);
+      if (empty($exactMatchStrings)) {
+        // plainto_tsquery only concatenates words with & so its not used
+        $query->whereRaw('tsvectors @@ to_tsquery(\'portuguese\', ?)', [$search]);
+      }
+
+      $query->orderByRaw('ts_rank(tsvectors, to_tsquery(\'portuguese\', ?)) DESC', [$search]);
+      return $query;
     }
 }
