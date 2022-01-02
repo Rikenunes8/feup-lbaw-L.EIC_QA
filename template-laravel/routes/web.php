@@ -28,8 +28,10 @@ Route::post('login'   , 'Auth\LoginController@login');
 Route::get('logout'   , 'Auth\LoginController@logout')->name('logout');
 Route::get('register' , 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
-// Route::get('recover'  , 'X@showRecoverForm')->name('recover');
-// Route::post('recover' , 'X@recover');
+// Route::get('forgot-password'       , 'X@showForgotPasswordForm')->name('password.request');
+// Route::post('forgot-password'      , 'X@forgotPassowrd')->name('password.email');
+// Route::post('reset-password'       , 'X@resetPassowrd')->name('password.update');
+// Route::get('reset-password/{token}', 'X@showResetPasswordForm')->name('password.reset');
 
 
 // API
@@ -69,6 +71,7 @@ Route::get('users'       , 'UserController@list');
 Route::get('users/{id}'  , 'UserController@show');
 Route::get('users/{id}/edit'  , 'UserController@showEditForm');
 Route::post('users/{id}/edit' , 'UserController@update')->name('users.edit');
+Route::get('users/{id}/delete', 'UserController@delete')->name('users.delete');
 
 Route::post('api/users/{id}/block'    , 'UserController@block');
 Route::delete('api/users/{id}/delete' , 'UserController@delete');
@@ -77,11 +80,10 @@ Route::post('api/users/{user_id}/follow/{uc_id}', 'UserController@follow');
 
 // Notifications
 /*
-Route::get('notifications'                   , 'NotificationController@list');
-Route::get('notifications/{not_id}'          , 'NotificationController@show');
-Route::delete('notifications/{not_id}/delete', 'NotificationController@delete');
-Route::get('notifications/{not_id}/read'     , 'NotificationController@read');
-Route::post('api/notifications/read/{not_id}', 'NotificationController@read');
+Route::get('notifications'               , 'NotificationController@list');
+Route::get('notifications/{id}'          , 'NotificationController@show');
+Route::delete('api/notifications/{id}/delete', 'NotificationController@delete');
+Route::post('api/notifications/{id}/read', 'NotificationController@read');
 */
 
 
@@ -95,7 +97,7 @@ Route::post('ucs/{id}/edit'     , 'UcController@update')->name('ucs.edit');
 Route::delete('api/ucs/{id}/delete' , 'UcController@delete');
 
 Route::put('api/ucs/{uc_id}/teachers/{user_id}/add'       , 'UcController@addTeacher');
-Route::delete('api/ucs/{uc_id}/teachers/{user_id}/delete' , 'UcController@deleteTeacher');
+Route::delete('api/ucs/{uc_id}/teachers/{user_id}/remove' , 'UcController@deleteTeacher');
 
 
 // Search

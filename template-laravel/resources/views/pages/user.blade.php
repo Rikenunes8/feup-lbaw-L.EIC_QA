@@ -10,6 +10,7 @@
       @if ( Auth::check() && (Auth::user()->id == $user->id || Auth::user()->isAdmin()) )
         <div class="float-end">
           <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-primary text-white">Editar<i class="far fa-edit ms-2"></i></a>
+          <a href="{{ url('users/'.$user->id.'/delete') }}" class="btn btn-danger text-white">Eliminar<i class="far fa-trash-alt ms-2"></i></a>
         </div>
       @endif
       <h2 class="me-4">{{ $user->name }}</h2> 
@@ -166,7 +167,7 @@
       </section>
 
       @endif
-      
+    
     </div>
   </div>
 </section>

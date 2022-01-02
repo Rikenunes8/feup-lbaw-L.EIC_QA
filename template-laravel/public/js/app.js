@@ -100,7 +100,7 @@ function sendRemoveUcTeacherRequest() {
   let uc_id = this.closest('table').getAttribute('data-id');
   let teacher_id = this.closest('tr').getAttribute('data-id');
 
-  sendAjaxRequest('delete', '/api/ucs/' + uc_id + '/teachers/' + teacher_id + '/delete', null, ucTeacherRemovedHandler);
+  sendAjaxRequest('delete', '/api/ucs/' + uc_id + '/teachers/' + teacher_id + '/remove', null, ucTeacherRemovedHandler);
 }
 
 function sendAddUcTeacherRequest() {

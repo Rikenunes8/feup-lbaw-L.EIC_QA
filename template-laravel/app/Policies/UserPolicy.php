@@ -43,7 +43,7 @@ class UserPolicy
      */
     public function delete(User $user, User $user2)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->id == $user2->id;
     }
 
     /**
