@@ -6,12 +6,8 @@ info:
   description: 'Web Resources Specification (A7) for L.EIC Q&A'
 
 servers:
-- url: http://lbaw.fe.up.pt/lbaw2185/
+- url: http://lbaw2185.lbaw.fe.up.pt/
   description: Production server
-
-#externalDocs:
-#  description: Find more info here.
-#  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
 
 tags:
   - name: 'M01: Autenticação'             
@@ -279,7 +275,7 @@ paths:
   /questions:
     get:
       operationId: R201
-      summary: 'R201: Listar Questões.'
+      summary: 'R201: Vista de Questões'
       description: 'Lista questões segundo determinados parâmetros. Acesso: PUB.'
       tags: 
         - 'M02: Intervenções'
@@ -312,17 +308,17 @@ paths:
   /questions/create:
     get:
       operationId: R202
-      summary: 'R202: Formulário de Nova Questão'
-      description: 'Acesso ao formulário de Nova Questão. Acesso: USR. \n'
+      summary: 'R202: Formulário de Criação de Questão'
+      description: 'Acesso ao formulário de criação de Questão. Acesso: USR. \n'
       tags:
         - 'M02: Intervenções'
       responses:
         '200':
-          description: 'Ok. Mostrar Nova Questão UI'
+          description: 'Ok. Mostrar Criação Questão UI'
     post:
       operationId: R203
-      summary: 'R203: Ação de criação de questão.'
-      description: 'Acesso à submissão do formulário de Nova Questão. Acesso: USR'
+      summary: 'R203: Ação de Criação de Questão.'
+      description: 'Acesso à submissão do formulário de Criação Questão. Acesso: USR'
       tags: 
         - 'M02: Intervenções'
       requestBody:
@@ -360,7 +356,7 @@ paths:
   /questions/{id}: 
     get:
       operationId: R204
-      summary: 'R204: Visualizar detalhes de questão'
+      summary: 'R204: Vista de Detalhe de Questão'
       description: 'Mostra o detalhe de uma questão: contéudo da questão, respostas e comentários associados. Acesso: PUB.
                     Funcionalidades: criar nova questão, votar, validar, responder, editar, denunciar, apagar (varia com o utilizador)'
       tags:
@@ -395,7 +391,7 @@ paths:
           description: 'Ok. Mostrar Editar Questão UI'
     post:
       operationId: R206
-      summary: 'R206: Ação de Editar Questão'
+      summary: 'R206: Ação de Edição de Questão'
       description: 'Acesso à submissão do formulário de Editar Questão. Acesso: OWN'
       tags:
         - 'M02: Intervenções'
@@ -441,7 +437,7 @@ paths:
   /answers:
     get:
       operationId: R207
-      summary: 'R207: Redirecionar para Questões.'
+      summary: 'R207: Redirecionamento para Questões.'
       tags: 
         - 'M02: Intervenções'
       responses:
@@ -451,7 +447,7 @@ paths:
   /questions/{id}/answers/create:
     post:
       operationId: R208
-      summary: 'R208: Ação de criação de resposta.'
+      summary: 'R208: Ação de Criação de Resposta'
       description: 'Ação de submissão do formulário de Nova Resposta. Acesso: USR'
       tags: 
         - 'M02: Intervenções'
@@ -491,7 +487,7 @@ paths:
   /answers/{id}/edit:
     get:
       operationId: R209
-      summary: 'R209: Formulário de Editar Resposta'
+      summary: 'R209: Formulário de Edição de Resposta'
       description: 'Acesso ao formulário de Editar Resposta. Acesso: OWN'
       tags:
         - 'M02: Intervenções'
@@ -507,7 +503,7 @@ paths:
           description: 'Ok. Mostrar Editar Resposta UI'  
     post:
       operationId: R210
-      summary: 'R210: Ação de Editar Resposta'
+      summary: 'R210: Ação de Edição de Resposta'
       description: 'Acesso à submissão do formulário de Editar Resposta. Acesso: OWN'
       tags:
         - 'M02: Intervenções'
@@ -547,7 +543,7 @@ paths:
   /comments:
     get:
       operationId: R211
-      summary: 'R211: Redirecionar para Questões.'
+      summary: 'R211: Redirecionamento para Questões.'
       tags: 
         - 'M02: Intervenções'
       responses:
@@ -557,7 +553,7 @@ paths:
   /answers/{id}/comments/create:
     post:
       operationId: R212
-      summary: 'R212: Ação de criação de comentário.'
+      summary: 'R212: Ação de Criação de Comentário'
       description: 'Ação de submissão do formulário de Novo Comentário. Acesso: USR'
       tags: 
         - 'M02: Intervenções'
@@ -597,8 +593,8 @@ paths:
   /comments/{id}/edit:
     get:
       operationId: R213
-      summary: 'R213: Formulário de Editar Resposta'
-      description: 'Acesso ao formulário de Editar Resposta. Acesso: OWN'
+      summary: 'R213: Formulário de Edição de Comentário'
+      description: 'Acesso ao formulário de Editar Comentário. Acesso: OWN'
       tags:
         - 'M02: Intervenções'
       parameters:
@@ -643,7 +639,7 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Edição com sucesso. Redirecionar para o detalhe da questão comentada'
+                  description: 'Edição com sucesso. Redirecionar para o detalhe da questão da resposta comentada'
                   value: '/questions/{question_id}'
                 302Error:
                   description: 'Edição sem sucesso. Redirecionar para o formulário de edição de comentário.'
@@ -653,7 +649,7 @@ paths:
   /api/interventions/{id}/delete:
     delete:
       operationId: R215
-      summary: 'R215: Ação de Eliminar uma Intervenção.'
+      summary: 'R215: Ação de Eliminação de Intervenção.'
       description: 'Ação de eliminar uma intervenção. Acesso: OWN, ADM'
       tags: 
         - 'M02: Intervenções'
@@ -679,7 +675,7 @@ paths:
   /api/interventions/{id}/vote:
     post:
       operationId: R216
-      summary: 'R216: Ação de Votar numa Intervenção.'
+      summary: 'R216: Ação de Votação em Intervenção.'
       description: 'Ação de votar numa intervenção. Acesso: USR - OWN'
       tags: 
         - 'M02: Intervenções'
@@ -716,7 +712,7 @@ paths:
   /api/interventions/{id}/validate:
     post:
       operationId: R217
-      summary: 'R217: Ação de Validar uma Resposta.'
+      summary: 'R217: Ação de Validação de Resposta.'
       description: 'Ação de validar uma resposta. Acesso: TCH'
       tags: 
         - 'M02: Intervenções'
@@ -790,7 +786,7 @@ paths:
   /search:
     get:
       operationId: R301
-      summary: 'R301: Pesquisar Intervenções.'
+      summary: 'R301: Pesquisa de Intervenções.'
       description: 'Procura por intervenções e redireciona para uma página com as questões selecionadas pela pesquisa. Acesso: PUB.'
       tags: 
         - 'M03: Pesquisa de Questões'
@@ -810,7 +806,7 @@ paths:
   /ucs:
     get:
       operationId: R401
-      summary: 'R401: Catálogo de Unidades Curriculares.'
+      summary: 'R401: Vista de Unidades Curriculares.'
       description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: PUB. \nFuncionalidades: visitar em detalhe uma UC, seguir uma UC.'
       tags: 
         - 'M04: Unidades Curriculares'
@@ -821,7 +817,7 @@ paths:
   /ucs/{id}:
     get:
       operationId: R402
-      summary: 'R402: Detalhe de uma Unidades Curricular.'
+      summary: 'R402: Vista de Detalhe de uma Unidades Curricular.'
       description: 'Mostra em detalhe uma Unidade Curricular do sitema. Acesso: USR. \nFuncionalidades: visitar o perfil de um docente seu, visitar uma das suas top questões, seguir uma UC.'
       tags: 
         - 'M04: Unidades Curriculares'
@@ -839,7 +835,7 @@ paths:
   /ucs/create:
     get:
       operationId: R403
-      summary: 'R403: Formulário de criação de Unidade Curricular.'
+      summary: 'R403: Formulário de Criação de Unidade Curricular.'
       description: 'Acesso ao formulário de criação de Unidade Curricular. Acesso: ADM.'
       tags: 
         - 'M04: Unidades Curriculares'
@@ -848,7 +844,7 @@ paths:
           description: 'Ok. Mostrar Criação de Unidade Curricular UI'
     post:
       operationId: R404
-      summary: 'R404: Ação de criação de Unidade Curricular'
+      summary: 'R404: Ação de Criação de Unidade Curricular'
       description: 'Acesso à submissão de criação de Unidade Curricular. Acesso: ADM.'
       tags: 
         - 'M04: Unidades Curriculares'
@@ -887,7 +883,7 @@ paths:
   /ucs/{id}/edit:
     get:
       operationId: R405
-      summary: 'R405: Formulário de edição de Unidade Curricular.'
+      summary: 'R405: Formulário de Edição de Unidade Curricular.'
       description: 'Acesso ao formulário de edição de Unidade Curricular. Acesso: ADM.'
       tags: 
         - 'M04: Unidades Curriculares'
@@ -903,7 +899,7 @@ paths:
           description: 'Ok. Mostrar Edição de Unidade Curricular UI'
     post:
       operationId: R406
-      summary: 'R406: Ação de edição de Unidade Curricular'
+      summary: 'R406: Ação de Edição de Unidade Curricular'
       description: 'Acesso à submissão de edição de Unidade Curricular. Acesso: ADM.'
       tags: 
         - 'M04: Unidades Curriculares'
@@ -942,7 +938,7 @@ paths:
   /api/ucs/{id}/delete:
     delete:
       operationId: R407
-      summary: 'R407: Ação de Eliminar uma Unidade Curricular.'
+      summary: 'R407: Ação de Eliminação de Unidade Curricular.'
       description: 'Ação de eliminar uma unidade curricular. Acesso: ADM'
       tags: 
         - 'M04: Unidades Curriculares'
@@ -966,7 +962,7 @@ paths:
   /api/ucs/{uc_id}/teachers/{user_id}/add:
     put:
       operationId: R408
-      summary: 'R408: Ação de adicionar a uma Unidade Curricular um docente.'
+      summary: 'R408: Ação de Adicionar a uma Unidade Curricular um Docente.'
       description: 'Ação de adicionar a uma unidade curricular um docente. Acesso: ADM'
       tags: 
         - 'M04: Unidades Curriculares'
@@ -996,7 +992,7 @@ paths:
   /api/ucs/{uc_id}/teachers/{user_id}/remove:
     delete:
       operationId: R409
-      summary: 'R409: Ação de remover de uma Unidade Curricular um docente.'
+      summary: 'R409: Ação de Remover de uma Unidade Curricular um Docente.'
       description: 'Ação de remover de uma unidade curricular um docente. Acesso: ADM'
       tags: 
         - 'M04: Unidades Curriculares'
@@ -1031,7 +1027,7 @@ paths:
   /user:
     get:
       operationId: R501
-      summary: 'R501: Redirecionar para Perfil do Utilizador.'
+      summary: 'R501: Redirecionamento para Perfil do Utilizador.'
       description: 'Redirecionar para Perfil do Utilizador se estiver autenticado ou para a página de login caso não esteja.'
       tags: 
         - 'M05: Utilizadores'
@@ -1052,7 +1048,7 @@ paths:
   /users:
     get:
       operationId: R502
-      summary: 'R502: Catálogo de Utilizadores.'
+      summary: 'R502: Vista de Utilizadores'
       description: 'Mostra todos os Utilizadores do sistema. Acesso: PUB.'
       tags: 
         - 'M05: Utilizadores'
@@ -1063,7 +1059,7 @@ paths:
   /users/{id}:
     get:
       operationId: R503
-      summary: 'R503: Visualizar Perfil de Utilizador'
+      summary: 'R503: Vista do Perfil de Utilizador'
       description: 'Mostra o perfil do utilizador. Acesso: USR'
       tags:
         - 'M05: Utilizadores'
@@ -1081,7 +1077,7 @@ paths:
   /users/{id}/edit:
     get:
       operationId: R504
-      summary: 'R504: Formulário de Editar Perfil do Utilizador'
+      summary: 'R504: Formulário de Edição Perfil do Utilizador'
       description: 'Acesso ao formulário de Editar Perfil do Utilizador. Acesso: OWN'
       tags:
         - 'M05: Utilizadores'
@@ -1097,7 +1093,7 @@ paths:
           description: 'Ok. Mostrar Editar Perfil do Utilizador UI'
     post:
       operationId: R505
-      summary: 'R505: Ação de Editar Perfil do Utilizador'
+      summary: 'R505: Ação de Edição Perfil do Utilizador'
       description: 'Acesso à submissão do formulário de Editar Perfil do Utilizador. Acesso: OWN'
       tags:
         - 'M05: Utilizadores'
@@ -1155,7 +1151,7 @@ paths:
   /users/{id}/delete:
     get:
       operationId: R506
-      summary: 'R506: Ação de Eliminar um Utilizador'
+      summary: 'R506: Ação de Eliminição de um Utilizador'
       description: 'Ação de Eliminar um Utilizador. Acesso: OWN, ADM'
       tags:
         - 'M05: Utilizadores'
@@ -1215,7 +1211,7 @@ paths:
   /api/users/{id}/block:
     post:
       operationId: R508
-      summary: 'R508: Ação de Bloquear e Desbloquear um Utilizador'
+      summary: 'R508: Ação de Bloqueio e Desbloqueio de um Utilizador'
       description: 'Ação de bloquear e desbloquear um utilizador. Acesso: ADM'
       tags:
         - 'M05: Utilizadores'
@@ -1250,7 +1246,7 @@ paths:
   /api/users/{id}/delete:
     delete:
       operationId: R509
-      summary: 'R509: Ação de Eliminar um Utilizador.'
+      summary: 'R509: Ação de Eliminição de um Utilizador'
       description: 'Ação de eliminar um Utilizador. Acesso: ADM'
       tags: 
         - 'M05: Utilizadores'
@@ -1423,7 +1419,7 @@ paths:
   /admin:
     get:
       operationId: R801
-      summary: 'R801: Redirecionar para Perfil do Utilizador.'
+      summary: 'R801: Redirecionamento para Perfil do Utilizador.'
       description: 'Redirecionar para Perfil do Utilizador se estiver autenticado ou para a página de login caso não esteja.'
       tags: 
         - 'M08: Páginas de administração'
@@ -1444,7 +1440,8 @@ paths:
   /admin/ucs/{id}:
     get:
       operationId: R802
-      summary: 'R802: Redirecionar para Detalhe de uma Unidade Curricular.'
+      summary: 'R802: Redirecionamento para Detalhe de uma Unidade Curricular.'
+      description: 'Redirecionar para Detalhe de uma Unidade Curricular.'
       tags: 
         - 'M08: Páginas de administração'
       parameters:
