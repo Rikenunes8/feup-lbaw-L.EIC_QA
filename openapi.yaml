@@ -429,7 +429,7 @@ paths:
                 - title
                 - text
                 - category
-      response:
+      responses:
         '302':
           description: 'Redirecionar após o processamento da edição da questão.'
           headers:
@@ -1049,7 +1049,7 @@ paths:
                 - username
                 - email
                        
-      response:
+      responses:
         '302':
           description: 'Redirecionar após o processamento da edição do Perfil do Utilizador.'
           headers:
@@ -1095,7 +1095,7 @@ paths:
               required:
                 - follow
 
-      response:
+      responses:
         '202':
           description: 'Ok. Seguir ou deixar de seguir UC e atualizar uc-card na página em concordância.'
           content:
