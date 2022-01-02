@@ -14,20 +14,20 @@ servers:
 #  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
 
 tags:
-  - name: 'M01: Autenticação'             # [DONE] MISS a TODO about new-password
-  - name: 'M02: Intervenções'             # [DONE] MISS api/.../report
-  - name: 'M03: Pesquisa de Questões'     # [DONE]
-  - name: 'M04: Unidades Curriculares'    # [DOING]
-  - name: 'M05: Utilizadores'             # [DONE]
+  - name: 'M01: Autenticação'             
+  - name: 'M02: Intervenções'             
+  - name: 'M03: Pesquisa de Questões'     
+  - name: 'M04: Unidades Curriculares'    
+  - name: 'M05: Utilizadores'             
   - name: 'M06: Notificações'
-  - name: 'M07: Páginas estáticas'        # [DONE]
-  - name: 'M08: Páginas de administração' # [DONE]
+  - name: 'M07: Páginas estáticas'        
+  - name: 'M08: Páginas de administração' 
 
 paths:
 
-  #########################################
+  #####################
   # M01: Autenticação #
-  #########################################
+  #####################
 
   /login:
     get:
@@ -45,7 +45,6 @@ paths:
       description: 'Acesso à submissão do formulário de autenticação. Acesso: PUB'
       tags:
         - 'M01: Autenticação'
- 
       requestBody:
         required: true
         content:
@@ -60,7 +59,6 @@ paths:
               required:
                 - email
                 - password
- 
       responses:
         '302':
           description: 'Redirecionar após o processamento das credenciais de autenticação.'
@@ -105,14 +103,12 @@ paths:
       responses:
         '200':
           description: 'Ok. Mostrar Formulário de Registo.'
-
     post:
       operationId: R105
       summary: 'R105: Ação de Registo'
       description: 'Processa a submissão de registo do novo utilizador. Acesso: PUB'
       tags:
         - 'M01: Autenticação'
-
       requestBody:
         required: true
         content:
@@ -171,7 +167,7 @@ paths:
                   description: 'Autenticação falhada. Redirecionar para o formulário de Registo.'
                   value: '/register'
 
-  /recover:
+  /forgot-password:
     get:
       operationId: R106
       summary: 'R106: Formulário de Recuperação de Password'
@@ -209,34 +205,17 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Email presente no sistema. Redirecionar para .'
-                  value: '' # Para onde vai?????????????????
+                  description: 'Email presente no sistema. Redirecionar para a Página de Login.'
+                  value: '/login' 
                 302Failure:
-                  description: 'Email ausente do sistema. Redirecionar para o formulário de Registo.'
-                  value: '/registar'
+                  description: 'Email ausente do sistema. Redirecionar para a Página de Registo.'
+                  value: '/register'
   
-  # TODO Isto faz sentido? Normalmente a página de recuperar password é só para escolher o email para onde vão mandar o link para recuperar a password e só a partir desse link é que se altera a password
-  /users/{id}/new-password:
-    get:
-      operationId: R108
-      summary: 'R108: Formulário de Configuração de Nova Password'
-      description: 'Acesso ao formulário de configuração de nova passowrd. Acesso: OWN' # Qual seria o acesso? OWN não parece fazer sentido porque a pessoa não está logada acho eu
-      tags:
-        - 'M01: Autenticação'
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: 'Ok. Mostrar Formulário de Configuração de Nova Password.'
-    
+  /reset-password:
     post:
-      operationId: R109
-      summary: 'R109: Ação de Configuração de Nova Password'
-      description: 'Processa a submissão de nova password de um utilizador. Acesso: OWN' # Idem
+      operationId: R108
+      summary: 'R108: Ação de Configuração de Nova Password'
+      description: 'Processa a submissão de nova password de um utilizador. Acesso: PUB'
       tags:
         - 'M01: Autenticação'
       
@@ -268,12 +247,31 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Recuperação de Password bem sucedida. Redirecionar para o perfil de utilizador.'
-                  value:  '/users/{id}'
+                  description: 'Recuperação de Password bem sucedida. Redirecionar para a Página de Login.'
+                  value:  '/login'
                 302Failure:
-                  description: 'Recuperação de Password falhada. Redirecionar para o formulário de Configuração de Nova Password.'
-                  value: '/users/{id}/new-password'
+                  description: 'Recuperação de Password falhada. Redirecionar para a Página Inicial.'
+                  value: '/'
 
+  /reset-password/{token}:
+    get:
+      operationId: R109
+      summary: 'R109: Formulário de Configuração de Nova Password'
+      description: 'Acesso ao formulário de configuração de nova passowrd. Acesso: PUB'
+      tags:
+        - 'M01: Autenticação'
+      parameters:
+        - in: path
+          name: id
+          description: Identificador do Utilizador
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Ok. Mostrar Formulário de Configuração de Nova Password.'
+
+  
   #####################
   # M02: Intervenções #
   ##################### 
@@ -283,10 +281,8 @@ paths:
       operationId: R201
       summary: 'R201: Listar Questões.'
       description: 'Lista questões segundo determinados parâmetros. Acesso: PUB.'
-  
       tags: 
         - 'M02: Intervenções'
-
       parameters:
         - in: query
           name: filter
@@ -323,14 +319,12 @@ paths:
       responses:
         '200':
           description: 'Ok. Mostrar Nova Questão UI'
-    
     post:
       operationId: R203
       summary: 'R203: Ação de criação de questão.'
       description: 'Acesso à submissão do formulário de Nova Questão. Acesso: USR'
       tags: 
         - 'M02: Intervenções'
-    
       requestBody:
         required: true
         content:
@@ -371,14 +365,13 @@ paths:
                     Funcionalidades: criar nova questão, votar, validar, responder, editar, denunciar, apagar (varia com o utilizador)'
       tags:
         - 'M02: Intervenções'
-        
       parameters:
         - in: path
           name: id
+          description: Identificador da Intervenção
           schema:
             type: integer
           required: true
-
       responses:
         '200':
           description: 'Ok. Mostrar a UI do detalhe de questão'
@@ -393,13 +386,13 @@ paths:
       parameters:
         - in: path
           name: id
+          description: Identificador da Intervenção
           schema:
             type: integer
           required: true
       responses:
         '200':
           description: 'Ok. Mostrar Editar Questão UI'
-
     post:
       operationId: R206
       summary: 'R206: Ação de Editar Questão'
@@ -449,7 +442,6 @@ paths:
     get:
       operationId: R207
       summary: 'R207: Redirecionar para Questões.'
-  
       tags: 
         - 'M02: Intervenções'
       responses:
@@ -463,14 +455,13 @@ paths:
       description: 'Ação de submissão do formulário de Nova Resposta. Acesso: USR'
       tags: 
         - 'M02: Intervenções'
-      
       parameters:
         - in: path
           name: id
+          description: Identificador da Intervenção
           schema:
             type: integer
           required: true
-
       requestBody:
         required: true
         content:
@@ -507,27 +498,25 @@ paths:
       parameters:
         - in: path
           name: id
+          description: Identificador da Intervenção
           schema:
             type: integer
           required: true
       responses:
         '200':
-          description: 'Ok. Mostrar Editar Resposta UI'
-          
+          description: 'Ok. Mostrar Editar Resposta UI'  
     post:
       operationId: R210
       summary: 'R210: Ação de Editar Resposta'
       description: 'Acesso à submissão do formulário de Editar Resposta. Acesso: OWN'
       tags:
         - 'M02: Intervenções'
-
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer
-
       requestBody:
         required: true
         content:
@@ -559,7 +548,6 @@ paths:
     get:
       operationId: R211
       summary: 'R211: Redirecionar para Questões.'
-  
       tags: 
         - 'M02: Intervenções'
       responses:
@@ -573,14 +561,13 @@ paths:
       description: 'Ação de submissão do formulário de Novo Comentário. Acesso: USR'
       tags: 
         - 'M02: Intervenções'
-      
       parameters:
         - in: path
           name: id
+          description: Identificador da Intervenção
           schema:
             type: integer
           required: true
-
       requestBody:
         required: true
         content:
@@ -617,27 +604,25 @@ paths:
       parameters:
         - in: path
           name: id
+          description: Identificador da Intervenção
           schema:
             type: integer
           required: true
       responses:
         '200':
           description: 'Ok. Mostrar Editar Comentário UI'
-          
     post:
       operationId: R214
       summary: 'R214: Ação de Editar Comentário'
       description: 'Acesso à submissão do formulário de Editar Comentário. Acesso: OWN'
       tags:
         - 'M02: Intervenções'
-
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer
-
       requestBody:
         required: true
         content:
@@ -675,6 +660,7 @@ paths:
       parameters:
         - in: path
           name: id
+          description: Identificador da Intervenção
           required: true
           schema:
             type: integer   
@@ -700,6 +686,7 @@ paths:
       parameters:
         - in: path
           name: id
+          description: Identificador da Intervenção
           required: true
           schema:
             type: integer   
@@ -736,6 +723,7 @@ paths:
       parameters:
         - in: path
           name: id
+          description: Identificador da Intervenção
           required: true
           schema:
             type: integer   
@@ -768,7 +756,32 @@ paths:
         'XXX':
           description: "Redirecionar para '/'"
 
-  # TODO /api/interventions/{id}/report:
+  /api/interventions/{id}/report:
+    post:
+      operationId: R218
+      summary: 'R218: Ação de Reportar uma Intervenção.'
+      description: 'Ação de reportar uma intervenção. Acesso: USR'
+      tags: 
+        - 'M02: Intervenções'
+      parameters:
+        - in: path
+          name: id
+          description: Identificador da Intervenção
+          schema:
+            type: integer   
+          required: true
+      responses:
+        '200':
+          description: 'OK. Reportar a intervenção.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Intervention'
+        '403':
+          description: 'Mostrar mensagem de erro.'
+        'XXX':
+          description: "Redirecionar para '/'"
+
 
   #############################
   # M03: Pesquisa de Questões #
@@ -779,10 +792,8 @@ paths:
       operationId: R301
       summary: 'R301: Pesquisar Intervenções.'
       description: 'Procura por intervenções e redireciona para uma página com as questões selecionadas pela pesquisa. Acesso: PUB.'
-  
       tags: 
         - 'M03: Pesquisa de Questões'
-
       parameters:
         - in: query
           name: q
@@ -928,9 +939,89 @@ paths:
                   description: 'Edição falhada. Redirecionar para o formulário de edição da UC.'
                   value: '/ucs/{id}/edit'
 
-  # TODO /api/ucs/{id}/delete
-  # TODO /api/ucs/{uc_id}/teachers/{user_id}/add
-  # TODO /api/ucs/{uc_id}/teachers/{user_id}/delete
+  /api/ucs/{id}/delete:
+    delete:
+      operationId: R407
+      summary: 'R407: Ação de Eliminar uma Unidade Curricular.'
+      description: 'Ação de eliminar uma unidade curricular. Acesso: ADM'
+      tags: 
+        - 'M04: Unidades Curriculares'
+      parameters:
+        - in: path
+          name: id
+          description: Identificador da Unidade Curricular
+          schema:
+            type: integer 
+          required: true  
+      responses:
+        '200':
+          description: 'OK. Apagar unidade curricular.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uc'
+        'XXX':
+          description: "Redirecionar para '/'"
+          
+  /api/ucs/{uc_id}/teachers/{user_id}/add:
+    put:
+      operationId: R408
+      summary: 'R408: Ação de adicionar a uma Unidade Curricular um docente.'
+      description: 'Ação de adicionar a uma unidade curricular um docente. Acesso: ADM'
+      tags: 
+        - 'M04: Unidades Curriculares'
+      parameters:
+        - in: path
+          name: uc_id
+          description: Identificador da Unidade Curricular
+          schema:
+            type: integer 
+          required: true  
+        - in: path
+          name: user_id
+          description: Identificador do Utilizador 'Docente'
+          schema:
+            type: integer 
+          required: true  
+      responses:
+        '200':
+          description: 'OK. Adicionar à unidade corricular o docente e atualizar essa informação na página.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uc'
+        'XXX':
+          description: "Redirecionar para '/'"
+          
+  /api/ucs/{uc_id}/teachers/{user_id}/remove:
+    delete:
+      operationId: R409
+      summary: 'R409: Ação de remover de uma Unidade Curricular um docente.'
+      description: 'Ação de remover de uma unidade curricular um docente. Acesso: ADM'
+      tags: 
+        - 'M04: Unidades Curriculares'
+      parameters:
+        - in: path
+          name: uc_id
+          description: Identificador da Unidade Curricular
+          schema:
+            type: integer 
+          required: true  
+        - in: path
+          name: user_id
+          description: Identificador do Utilizador 'Docente'
+          schema:
+            type: integer 
+          required: true  
+      responses:
+        '200':
+          description: 'OK. Remover da unidade corricular o docente e atualizar essa informação na página.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uc'
+        'XXX':
+          description: "Redirecionar para '/'"
 
 
   #####################
@@ -942,7 +1033,6 @@ paths:
       operationId: R501
       summary: 'R501: Redirecionar para Perfil do Utilizador.'
       description: 'Redirecionar para Perfil do Utilizador se estiver autenticado ou para a página de login caso não esteja.'
-  
       tags: 
         - 'M05: Utilizadores'
       responses:
@@ -977,14 +1067,13 @@ paths:
       description: 'Mostra o perfil do utilizador. Acesso: USR'
       tags:
         - 'M05: Utilizadores'
-
       parameters:
         - in: path
           name: id
+          description: Identificador do Utilizador
           schema:
             type: integer
           required: true
-
       responses:
         '200':
           description: 'Ok. Mostrar a UI do perfil de utilizador'
@@ -999,6 +1088,7 @@ paths:
       parameters:
         - in: path
           name: id
+          description: Identificador do Utilizador
           schema:
             type: integer
           required: true
@@ -1011,7 +1101,6 @@ paths:
       description: 'Acesso à submissão do formulário de Editar Perfil do Utilizador. Acesso: OWN'
       tags:
         - 'M05: Utilizadores'
-
       requestBody:
         required: true
         content:
@@ -1047,8 +1136,7 @@ paths:
                   nullable: true
               required:
                 - username
-                - email
-                       
+                - email          
       responses:
         '302':
           description: 'Redirecionar após o processamento da edição do Perfil do Utilizador.'
@@ -1064,22 +1152,40 @@ paths:
                   description: 'Edição sem sucesso. Redirecionar para o formulário da edição do Perfil do Utilizador.'
                   value: '/users/{id}/edit'
 
+  /users/{id}/delete:
+    get:
+      operationId: R506
+      summary: 'R506: Ação de Eliminar um Utilizador'
+      description: 'Ação de Eliminar um Utilizador. Acesso: OWN, ADM'
+      tags:
+        - 'M05: Utilizadores'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: Redirecionar para '/admin/users' ou /home
+
   /api/users/{user_id}/follow/{uc_id}:
     post:
-      operationId: R506
-      summary: 'R506: Ação de Seguir uma Unidade Curricular'
+      operationId: R507
+      summary: 'R507: Ação de Seguir uma Unidade Curricular'
       description: 'Ação de fazer um aluno seguir uma unidade curricular. Acesso: OWN'
       tags:
         - 'M05: Utilizadores'
-
       parameters:
         - in: path
           name: user_id
+          description: Identificador do Utilizador
           schema:
             type: integer
           required: true
         - in: path
           name: uc_id
+          description: Identificador da Unidade Curricular
           schema:
             type: integer
           required: true
@@ -1094,9 +1200,8 @@ paths:
                   type: boolean
               required:
                 - follow
-
       responses:
-        '202':
+        '200':
           description: 'Ok. Seguir ou deixar de seguir UC e atualizar uc-card na página em concordância.'
           content:
             application/json:
@@ -1107,19 +1212,13 @@ paths:
         'XXX':
           description: "Redirecionar para '/'"
 
-
-  #####################
-  # M06: Notificações #
-  #####################
-
-  /users/{id}/notifications:
-    get: 
-      operationId: R801
-      summary: 'R801: UI de Notitificações do Utilizador.'
-      description: 'Mostra as Notificações de um Utilizador. Acesso: OWN.'
-      tags: 
-        - 'M06: Notificações'
-
+  /api/users/{id}/block:
+    post:
+      operationId: R508
+      summary: 'R508: Ação de Bloquear e Desbloquear um Utilizador'
+      description: 'Ação de bloquear e desbloquear um utilizador. Acesso: ADM'
+      tags:
+        - 'M05: Utilizadores'
       parameters:
         - in: path
           name: id
@@ -1127,19 +1226,145 @@ paths:
           schema:
             type: integer
           required: true
-
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                block_reason:
+                  type: string
+              required:
+                - block_reason
       responses:
         '200':
-          description: 'Ok. Mostrar Notitificações do Utilizador UI'
+          description: 'Ok. Bloquear ou desbloquear um Utilizador e atualizar a sua secção na página.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        'XXX':
+          description: "Redirecionar para '/'"
 
-  # marcar como lidas é ação?? nao deve estar aqui como resource
-  # eliminacao é uma ação - nao deve estar incluido??
+  /api/users/{id}/delete:
+    delete:
+      operationId: R509
+      summary: 'R509: Ação de Eliminar um Utilizador.'
+      description: 'Ação de eliminar um Utilizador. Acesso: ADM'
+      tags: 
+        - 'M05: Utilizadores'
+      parameters:
+        - in: path
+          name: id
+          description: Identificador do Utilizador
+          schema:
+            type: integer 
+          required: true  
+      responses:
+        '200':
+          description: 'OK. Apagar utilizador.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        'XXX':
+          description: "Redirecionar para '/'"
 
-  # /users/{id}/notifications/{not_id}:
 
-  # /users/{id}/notifications/{not}/delete:
+  #####################
+  # M06: Notificações #
+  #####################
 
-  # /users/{id}/notifications/{not}/read:
+  /notifications:
+    get:
+      operationId: R801
+      summary: 'R801: Catálogo de Notificações.'
+      description: 'Mostra todas as Notificações do Utilizador autenticado. Acesso: OWN. \nFuncionalidades: visitar a intervenção e utilizador associado a uma notificação; marcar como lida e eliminar uma notificação.'
+      tags: 
+        - 'M06: Notificações'
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página de Notificações UI'
+
+  /notifications/{id}:
+    get:
+      operationId: R802
+      summary: 'R802: Detalhe de uma Notificação.'
+      description: 'Mostra em detalhe uma Notificação do Utilizador autenticado. Acesso: OWN. \nFuncionalidades: visitar a intervenção e utilizador associado à notificação; marcar como lida e eliminar a notificação.'
+      tags: 
+        - 'M06: Notificações'
+      parameters:
+        - in: path
+          name: id
+          description: Identificador da Notificação
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página de Detalhe de Notificação UI'
+
+  /api/notifications/{id}/read:
+    post:
+      operationId: R803
+      summary: 'R803: Ação de Ler uma Notificação.'
+      description: 'Ação de ler uma Notificação. Acesso: OWN'
+      tags: 
+        - 'M06: Notificações'
+      parameters:
+        - in: path
+          name: id
+          description: Identificador da Notificação
+          required: true
+          schema:
+            type: integer   
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                read:
+                  type: boolean
+              required:
+                - read
+      responses:
+        '200':
+          description: 'Ok. Ler a Notificação e atualizar essa informação na página.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        '403':
+          description: 'Mostrar mensagem de erro.'
+        'XXX':
+          description: Redirecionar para '/'
+
+  /api/notifications/{id}/delete:
+    delete:
+      operationId: R804
+      summary: 'R804: Ação de Eliminar uma Notificação.'
+      description: 'Ação de eliminar uma notificação. Acesso: OWN'
+      tags: 
+        - 'M06: Notificações'
+      parameters:
+        - in: path
+          name: id
+          description: Identificador da Notificação
+          schema:
+            type: integer 
+          required: true  
+      responses:
+        '200':
+          description: 'OK. Apagar notificação.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        'XXX':
+          description: "Redirecionar para '/'"
 
 
   ##########################
@@ -1195,10 +1420,48 @@ paths:
   # M08: Páginas de administração # 
   #################################
 
-  /admin/users: 
+  /admin:
     get:
       operationId: R801
-      summary: 'R801: Catálogo de Utilizadores'
+      summary: 'R801: Redirecionar para Perfil do Utilizador.'
+      description: 'Redirecionar para Perfil do Utilizador se estiver autenticado ou para a página de login caso não esteja.'
+      tags: 
+        - 'M08: Páginas de administração'
+      responses:
+        '302':
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Auth:
+                  description: 'Utilizador Autenticado. Redirecionar para o Perfil do Utilizador.'
+                  value: '/users/{id}'
+                302NotAuth:
+                  description: 'Utilizador não autenticado. Redirecionar para a página de login.'
+                  value: '/login'
+
+  /admin/ucs/{id}:
+    get:
+      operationId: R802
+      summary: 'R802: Redirecionar para Detalhe de uma Unidade Curricular.'
+      tags: 
+        - 'M08: Páginas de administração'
+      parameters:
+        - in: path
+          name: id
+          description: Identificador da Unidade Curricular
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: Redirecionar para '/ucs/{id}'
+
+  /admin/users: 
+    get:
+      operationId: R803
+      summary: 'R803: Catálogo de Utilizadores'
       description: 'Mostra todos os utilizadores do sitema. Acesso: ADM. \nFuncionalidades: visitar, bloquear/desbloquear, editar e eliminar utilizadores.'
       tags:
         - 'M08: Páginas de administração'
@@ -1208,8 +1471,8 @@ paths:
   
   /admin/ucs:
     get:
-      operationId: R802
-      summary: 'R802: Catálogo de Unidades Curriculares'
+      operationId: R804
+      summary: 'R804: Catálogo de Unidades Curriculares'
       description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: ADM. \nFuncionalidades: criar, visitar, ver docentes associados, editar e eliminar UCs.'
       tags:
         - 'M08: Páginas de administração'
@@ -1219,8 +1482,8 @@ paths:
   
   /admin/ucs/{id}/teachers:
     get:
-      operationId: R803
-      summary: 'R803: Catálogo de Docentes'
+      operationId: R805
+      summary: 'R805: Catálogo de Docentes'
       description: 'Mostra todos os Docentes do sistema, indicando os que se encontram associados à UC específica a inspecionar. Acesso: ADM. \nFuncionalidades: visitar perfil do Docente; associar e dessaciar Docentes à UC.'
       tags:
         - 'M08: Páginas de administração'
@@ -1237,8 +1500,8 @@ paths:
 
   /admin/reports:
     get:
-      operationId: R804
-      summary: 'R804: Catálogo de Denúncias'
+      operationId: R806
+      summary: 'R806: Catálogo de Denúncias'
       description: 'Mostra todas denúncias de intervenções recebidas. Acesso: ADM. \nFuncionalidades: visitar e eliminar intervenções.'
       tags:
         - 'M08: Páginas de administração'
@@ -1247,8 +1510,9 @@ paths:
           description: 'OK. Mostrar Página do Administrador de Denúncias UI.'
   
 
-      
-    
+###############
+# Componentes # 
+###############         
 
 components:
   schemas:
@@ -1340,82 +1604,22 @@ components:
         description:
           type: string
 
-    
-#---exemplo--
-
-  /api/works:
-    get:
-      operationId: R202
-      summary: 'R202: Search Works API'
-      description: 'Searches for works and returns the results as JSON. Access: PUB.'
-
-      tags: 
-        - 'M02: Works'
-
-      parameters:
-        - in: query
-          name: query
-          description: String to use for full-text search
-          schema:
-            type: string
-          required: false
-        - in: query
-          name: item
-          description: Category of the works
-          schema:
-            type: string
-          required: false
-        - in: query
-          name: loaned
-          description: Boolean with the loaned flag value
-          schema:
-            type: boolean
-          required: false
-        - in: query
-          name: owner
-          description: Boolean with the owner flag value
-          schema:
-            type: boolean
-          required: false
-        - in: query
-          name: classification
-          description: Integer corresponding to the work classification
-          schema:
-            type: integer
-          required: false
-
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    title:
-                      type: string
-                    obs:
-                      type: string
-                    year:
-                      type: string
-                    owner:
-                      type: string
-                    type:
-                      type: string
-                example:
-                  - id: 1
-                    title: Rihanna - Unapologetic
-                    obs: Good pop music album.
-                    year: 2012
-                    owner: Joana Lima
-                    type: MP3
-                  - id: 15
-                    title: Mr. Bean
-                    obs: The best comedy movie.
-                    year: 1995
-                    owner: Manuel Teixeira
-                    type: DVD
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        id_intervention:
+          type: integer
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        validation:
+          type: string
+          nullable: true
+        type:
+          type: string
