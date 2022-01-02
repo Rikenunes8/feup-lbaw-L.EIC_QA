@@ -1,57 +1,43 @@
-/* APP HEADER */
 #header-container, #navbar-content-container {
   grid-template-columns: 1fr 3fr;
 }
-
 #logo-img, #profile-photo {
   height: 32px;
   width: 32px;
   object-fit: cover;
 }
-
 .navbar-nav {
   min-height: calc(100vh - 110px);
 }
-
-/*TODO improve links colors*/
-/* SIDEBAR ADD APP LINKS*/
 .nav-link, .navbar-text, .app-link {
   color: rgb(41, 41, 41);
 }
-
 .nav-link:hover, .nav-link:focus, 
 .app-link:hover, .app-link:focus {
   color: rgb(128, 128, 128);
 }
-
 section#faq-page .accordion-button:not(.collapsed) {
   color: rgb(128, 128, 128);
 }
-
-/* HOME PAGE */
 #home-page .mask-white {
   background-color: rgba(255, 255, 255, 0.75);
 }
-
-/* ABOUT PAGE */
+.home-icons-icon i {
+  font-size: 2rem;
+}
 .about-icons-item {
   max-width: 20rem;
 }
-
 .about-icons-icon {
   height: 5rem;
 }
-
 .about-icons-icon i {
   font-size: 4rem;
 }
-
-/* QUESTIONS PAGE */
 .user-action-add {
   display: flex;
   justify-content: space-between;
 }
-
 .question-card .question-card-score {
   display: flex;
   align-items: center;
@@ -59,29 +45,23 @@ section#faq-page .accordion-button:not(.collapsed) {
   text-align: center;
   background-color: rgb(255,255,255)!important;
 }
-
 .question-card span.text-muted, 
 .user-profile span.text-muted,
 #question-page .question-card p.text-muted {
   font-size: .75rem;
 }
-
 .question-card .question-card-actions {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-align: end;
 }
-
 .question-valid-icon {
   color: #00b74a;
 }
-
 .question-invalid-icon {
   color: #e42e0d;
 }
-
-/* QUESTION PAGE */
 #question-page .question-detail > .row {
   margin-right: 1rem;
   width: 100%;
@@ -92,15 +72,13 @@ section#faq-page .accordion-button:not(.collapsed) {
 }
 #question-page .comment-detail > .row {
   margin-right: 1rem;
-  width: 88%
+  width: 88%;
 }
-
 #question-page .intervention-votes {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-
 #question-page .question-detail .question-page-actions,
 #question-page .answer-detail .question-page-actions,
 #question-page .comment-detail .question-page-actions {
@@ -109,58 +87,44 @@ section#faq-page .accordion-button:not(.collapsed) {
   bottom: 0;
   right: 0;
 }
-
 #question-page .question-detail .card:hover .question-page-actions,
 #question-page .answer-detail .card:hover .question-page-actions,
 #question-page .comment-detail .card:hover .question-page-actions {
   display: inherit;
 }
-
 #question-page .card-body > p:first-of-type {
   margin-right: 8rem;
   margin-bottom: 1rem;
 }
-
-
-/* UCS PAGE */
 .uc-card-icon, .question-card-icon {
   position: absolute;
   top: 0;
   right: 0;
 }
-
-/*ADMIN PAGES*/
 div.admin-action-add {
   position: relative;
 }
-
 div.admin-action-add a {
   position: absolute;
   right: 0.75rem;
   top: 0;
 }
-
 td.admin-table-uc-actions, td.admin-table-user-actions {
   white-space: nowrap;
   vertical-align: middle;
 }
-
 .form-label.required:after {
   content:" *";
   color:red;
 }
-
 .filter-form .filter-parameter {
   width:fit-content;
 }
-
 .dropdown-keep-open .dropdown-menu {
   overflow: hidden;
   overflow-y: auto;
   max-height: 450px;
 }
-
-/* FOOTER */
 footer > p {
   font-size: small;
 }
