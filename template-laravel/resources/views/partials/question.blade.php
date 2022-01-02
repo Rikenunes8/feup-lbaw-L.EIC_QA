@@ -20,8 +20,13 @@
             </span>
           </h6>
           <p class="card-text">
-            {!! substr($question->text, 0, 70) !!}
-            @if (strlen($question->text) > 70)
+            @php
+              $str = str_replace("<p>", "", $question->text);
+              $str = str_replace("</p>", " ", $str);
+              $str = str_replace("&nbsp;", "", $str);
+            @endphp
+            {!! substr($str, 0, 70) !!}
+            @if (strlen($str) > 70)
             ...
             @endif
           </p>

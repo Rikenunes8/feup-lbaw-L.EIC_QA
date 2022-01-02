@@ -4,8 +4,13 @@
       <h5 class="card-title me-4"><a href="{{ url('/ucs/'.$uc->id) }}" class="app-link">{{ $uc->name }}</a></h5>
       <h6 class="card-subtitle mt-1 mb-2"><span class="badge bg-info text-dark">{{ $uc->code }}</span></h6>
       <p class="card-text">
-        {{ substr($uc->description, 0, 100) }}
-        @if (strlen($uc->description) > 100)
+        @php
+          $str = str_replace("<p>", "", $uc->description);
+          $str = str_replace("</p>", " ", $str);
+          $str = str_replace("&nbsp;", "", $str);
+        @endphp
+        {!! substr($str, 0, 100) !!}
+        @if (strlen($str) > 100)
         ...
         @endif
       </p>

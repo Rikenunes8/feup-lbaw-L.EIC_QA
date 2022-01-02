@@ -32,8 +32,13 @@
               <th scope="row"><a href="{{ url('/ucs/'.$uc->id) }}" class="app-link">{{ $uc->name }}</a></th>
               <td>{{ $uc->code }}</td>
               <td>
-                {{ substr($uc->description, 0, 50) }}
-                @if (strlen($uc->description) > 50)
+                @php
+                  $str = str_replace("<p>", "", $uc->description);
+                  $str = str_replace("</p>", " ", $str);
+                  $str = str_replace("&nbsp;", "", $str);
+                @endphp
+                {!! substr($str, 0, 50) !!}
+                @if (strlen($str) > 50)
                 ...
                 @endif
               </td>
