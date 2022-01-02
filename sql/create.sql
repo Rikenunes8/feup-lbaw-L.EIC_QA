@@ -83,10 +83,11 @@ CREATE TABLE "intervention" (
 );
 
 CREATE TABLE "voting" (
+    id              SERIAL PRIMARY KEY,
     id_user         INTEGER REFERENCES "users" ON DELETE SET NULL ON UPDATE CASCADE,
     id_intervention INTEGER REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
     vote            BOOLEAN NOT NULL,
-    PRIMARY KEY (id_user, id_intervention)
+    UNIQUE (id_user, id_intervention)
 );
 
 CREATE TABLE "validation" (
