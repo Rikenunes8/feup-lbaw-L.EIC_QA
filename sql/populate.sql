@@ -32,10 +32,10 @@ INSERT INTO "users" (email, username, password, type, score, blocked, registry_d
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
     'Admin', NULL, NULL, '2021-11-01'
 );
-INSERT INTO "users" (email, username, password, type, score, blocked, registry_date) VALUES (
+INSERT INTO "users" (email, username, password, type, score, blocked, registry_date, photo) VALUES (
     'percurso.academico@fe.up.pt', 'secretaria', 
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
-    'Admin', NULL, NULL, '2021-11-01'
+    'Admin', NULL, NULL, '2021-11-01', '2_1000000000.png'
 );
 
 -- Teacher
@@ -49,10 +49,10 @@ INSERT INTO "users" (email, username, password, type, name, about, registry_date
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
     'Teacher', 'José Paulo de Vilhena Geraldes Leal', 'Para além de professor, interesso-me por escrever livros pedagógicos.', '2021-11-01'
 );
-INSERT INTO "users" (email, username, password, type, name, about, registry_date) VALUES (
+INSERT INTO "users" (email, username, password, type, name, about, registry_date, photo) VALUES (
     'ssn@fe.up.pt', 'ssn', 
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
-    'Teacher', 'Sérgio Sobral Nunes', 'I am an Assistant Professor at the Department of Informatics Engineering at the Faculty of Engineering of the University of Porto (FEUP), and a Senior Researcher at the Centre for Information Systems and Computer Graphics at INESC TEC.', '2021-11-01'
+    'Teacher', 'Sérgio Sobral Nunes', 'I am an Assistant Professor at the Department of Informatics Engineering at the Faculty of Engineering of the University of Porto (FEUP), and a Senior Researcher at the Centre for Information Systems and Computer Graphics at INESC TEC.', '2021-11-01', '5_1641229712_dl758KLoUU.png'
 );
 INSERT INTO "users" (email, username, password, type, name, about, registry_date) VALUES (
     'tbs@fe.up.pt', 'tbs', 
@@ -76,15 +76,15 @@ INSERT INTO "users" (email, username, password, type, name, about, registry_date
 );
 
 -- Student
-INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date) VALUES (
+INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, photo) VALUES (
     'up201805455@fc.up.pt', 'up201805455', 
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
-    'Student', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01'
+    'Student', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01', '10_1641229580_vBEUWTuB0f.jpg'
 );
-INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date) VALUES (
+INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, photo) VALUES (
     'up201906852@fe.up.pt', 'up201906852', 
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
-    'Student', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01'
+    'Student', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01', '11_1641229484_onzioN1AGD.png'
 );
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date) VALUES (
     'up201905427@fe.up.pt', 'up201905427', 
