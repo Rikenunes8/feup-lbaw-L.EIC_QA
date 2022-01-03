@@ -24,15 +24,24 @@
           <small class="text-muted"> {{ $teacher->name }}; </small>
         @endforeach
       </p>
-
+     
       @if ( Auth::check() && Auth::user()->isStudent() )
-      <p class="uc-card-icon p-4">
-        
-        <a href="#" class="card-link uc-card-icon-follow">
-          <i class="{{ in_array(Auth::user()->email, $uc->followers()->pluck('email', 'id')->toArray() )?'fas':'far' }} fa-heart text-danger"></i>
-        </a>
-        
-      </p>
+        @php
+          $showFollow = true;
+         
+          $urlParts = explode('/', $_SERVER['REQUEST_URI']);
+          if ($urlParts[1] == 'users' && $urlParts[2] != Auth::user()->id)
+            $showFollow = false;
+        @endphp 
+        @if ($showFollow)
+          <p class="uc-card-icon p-4">
+            
+            <a href="#" class="card-link uc-card-icon-follow">
+              <i class="{{ in_array(Auth::user()->email, $uc->followers()->pluck('email', 'id')->toArray() )?'fas':'far' }} fa-heart text-danger"></i>
+            </a>
+            
+          </p>
+        @endif
       @endif
     </div>
   </div>
