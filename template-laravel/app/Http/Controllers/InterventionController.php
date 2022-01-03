@@ -106,11 +106,8 @@ class InterventionController extends Controller
      */
     public function show($id)
     {
-        $question = Intervention::find($id);
+        $question = Intervention::questions()->find($id);
         if (is_null($question)) return redirect('/questions');
-
-        $this->authorize('show', $question);
-        
         return view('pages.question', ['question' => $question]);
     }
 

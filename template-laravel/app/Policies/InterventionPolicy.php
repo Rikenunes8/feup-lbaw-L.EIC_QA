@@ -10,19 +10,6 @@ class InterventionPolicy
 {
     use HandlesAuthorization;
 
-
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  User  $user
-     * @param  Intervention  $intervention
-     * @return Response|bool
-     */
-    public function show(User $user, Intervention $intervention)
-    {
-        return $intervention->isQuestion();
-    }
-
     /**
      * Determine whether the user can create models.
      *

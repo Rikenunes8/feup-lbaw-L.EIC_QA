@@ -9,19 +9,6 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  User  $user
-     * @param  User  $user2
-     * @return Response|bool
-     */
-    public function show(User $user)
-    {
-        return !$user->blocked;
-    }
-
     /**
      * Determine whether the user can update the model.
      *
