@@ -99,6 +99,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'about' => 'nullable|string|max:500',
                 'birthdate' => 'nullable|date_format:Y-m-d',
+                'photo' => 'nullable|image|mimes:jpeg,jpg,png,bmp,tiff,gif|max:4096',
             ]);
 
             $user->name = $request->input('name');
@@ -107,13 +108,6 @@ class UserController extends Controller
             
             if ($request->hasFile('photo')) {
                 $file = $request->photo;
-
-                $image = array('file' => $file);
-                $rules = array('file' => 'image');
-                $validator = Validator::make($image, $rules);
-                if ($validator->fails())
-                    return Redirect::back()->withErrors(['photo' => 'The photo must be an image.']); 
-
                 $filename = $user->id.'_'.time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
                 $request->photo->storeAs('users', $filename, 'images_uploads');
                 $user->photo = $filename;
