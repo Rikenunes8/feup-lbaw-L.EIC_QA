@@ -40,13 +40,17 @@
                 <th scope="row"><a href="{{ url('/users/'.$user->id) }}" class="app-link">{{ $user->name }}</a></th>
                 <td>{{ $user->email }}</td>
                 <td>
+                  @if (!$user->isAdmin())
                   <input type="text" name="reason" value="{{ $user->block_reason }}" {{ is_null($user->block_reason)?'':'disabled' }}>
+                  @endif
                 </td>
                 <td class="text-center admin-table-user-actions">
-                  @if (is_null($user->block_reason))
-                    <a href="#" class="btn btn-info text-dark me-1 admin-table-block"><i class="fas fa-lock"></i><span class="d-none">Lock</span></a>
-                  @else 
-                    <a href="#" class="btn btn-dark text-white me-1 admin-table-block"><i class="fas fa-unlock"></i><span class="d-none">Unlock</span></a>
+                  @if (!$user->isAdmin())
+                    @if (is_null($user->block_reason))
+                      <a href="#" class="btn btn-info text-dark me-1 admin-table-block"><i class="fas fa-lock"></i><span class="d-none">Lock</span></a>
+                    @else 
+                      <a href="#" class="btn btn-dark text-white me-1 admin-table-block"><i class="fas fa-unlock"></i><span class="d-none">Unlock</span></a>
+                    @endif
                   @endif
                   <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
                   <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="far fa-trash-alt"></i></a>

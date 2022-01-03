@@ -14,7 +14,6 @@ class InterventionPolicy
      * Determine whether the user can create models.
      *
      * @param  User  $user
-     * @param  Intervention  $intervention
      * @return Response|bool
      */
     public function showCreate(User $user)

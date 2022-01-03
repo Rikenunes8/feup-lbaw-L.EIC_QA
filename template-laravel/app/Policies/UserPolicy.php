@@ -10,6 +10,17 @@ class UserPolicy
     use HandlesAuthorization;
 
     /**
+     * Determine whether the user can show.
+     *
+     * @param  User  $user
+     * @return Response|bool
+     */
+    public function showToAdmin(User $user)
+    {
+        return $user->isAdmin() && !$user->blocked;
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  User  $user
@@ -30,7 +41,7 @@ class UserPolicy
      */
     public function delete(User $user, User $user2)
     {
-        return $user->isAdmin() || $user->id == $user2->id;
+        return ($user->isAdmin() || $user->id == $user2->id) && !$user->blocked;
     }
 
     /**
@@ -42,7 +53,7 @@ class UserPolicy
      */
     public function block(User $user, User $user2)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && !$user2->isAdmin() && !$user->blocked;
     }
 
     /**
