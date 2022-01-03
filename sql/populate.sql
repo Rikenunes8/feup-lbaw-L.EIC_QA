@@ -32,10 +32,10 @@ INSERT INTO "users" (email, username, password, type, score, blocked, registry_d
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
     'Admin', NULL, NULL, '2021-11-01'
 );
-INSERT INTO "users" (email, username, password, type, score, blocked, registry_date, photo) VALUES (
+INSERT INTO "users" (email, username, password, type, score, blocked, registry_date) VALUES (
     'percurso.academico@fe.up.pt', 'secretaria', 
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
-    'Admin', NULL, NULL, '2021-11-01', '2_1000000000.png'
+    'Admin', NULL, NULL, '2021-11-01'
 );
 
 -- Teacher
