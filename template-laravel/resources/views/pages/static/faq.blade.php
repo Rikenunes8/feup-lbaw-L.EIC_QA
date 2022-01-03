@@ -19,8 +19,8 @@
         aria-labelledby="heading-question-one" data-mdb-parent="#faq-accordion">
         <div class="accordion-body">
           <strong>Sim! Para fazeres ou responderes a questões. </strong> 
-          Precisas de ter email da Google: <code>upXXXXXXXXX@g.uporto.pt</code> 
-          para te conseguires registar.
+          Precisas de ter email institucional: <code>upXXXXXXXXX@g.uporto.pt</code> 
+          ou <code>upXXXXXXXXX@f_.up.pt</code> para te conseguires registar.
         </div>
       </div>
     </div>
