@@ -86,7 +86,7 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Terminar sessão bem sucedida. Redirecionar para Página Inicial'
+                  description: 'Terminar sessão bem sucedida. Redirecionar para Página Inicial UI'
                   value: '/'
 
   /register:
@@ -98,7 +98,7 @@ paths:
         - 'M01: Autenticação'
       responses:
         '200':
-          description: 'Ok. Mostrar Formulário de Registo.'
+          description: 'Ok. Mostrar Formulário de Registo UI.'
     post:
       operationId: R105
       summary: 'R105: Ação de Registo'
@@ -159,7 +159,7 @@ paths:
                 302Success:
                   description: 'Autenticação bem sucedida. Redirecionar para o perfil de utilizador.'
                   value: '/users/{id}'
-                302Failure:
+                302Error:
                   description: 'Autenticação falhada. Redirecionar para o formulário de Registo.'
                   value: '/register'
 
@@ -172,7 +172,7 @@ paths:
         - 'M01: Autenticação'
       responses:
         '200':
-          description: 'Ok. Mostrar Formulário de Recuperação de Password.'
+          description: 'Ok. Mostrar Formulário de Recuperação de Password UI.'
     
     post:
       operationId: R107
@@ -203,7 +203,7 @@ paths:
                 302Success:
                   description: 'Email presente no sistema. Redirecionar para a Página de Login.'
                   value: '/login' 
-                302Failure:
+                302Error:
                   description: 'Email ausente do sistema. Redirecionar para a Página de Registo.'
                   value: '/register'
   
@@ -245,7 +245,7 @@ paths:
                 302Success:
                   description: 'Recuperação de Password bem sucedida. Redirecionar para a Página de Login.'
                   value:  '/login'
-                302Failure:
+                302Error:
                   description: 'Recuperação de Password falhada. Redirecionar para a Página Inicial.'
                   value: '/'
 
@@ -265,7 +265,7 @@ paths:
             type: integer
       responses:
         '200':
-          description: 'Ok. Mostrar Formulário de Configuração de Nova Password.'
+          description: 'Ok. Mostrar Formulário de Configuração de Nova Password UI.'
 
   
   #####################
@@ -304,12 +304,15 @@ paths:
           schema:
             type: string
           required: false
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página de Questões UI.'
 
   /questions/create:
     get:
       operationId: R202
       summary: 'R202: Formulário de Criação de Questão'
-      description: 'Acesso ao formulário de criação de Questão. Acesso: USR. \n'
+      description: 'Acesso ao formulário de criação de Questão. Acesso: USR.'
       tags:
         - 'M02: Intervenções'
       responses:
@@ -370,7 +373,7 @@ paths:
           required: true
       responses:
         '200':
-          description: 'Ok. Mostrar a UI do detalhe de questão'
+          description: 'Ok. Mostrar Detalhe de Questão UI'
           
   /questions/{id}/edit:
     get:
@@ -438,6 +441,7 @@ paths:
     get:
       operationId: R207
       summary: 'R207: Redirecionamento para Questões.'
+      description: 'Redirecionar para Questões. Acesso: PUB'
       tags: 
         - 'M02: Intervenções'
       responses:
@@ -544,6 +548,7 @@ paths:
     get:
       operationId: R211
       summary: 'R211: Redirecionamento para Questões.'
+      description: 'Redirecionar para Questões. Acesso: PUB'
       tags: 
         - 'M02: Intervenções'
       responses:
@@ -797,6 +802,9 @@ paths:
           schema:
             type: string
           required: false    
+      responses:
+        '200':
+          description: 'Ok. Mostrar Página Questões UI com os resultados da pesquisa'
 
 
   ##############################
@@ -807,7 +815,8 @@ paths:
     get:
       operationId: R401
       summary: 'R401: Vista de Unidades Curriculares.'
-      description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: PUB. \nFuncionalidades: visitar em detalhe uma UC, seguir uma UC.'
+      description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: PUB.
+                    Funcionalidades: visitar em detalhe uma UC, seguir uma UC.'
       tags: 
         - 'M04: Unidades Curriculares'
       responses:
@@ -818,7 +827,8 @@ paths:
     get:
       operationId: R402
       summary: 'R402: Vista de Detalhe de uma Unidades Curricular.'
-      description: 'Mostra em detalhe uma Unidade Curricular do sitema. Acesso: USR. \nFuncionalidades: visitar o perfil de um docente seu, visitar uma das suas top questões, seguir uma UC.'
+      description: 'Mostra em detalhe uma Unidade Curricular do sitema. Acesso: USR.
+                    Funcionalidades: visitar o perfil de um docente seu, visitar uma das suas top questões, seguir uma UC.'
       tags: 
         - 'M04: Unidades Curriculares'
       parameters:
@@ -1028,7 +1038,7 @@ paths:
     get:
       operationId: R501
       summary: 'R501: Redirecionamento para Perfil do Utilizador.'
-      description: 'Redirecionar para Perfil do Utilizador se estiver autenticado ou para a página de login caso não esteja.'
+      description: 'Redirecionar para Perfil do Utilizador se estiver autenticado ou para a página de login caso não esteja. Acesso: PUB'
       tags: 
         - 'M05: Utilizadores'
       responses:
@@ -1276,7 +1286,8 @@ paths:
     get:
       operationId: R801
       summary: 'R801: Catálogo de Notificações.'
-      description: 'Mostra todas as Notificações do Utilizador autenticado. Acesso: OWN. \nFuncionalidades: visitar a intervenção e utilizador associado a uma notificação; marcar como lida e eliminar uma notificação.'
+      description: 'Mostra todas as Notificações do Utilizador autenticado. Acesso: OWN.
+                    Funcionalidades: visitar a intervenção e utilizador associado a uma notificação; marcar como lida e eliminar uma notificação.'
       tags: 
         - 'M06: Notificações'
       responses:
@@ -1287,7 +1298,8 @@ paths:
     get:
       operationId: R802
       summary: 'R802: Detalhe de uma Notificação.'
-      description: 'Mostra em detalhe uma Notificação do Utilizador autenticado. Acesso: OWN. \nFuncionalidades: visitar a intervenção e utilizador associado à notificação; marcar como lida e eliminar a notificação.'
+      description: 'Mostra em detalhe uma Notificação do Utilizador autenticado. Acesso: OWN.
+                    Funcionalidades: visitar a intervenção e utilizador associado à notificação; marcar como lida e eliminar a notificação.'
       tags: 
         - 'M06: Notificações'
       parameters:
@@ -1420,7 +1432,7 @@ paths:
     get:
       operationId: R801
       summary: 'R801: Redirecionamento para Perfil do Utilizador.'
-      description: 'Redirecionar para Perfil do Utilizador se estiver autenticado ou para a página de login caso não esteja.'
+      description: 'Redirecionar para Perfil do Utilizador se estiver autenticado ou para a página de login caso não esteja. Acesso: PUB'
       tags: 
         - 'M08: Páginas de administração'
       responses:
@@ -1441,7 +1453,7 @@ paths:
     get:
       operationId: R802
       summary: 'R802: Redirecionamento para Detalhe de uma Unidade Curricular.'
-      description: 'Redirecionar para Detalhe de uma Unidade Curricular.'
+      description: 'Redirecionar para Detalhe de uma Unidade Curricular. Acesso: PUB'
       tags: 
         - 'M08: Páginas de administração'
       parameters:
@@ -1459,7 +1471,8 @@ paths:
     get:
       operationId: R803
       summary: 'R803: Catálogo de Utilizadores'
-      description: 'Mostra todos os utilizadores do sitema. Acesso: ADM. \nFuncionalidades: visitar, bloquear/desbloquear, editar e eliminar utilizadores.'
+      description: 'Mostra todos os utilizadores do sitema. Acesso: ADM.
+                    Funcionalidades: visitar, bloquear/desbloquear, editar e eliminar utilizadores.'
       tags:
         - 'M08: Páginas de administração'
       responses:
@@ -1470,7 +1483,8 @@ paths:
     get:
       operationId: R804
       summary: 'R804: Catálogo de Unidades Curriculares'
-      description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: ADM. \nFuncionalidades: criar, visitar, ver docentes associados, editar e eliminar UCs.'
+      description: 'Mostra todas as Unidades Curriculares do sitema. Acesso: ADM.
+                    Funcionalidades: criar, visitar, ver docentes associados, editar e eliminar UCs.'
       tags:
         - 'M08: Páginas de administração'
       responses:
@@ -1481,7 +1495,8 @@ paths:
     get:
       operationId: R805
       summary: 'R805: Catálogo de Docentes'
-      description: 'Mostra todos os Docentes do sistema, indicando os que se encontram associados à UC específica a inspecionar. Acesso: ADM. \nFuncionalidades: visitar perfil do Docente; associar e dessaciar Docentes à UC.'
+      description: 'Mostra todos os Docentes do sistema, indicando os que se encontram associados à UC específica a inspecionar. Acesso: ADM.
+                    Funcionalidades: visitar perfil do Docente; associar e dessaciar Docentes à UC.'
       tags:
         - 'M08: Páginas de administração'
       parameters:
@@ -1499,7 +1514,8 @@ paths:
     get:
       operationId: R806
       summary: 'R806: Catálogo de Denúncias'
-      description: 'Mostra todas denúncias de intervenções recebidas. Acesso: ADM. \nFuncionalidades: visitar e eliminar intervenções.'
+      description: 'Mostra todas denúncias de intervenções recebidas. Acesso: ADM. 
+                    Funcionalidades: visitar e eliminar intervenções.'
       tags:
         - 'M08: Páginas de administração'
       responses:
