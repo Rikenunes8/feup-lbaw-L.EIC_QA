@@ -4,7 +4,7 @@
 
 @section('content')
 
-<section id="ucs-page" {{ Auth::check()? " data-id=".Auth::user()->id : "" }}">
+<section id="ucs-page" data-id="{{ Auth::check()?Auth::user()->id:''}}">
   <h2>Unidades Curriculares</h2> 
 
   <section class="error-msg"></section>
