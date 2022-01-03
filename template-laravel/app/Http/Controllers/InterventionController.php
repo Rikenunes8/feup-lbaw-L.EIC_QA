@@ -384,6 +384,7 @@ class InterventionController extends Controller
 
         $intervention = Intervention::find($id);
         $user = Auth::user();
+        if (is_null($intervention) || is_null($user)) return App::abort(404);
         $vote = $request->input('vote');
         $vote = $vote=='true'? true : false;
 
@@ -415,6 +416,7 @@ class InterventionController extends Controller
 
         $intervention = Intervention::answers()->find($id);
         $user = Auth::user();
+        if (is_null($intervention) || is_null($user)) return App::abort(404);
         $validAux = $request->input('valid');
         $valid = null;
         if ($validAux == 'true') $valid = true;

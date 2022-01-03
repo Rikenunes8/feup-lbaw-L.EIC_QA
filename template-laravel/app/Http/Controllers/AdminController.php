@@ -18,7 +18,7 @@ class AdminController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $this->authorize('show', User::class);
+        $this->authorize('showToAdmin', User::class);
         $users = User::where('id', '!=', Auth::user()->id)->orderBy('name')->get();
         return view('pages.admin.users', ['users' => $users]);
     }
@@ -32,7 +32,7 @@ class AdminController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $this->authorize('show', User::class);
+        $this->authorize('showToAdmin', User::class);
         $ucs = Uc::orderBy('name')->get();
         return view('pages.admin.ucs', ['ucs' => $ucs]);
     }
@@ -47,8 +47,9 @@ class AdminController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $this->authorize('show', User::class);
+        $this->authorize('showToAdmin', User::class);
         $uc = Uc::find($id);
+        if (is_null($uc)) return App::abort(404);
         $teachersAssoc = $uc->teachers()->orderBy('name')->get();
         $uc_teachers_ids = $teachersAssoc->pluck('id')->toArray();
         $teachersNotAssoc = User::teachers()->whereNotIn('id', $uc_teachers_ids)->orderBy('name')->get();

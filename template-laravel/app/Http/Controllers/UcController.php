@@ -101,6 +101,7 @@ class UcController extends Controller
         if (!Auth::check()) return redirect('/login');
         
         $uc = Uc::find($id);
+        if (is_null($uc)) return App::abort(404);
         $this->authorize('update', $uc);
 
         $request->validate([
@@ -125,6 +126,7 @@ class UcController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
         $uc = Uc::find($id);
+        if (is_null($uc)) return App::abort(404);
         $this->authorize('delete', $uc);
         $uc->delete();
         return $uc;
@@ -141,7 +143,9 @@ class UcController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
         $uc = Uc::find($uc_id);
-        $teacher = User::find($user_id);  
+        $teacher = User::find($user_id);
+        if (is_null($uc) || is_null($teacher)) return App::abort(404);
+
             
         $this->authorize('teacher', [$uc, $teacher]);
         $uc->teachers()->attach($user_id);
@@ -160,6 +164,7 @@ class UcController extends Controller
         if (!Auth::check()) return redirect('/login');
         $uc = Uc::find($uc_id);
         $teacher = User::find($user_id);
+        if (is_null($uc) || is_null($teacher)) return App::abort(404);
         
         $this->authorize('teacher', [$uc, $teacher]);
         $uc->teachers()->detach($user_id);
