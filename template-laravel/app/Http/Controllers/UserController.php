@@ -21,10 +21,15 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function list()
+    public function list(Request $request)
     {
-        $users = User::where('type', '!=', "Admin")->orderBy('score', 'DESC')->paginate(18);
-        return view('pages.users', ['users' => $users]);
+        $search = $request->search;
+        $query = User::where('type', '!=', "Admin")->orderBy('score', 'DESC');
+        if(!empty($search)) {
+            $query = User::where('type', '!=', "Admin")->where('name', 'ilike', '%'.$search.'%')->orderBy('score', 'DESC');
+        }
+        $users =  $query->paginate(12);
+        return view('pages.users', ['users' => $users, 'search' => $search]);
     }
 
     /**

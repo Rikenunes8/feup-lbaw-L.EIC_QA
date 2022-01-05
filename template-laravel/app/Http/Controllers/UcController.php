@@ -23,7 +23,7 @@ class UcController extends Controller
         if(!empty($search)) {
             $query = Uc::where('name', 'ilike', '%'.$search.'%')->orderBy('name');
         }
-        $ucs = $query->paginate(6);
+        $ucs = $query->paginate(12);
         return view('pages.ucs', ['ucs' => $ucs, 'search' => $search]);
     }
 
