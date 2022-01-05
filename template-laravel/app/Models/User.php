@@ -109,8 +109,4 @@ class User extends Authenticatable
     public function scopeStudents($query) {
         return $query->whereType('Student');
     }
-
-    public function unread_notifications() {
-      return count($this->notifications()->wherePivot('read', false)->get());
-  } 
 }

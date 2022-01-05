@@ -13,7 +13,7 @@
       @if (Auth::check())
       <a href="{{ url('/notifications') }}" id="header-notification-icon" class="d-flex me-2 link-dark text-decoration-none fs-4 far fa-envelope position-relative">
         @php
-          $nots = Auth::user()->unread_notifications(); // TODO NOT WORKING
+          $nots = count(Auth::user()->notifications()->wherePivot('read', false)->get());
         @endphp
         @if ( $nots != 0 )
         <span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger">
