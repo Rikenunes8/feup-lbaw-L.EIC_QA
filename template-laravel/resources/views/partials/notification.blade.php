@@ -30,13 +30,19 @@
             $link = url('/users/'.Auth::user()->id);
           }
           @endphp
-          <a href="{{ $link }}" class="app-link">
+          <a href="#" class="app-link" onclick="event.preventDefault();
+                                                document.getElementById('redirect-form-{{ $notification->id }}').submit();">
             <h5 class="card-title me-4"> {{ $type }}</h5>
             <h6>{{ date('d/m/Y H:i', strtotime($notification->date)); }}</h6>
           </a>
-            <p class="card-text">
-              @include('partials.notifications.'.$notification->type)
-            </p>
+          <p class="card-text">
+            @include('partials.notifications.'.$notification->type)
+          </p>
+          <form method="POST" id="redirect-form-{{ $notification->id }}" class="d-none" 
+                action="{{ route('notifications.read', $notification->id)}}">
+            @csrf
+            <input type="text" value="{{ $link }}" name="link">
+          </form>
         </div>
       </div>
 
