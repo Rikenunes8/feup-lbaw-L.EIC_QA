@@ -66,12 +66,12 @@
       
       <div class="container-fluid px-0">
         <div id="navbar-content-container" class="d-grid gap-0">
-          <div class="border-end">
+          <div class="border-end" id="navbar-column">
             <section id="navbar">
               @include('layouts.navbar')
             </section>
           </div>
-          <div class="container py-3 px-4">
+          <div class="container py-3 px-4" id="content-column">
             @include('layouts.breadcrumbs')
             <section id="content">
               @yield('content')

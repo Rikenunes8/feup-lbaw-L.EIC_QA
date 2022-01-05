@@ -342,6 +342,10 @@ function focusSearchInput() {
   document.querySelector('input#search-input').focus(); 
 }
 
+function focusAnswerInput() {
+  tinyMCE.get('answer-textarea').focus();
+}
+
 function showRegisterFormFields() {
   const select = document.querySelector('select#usertype');
   if (select === null) return;

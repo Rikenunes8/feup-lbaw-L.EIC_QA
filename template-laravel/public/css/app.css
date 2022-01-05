@@ -25,6 +25,9 @@ section#faq-page .accordion-button:not(.collapsed) {
 .home-icons-icon i {
   font-size: 2rem;
 }
+.d-contents {
+  display:contents;
+}
 .about-icons-item {
   max-width: 20rem;
 }
@@ -140,9 +143,31 @@ footer > p {
   font-size: small;
 }
 
+@media (max-width: 575px) {
+  #header-logo-column, #header-options-column,
+  #navbar-column, #content-column {
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+  #header-logo-column {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  #navbar-column {
+    border-bottom: 1px solid #e0e0e0;
+    border-right: 0px!important;
+  }
+  .navbar-nav {
+    min-height: auto;
+  }
+}
 @media (max-width: 767px) {
   #form-login, #form-uc-create, #form-uc-edit {
     width: 100%!important;
+  }
+
+  .home-icons-icon {
+    text-align: center!important;
   }
 }
 @media (max-width: 1199px) {
