@@ -11,7 +11,16 @@
       </form>
 
       @if (Auth::check())
-      <a href="{{ url('/notifications') }}" class="d-flex me-2 link-dark text-decoration-none fs-4 far fa-envelope"></a>
+      <a href="{{ url('/notifications') }}" id="header-notification-icon" class="d-flex me-2 link-dark text-decoration-none fs-4 far fa-envelope position-relative">
+        @php
+          $nots = Auth::user()->unread_notifications(); // TODO NOT WORKING
+        @endphp
+        @if ( $nots != 0 )
+        <span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger">
+          {{ $nots>99? '+99':$nots }}
+        </span>
+        @endif
+      </a>
             
       <div class="flex-shrink-0 dropdown">
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdown-user" data-bs-toggle="dropdown" aria-expanded="false">

@@ -6,6 +6,9 @@
   width: 32px;
   object-fit: cover;
 }
+#header-notification-icon span{
+  font-size: 0.75rem;
+}
 .navbar-nav {
   min-height: calc(100vh - 110px);
 }
