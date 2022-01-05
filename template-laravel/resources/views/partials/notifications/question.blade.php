@@ -1,1 +1,5 @@
-There is a new question with id {{ $notification->intervention()->first()->id }} and text {!! $notification->intervention()->first()->text !!}
+@php
+$question = $notification->intervention()->first()
+@endphp
+Há uma nova questão em {{ $question->uc->code }}, vai lá ver!
+<b>{!! $question->title !!}</b>

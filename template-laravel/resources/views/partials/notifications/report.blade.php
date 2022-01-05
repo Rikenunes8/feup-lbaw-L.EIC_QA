@@ -1,1 +1,1 @@
-This is a report
+A intervenção {{ $notification->intervention->id }} foi reportada.

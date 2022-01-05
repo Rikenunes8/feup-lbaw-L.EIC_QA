@@ -18,7 +18,7 @@ class NotificationController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $notifications = Auth::user()->notifications()->get();
+        $notifications = Auth::user()->notifications()->orderBy('date', 'DESC')->get();
 
         return view('pages.notifications', ['notifications' => $notifications]);
     }

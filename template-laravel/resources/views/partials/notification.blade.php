@@ -9,12 +9,34 @@
           @endif
         </div>
         <div class="col-11">
-          <a href="{{ url('/notifications/'.$notification->id) }}" class="app-link">
-            <h5 class="card-title me-4">New {{ $notification->type }}</h5>
+          @php 
+          if ($notification->type == 'question') {
+            $type = 'Nova Questão';
+            $link = url('/questions/'.$notification->intervention->id);
+          } else if ($notification->type == 'answer') {
+            $type = 'Nova Resposta';
+            $link = url('/questions/'.$notification->intervention->parent->id);
+          } else if ($notification->type == 'comment') {
+            $type = 'Novo Comentário';
+            $link = url('/questions/'.$notification->intervention->parent->parent->id);
+          } else if ($notification->type == 'validation') {
+            $type = 'Nova Validação';
+            $link = url('/questions/'.$notification->intervention->parent->id);
+          } else if ($notification->type == 'report') {
+            $type = 'Nova Denúncia';
+            $link = url('/home');
+          } else {
+            $type = 'Novo Estado de Conta';
+            $link = url('/users/'.Auth::user()->id);
+          }
+          @endphp
+          <a href="{{ $link }}" class="app-link">
+            <h5 class="card-title me-4"> {{ $type }}</h5>
+            <h6>{{ date('d/m/Y H:i', strtotime($notification->date)); }}</h6>
+          </a>
             <p class="card-text">
               @include('partials.notifications.'.$notification->type)
             </p>
-          </a>
         </div>
       </div>
 
