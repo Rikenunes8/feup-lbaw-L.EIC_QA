@@ -16,10 +16,15 @@ class UcController extends Controller
      *
      * @return Response
      */
-    public function list()
+    public function list(Request $request)
     {
-        $ucs = Uc::orderBy('name')->paginate(18);
-        return view('pages.ucs', ['ucs' => $ucs]);
+        $search = $request->search;
+        $query = Uc::orderBy('name');
+        if(!empty($search)) {
+            $query = Uc::where('name', 'ilike', '%'.$search.'%')->orderBy('name');
+        }
+        $ucs = $query->paginate(6);
+        return view('pages.ucs', ['ucs' => $ucs, 'search' => $search]);
     }
 
      /**
