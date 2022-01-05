@@ -89,13 +89,15 @@
       </div>  
     </div>
   </div>
+  @if ($intervention->isQuestion())
+  <hr>
+  @endif
 </section>
 
 @if (!$intervention->isComment())
   @each('partials.intervention', $intervention->childs, 'intervention')
 
   @if ($intervention->isAnswer())
-    
     <section id="comment-answer-form-{{ $intervention->id }}" class="comment-detail mt-2 comment-parent-{{ $intervention->id }} d-none">
       <div class="row">
         <div class="col-1"></div>

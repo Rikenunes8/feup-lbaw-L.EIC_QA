@@ -63,15 +63,14 @@ section#faq-page .accordion-button:not(.collapsed) {
   color: #e42e0d;
 }
 #question-page .question-detail > .row {
-  margin-right: 1rem;
-  width: 100%;
+  margin-right: 0;
 }
 #question-page .answer-detail > .row {
-  margin-right: 1rem;
+  margin-right: 0;
   width: 94%;
 }
 #question-page .comment-detail > .row {
-  margin-right: 1rem;
+  margin-right: 0;
   width: 88%;
 }
 #question-page .intervention-votes {
@@ -95,6 +94,17 @@ section#faq-page .accordion-button:not(.collapsed) {
 #question-page .card-body > p:first-of-type {
   margin-right: 8rem;
   margin-bottom: 1rem;
+}
+#question-page .comment-detail .card {
+  box-shadow: none;
+  border: 1px solid #efefef;
+}
+#question-page .comment-detail .card-body {
+  padding: .5rem;
+}
+#question-page .comment-detail .card-body p {
+  margin-bottom: .5rem;
+  font-size: smaller;
 }
 .uc-card-icon, .question-card-icon {
   position: absolute;
