@@ -80,20 +80,6 @@ class UserController extends Controller
         $associatedUcs = $queryUcs->paginate(6, ['*'], 'associatedUcsPage');
 
         return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs', 'searchQuestions', 'searchAnswers', 'searchValidatedAnswers', 'searchUcs', 'active'));
-
-        /*
-        $questions = $user->interventions()->questions()->orderBy('votes', 'DESC')->paginate(5, ['*'], 'questionsPage');
-        $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->paginate(5, ['*'], 'answersPage');
-        $validatedAnswers = $user->validates()->orderBy('votes', 'DESC')->paginate(5, ['*'], 'validatedAnswersPage');
-        $associatedUcs = [];
-        if ($user->isStudent()) {
-            $associatedUcs = $user->follows()->orderBy('name')->paginate(6, ['*'], 'associatedUcsPage');
-        } else if ($user->isTeacher()) {
-            $associatedUcs = $user->teaches()->orderBy('name')->paginate(6, ['*'], 'associatedUcsPage');
-        }
-
-        return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs'));
-        */
     }
 
     /**
