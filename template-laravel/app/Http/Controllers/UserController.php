@@ -164,7 +164,7 @@ class UserController extends Controller
         
         $url = $request->path();
         
-        if ($self) return redirect('/home');
+        if ($self) return redirect('/home'); // e logout??
         else if (substr_compare($url, "api", 0, 3) != 0) return redirect("/admin/users");
         else return $user;
     }

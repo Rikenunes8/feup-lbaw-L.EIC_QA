@@ -31,7 +31,7 @@ function addEventListeners() {
     blocker.addEventListener('click', sendBlockUserRequest);
   });
 
-  let interventionDeleters = document.querySelectorAll('.intervention-detail div.question-page-actions a.question-page-delete');
+  let interventionDeleters = document.querySelectorAll('.intervention-detail div.question-page-actions-modals a.question-page-delete');
   [].forEach.call(interventionDeleters, function(deleter) {
     deleter.addEventListener('click', sendDeleteInterventionRequest);
   });
@@ -89,11 +89,7 @@ function sendFollowUcRequest() {
 function sendDeleteUcRequest(event) {
   let id = this.closest('tr').getAttribute('data-id');
   
-  const flag = confirm('Tem a certeza que quer eliminar permanentemente esta Unidade Curricular?');
-  if (flag)
-    sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler)
-
-  event.preventDefault();
+  sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler)
 }
 
 function sendRemoveUcTeacherRequest() {
@@ -113,11 +109,7 @@ function sendAddUcTeacherRequest() {
 function sendDeleteUserRequest(event) {
   let id = this.closest('tr').getAttribute('data-id');
   
-  const flag = confirm('Tem a certeza que quer eliminar permanentemente este Utilizador?');
-  if (flag)
-    sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
-
-  event.preventDefault();
+  sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
 }
 
 function sendBlockUserRequest(event) {
@@ -126,9 +118,10 @@ function sendBlockUserRequest(event) {
   let reason = user.querySelector('input[name=reason]').value;
 
   if (reason != '') {
-    const flag = confirm('Tem a certeza que quer alterar o estado de bloqueio deste Utilizador?');
-    if (flag)
       sendAjaxRequest('post', '/api/users/' + id + '/block', {block_reason: reason}, userBlockedHandler);
+  } else {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Não é possível bloquear um utilizador sem uma razão."));
   }
 
   event.preventDefault();
@@ -137,11 +130,7 @@ function sendBlockUserRequest(event) {
 function sendDeleteInterventionRequest(event) {
   let id = this.closest('section').getAttribute('data-id');
 
-  const flag = confirm('Tem a certeza que quer eliminar permanentemente esta Intervenção?');
-  if (flag)
-    sendAjaxRequest('delete', '/api/interventions/' + id + '/delete', null, interventionDeletedHandler);
-
-  event.preventDefault();
+  sendAjaxRequest('delete', '/api/interventions/' + id + '/delete', null, interventionDeletedHandler);
 }
 
 function sendUpVoteInterventionRequest() {
@@ -252,7 +241,7 @@ function userBlockedHandler() {
   if (!user.blocked)
     input.value = '';
   
-  let element = document.querySelector('tr[data-id="' + user.id + '"] td.admin-table-user-actions a.admin-table-block');
+  let element = document.querySelector('tr[data-id="' + user.id + '"] td.admin-table-user-actions button.block-btn');
   let icon = element.querySelector('i');
   let span = element.querySelector('span');
 
@@ -278,11 +267,17 @@ function interventionDeletedHandler() {
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
   let element = document.querySelector('section.intervention-detail[data-id="' + intervention.id + '"]');
-  if (element.classList.contains('question-detail'))
+  if (element.classList.contains('question-detail')) {
     location.reload();
-  else
+  } else if (element.classList.contains('answer-detail')) {
     element.remove();
-
+    let answerComments = document.querySelectorAll('section.comment-parent-' + intervention.id);
+    [].forEach.call(answerComments, function(comment) {
+      comment.remove();
+    });
+  } else {
+    element.remove();
+  }
 }
 
 function interventionVotedHandler() {

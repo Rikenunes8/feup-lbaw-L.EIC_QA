@@ -5,6 +5,8 @@
 @section('content')
 
 <section id="admin-ucs-page">
+  <section class="error-msg"></section>
+
   <h2>Utilizadores</h2> 
 
   <div class="row mt-3 mb-4">
@@ -47,13 +49,36 @@
                 <td class="text-center admin-table-user-actions">
                   @if (!$user->isAdmin())
                     @if (is_null($user->block_reason))
-                      <a href="#" class="btn btn-info text-dark me-1 admin-table-block"><i class="fas fa-lock"></i><span class="d-none">Lock</span></a>
+                      <button type="button" class="btn btn-info text-dark me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
+                        <i class="fas fa-lock"></i><span class="d-none">Lock</span>
+                      </button>
                     @else 
-                      <a href="#" class="btn btn-dark text-white me-1 admin-table-block"><i class="fas fa-unlock"></i><span class="d-none">Unlock</span></a>
+                      <button type="button" class="btn btn-dark text-white me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
+                        <i class="fas fa-unlock"></i><span class="d-none">Unlock</span>
+                      </button>
                     @endif
+
+                    @include('partials.modal', ['id' => 'blockUser'.$user->id.'Modal', 
+                                                'title' => 'Bloqueio '.$user->name , 
+                                                'body' => 'Tem a certeza que quer alterar o estado de bloqueio deste Utilizador?',
+                                                'href' => '#',
+                                                'action' => 'admin-table-block',
+                                                'cancel' => 'Cancelar',
+                                                'confirm' => 'Sim'])
                   @endif
                   <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
-                  <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="far fa-trash-alt"></i></a>
+                  
+                  <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
+                    <i class="far fa-trash-alt"></i>
+                  </button>
+
+                  @include('partials.modal', ['id' => 'deleteUser'.$user->id.'Modal', 
+                                              'title' => 'Eliminar '.$user->name , 
+                                              'body' => 'Tem a certeza que quer eliminar permanentemente este Utilizador?',
+                                              'href' => '#',
+                                              'action' => 'admin-table-delete',
+                                              'cancel' => 'Cancelar',
+                                              'confirm' => 'Sim'])
                 </td>
               </tr><span class="d-none">Eliminar</span>
             @endforeach
