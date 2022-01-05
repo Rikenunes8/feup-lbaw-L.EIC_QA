@@ -13,6 +13,9 @@
 
 // ------------ LEIC Q&A ---------------
 
+
+
+
 // Home
 Route::get('/', function () { return view('pages.static.home'); });
 
@@ -28,11 +31,18 @@ Route::post('login'   , 'Auth\LoginController@login');
 Route::get('logout'   , 'Auth\LoginController@logout')->name('logout');
 Route::get('register' , 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
-// Route::get('forgot-password'       , 'X@showForgotPasswordForm')->name('password.request');
-// Route::post('forgot-password'      , 'X@forgotPassowrd')->name('password.email');
+//Route::get('forgot-password', 'Auth\ForgotPasswordController@showForgotPasswordForm')->name('password.request'); 
+//Route::post('forgot-password', 'Auth\ForgotPasswordController@ForgotPassword')->name('password.email');
 // Route::post('reset-password'       , 'X@resetPassowrd')->name('password.update');
 // Route::get('reset-password/{token}', 'X@showResetPasswordForm')->name('password.reset');
 
+// Route::prefix('google')->name('google.')->group( function(){
+//   Route::get('login', 'Auth\LoginController@loginWithGoogle')->name('login');
+//   Route::any('callback', 'Auth\LoginController@callbackFromGoogle')->name('callback');
+// });
+
+Route::get('login/google', 'Auth\LoginController@loginWithGoogle');
+Route::get('login/google/callback', 'Auth\LoginController@callbackFromGoogle');
 
 // API
 Route::delete('api/interventions/{id}/delete' , 'InterventionController@delete');
