@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Administração Docentes UC')
+@section('title', 'Administração Docentes '.$uc->code)
 
 @section('content')
 

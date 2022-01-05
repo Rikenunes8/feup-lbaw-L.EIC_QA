@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Questão')
+@section('title', 'Detalhe de Questão ['.$question->title.']')
 
 @section('content')
 

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Editar Questão')
+
 @section('content')
 <h2 class="text-center">Editar Questão</h2> 
 

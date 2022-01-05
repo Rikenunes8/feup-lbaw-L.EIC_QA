@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Página Inicial')
+@section('title', 'Página Contactos')
 
 @section('content')
 <section id="contact-page">

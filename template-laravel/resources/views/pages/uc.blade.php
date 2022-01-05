@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Unidades Curriculares')
+@section('title', 'Detalhe de Unidade Curricular ['.$uc->code.']')
 
 @section('content')
 

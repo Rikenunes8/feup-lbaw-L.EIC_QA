@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Página Inicial')
+@section('title', 'Página Sobre')
 
 @section('content')
 <section id="about-page">

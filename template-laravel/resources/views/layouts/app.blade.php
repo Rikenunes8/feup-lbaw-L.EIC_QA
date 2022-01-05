@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'LEIC Q&A') }}</title>
+    <title>{{ config('app.name', 'LEIC Q&A') }} - @yield('title')</title>
 
     <!-- Styles -->
     <!-- Bootstrap -->

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Perfil')
+@section('title', (Auth::check() && Auth::user()->id == $user->id)?'O meu Perfil':'Perfil do Utilizador '.$user->username )
 
 @section('content')
 

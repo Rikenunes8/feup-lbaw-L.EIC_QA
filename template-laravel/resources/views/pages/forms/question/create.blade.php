@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Nova Questão')
+
 @section('content')
 <h2 class="text-center">Criar Questão</h2> 
 

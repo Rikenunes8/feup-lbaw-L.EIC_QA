@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Registar Conta')
+
 @section('content')
 <h2 class="text-center">Registo</h2> 
 

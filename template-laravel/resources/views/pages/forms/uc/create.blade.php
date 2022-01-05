@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Nova Unidade Curricular')
+
 @section('content')
 <h2 class="text-center">Criar Nova UC</h2> 
 

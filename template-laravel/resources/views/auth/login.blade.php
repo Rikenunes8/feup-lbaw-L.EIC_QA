@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Iniciar Sessão')
+
 @section('content')
 <h2 class="text-center">Login</h2> 
 

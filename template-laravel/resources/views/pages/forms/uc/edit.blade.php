@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Editar Unidade Curricular')
+
 @section('content')
 <h2 class="text-center">Editar UC</h2> 
 

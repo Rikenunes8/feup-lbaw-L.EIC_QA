@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
+@section('title', (Auth::check() && Auth::user()->id == $user->id)?'Editar Perfil':'Editar Utilizador '.$user->username )
+
 @section('content')
-<h2 class="text-center">Editar Perfil</h2> 
+<h2 class="text-center">{{ (Auth::check() && Auth::user()->id == $user->id)?'Editar Perfil':'Editar Utilizador' }}</h2> 
 
 <form method="POST" action="{{ route('users.edit', $user->id) }}" id="form-user-edit" class="row" enctype="multipart/form-data">
     {{ csrf_field() }}
