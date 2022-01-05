@@ -1,0 +1,1 @@
+New account status: {{ $notification->status}}.

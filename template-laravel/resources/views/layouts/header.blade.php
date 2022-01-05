@@ -11,7 +11,7 @@
       </form>
 
       @if (Auth::check())
-      <a href="{{ url('/users/' . Auth::user()->id . '/notifications') }}" class="d-flex me-2 link-dark text-decoration-none fs-4 far fa-envelope"></a>
+      <a href="{{ url('/notifications') }}" class="d-flex me-2 link-dark text-decoration-none fs-4 far fa-envelope"></a>
             
       <div class="flex-shrink-0 dropdown">
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdown-user" data-bs-toggle="dropdown" aria-expanded="false">

@@ -25,7 +25,7 @@ class Notification extends Model
      * The intervention this notification is associated with.
      */
     public function intervention() {
-        return $this->hasOne('App\Models\Intervention', 'id_intervention');
+        return $this->belongsTo('App\Models\Intervention', 'id_intervention');
     }
 
     public function isQuestion() {

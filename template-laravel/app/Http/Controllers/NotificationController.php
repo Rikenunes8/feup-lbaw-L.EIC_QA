@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class NotificationController extends Controller
 {
@@ -16,7 +18,7 @@ class NotificationController extends Controller
     {
         if (!Auth::check()) return redirect('/login');
 
-        $notification = Auth::user()->notifications()->get();
+        $notifications = Auth::user()->notifications()->get();
 
         return view('pages.notifications', ['notifications' => $notifications]);
     }

@@ -1,0 +1,1 @@
+The intervention with id {{ $notification->intervention()->first()->id }} was {{ $notification->validation }}.

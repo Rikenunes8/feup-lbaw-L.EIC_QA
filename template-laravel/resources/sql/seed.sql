@@ -409,7 +409,7 @@ author BIGINT;
 notificationId BIGINT;
 BEGIN
     IF NEW.type = 'comment' THEN
-        INSERT INTO notification(type, id_intervention) VALUES ('comment', NEW.id) RETURNING id INTO notificationId;
+        INSERT INTO "notification"(type, id_intervention) VALUES ('comment', NEW.id) RETURNING id INTO notificationId;
         
         FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_intervention) LOOP
             INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
