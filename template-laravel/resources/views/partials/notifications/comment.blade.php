@@ -1,6 +1,6 @@
 @php
 $comment = $notification->intervention()->first();
-$question = $comment->parent->parent
+$question = $comment->parent->parent;
 $str = str_replace("<p>", "", $comment->text);
 $str = str_replace("</p>", " ", $str);
 $str = str_replace("&nbsp;", "", $str);
