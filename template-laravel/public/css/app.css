@@ -109,7 +109,8 @@ div.admin-action-add a {
   right: 0.75rem;
   top: 0;
 }
-td.admin-table-uc-actions, td.admin-table-user-actions {
+td.admin-table-uc-actions section.actions-buttons, 
+td.admin-table-user-actions section.actions-buttons {
   white-space: nowrap;
   vertical-align: middle;
 }

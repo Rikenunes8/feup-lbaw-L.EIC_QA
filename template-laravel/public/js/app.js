@@ -438,3 +438,12 @@ $('.dropdown.dropdown-keep-open').on('hide.bs.dropdown', function (e) {
   var target = $(e.clickEvent.target);
   return !(target.hasClass('dropdown-keep-open') || target.parents('.dropdown-keep-open').length);
 });
+
+$('#deleteUserModal a').on('click', function (event) {
+  var $action = $(event.target);
+  event.preventDefault();
+  $(this).closest('.modal').on('hidden.bs.modal', function(ev) {
+    var $href = $action.attr('href');
+    window.location.href = $href;
+  });
+})

@@ -10,18 +10,18 @@
       @if ( Auth::check() && (Auth::user()->id == $user->id || Auth::user()->isAdmin()) )
         <div class="float-end">
           <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-primary text-white">Editar<i class="far fa-edit ms-2"></i></a>
-          <!-- <a href="{{ url('users/'.$user->id.'/delete') }}" class="btn btn-danger text-white">Eliminar<i class="far fa-trash-alt ms-2"></i></a> -->
           <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUserModal">
             Eliminar<i class="far fa-trash-alt ms-2"></i>
           </button>
 
           @include('partials.modal', ['id' => 'deleteUserModal', 
-                                      'title' => 'Eliminar '.$user->name , 
+                                      'title' => (Auth::user()->id == $user->id)?'Eliminar a Minha Conta':'Eliminar '.$user->username , 
                                       'body' => 'Tem a certeza que quer eliminar permanentemente esta Conta?',
-                                      'href' => route('users.delete', $user->id),
+                                      'href' => url('users/'.$user->id.'/delete'),
                                       'action' => '',
                                       'cancel' => 'Cancelar',
                                       'confirm' => 'Sim'])
+
         </div>
       @endif
       <h2 class="me-4">{{ $user->name }}</h2> 

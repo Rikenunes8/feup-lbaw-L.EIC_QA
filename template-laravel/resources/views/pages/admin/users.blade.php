@@ -47,17 +47,26 @@
                   @endif
                 </td>
                 <td class="text-center admin-table-user-actions">
-                  @if (!$user->isAdmin())
-                    @if (is_null($user->block_reason))
-                      <button type="button" class="btn btn-info text-dark me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
-                        <i class="fas fa-lock"></i><span class="d-none">Lock</span>
-                      </button>
-                    @else 
-                      <button type="button" class="btn btn-dark text-white me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
-                        <i class="fas fa-unlock"></i><span class="d-none">Unlock</span>
-                      </button>
+                  <section class="actions-buttons">
+                    @if (!$user->isAdmin())
+                      @if (is_null($user->block_reason))
+                        <button type="button" class="btn btn-info text-dark me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
+                          <i class="fas fa-lock"></i><span class="d-none">Lock</span>
+                        </button>
+                      @else 
+                        <button type="button" class="btn btn-dark text-white me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
+                          <i class="fas fa-unlock"></i><span class="d-none">Unlock</span>
+                        </button>
+                      @endif
                     @endif
-
+                    <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
+                    
+                    <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
+                      <i class="far fa-trash-alt"></i>
+                    </button>
+                  </section>
+                  
+                  <section class="actions-modals">
                     @include('partials.modal', ['id' => 'blockUser'.$user->id.'Modal', 
                                                 'title' => 'Bloqueio '.$user->name , 
                                                 'body' => 'Tem a certeza que quer alterar o estado de bloqueio deste Utilizador?',
@@ -65,20 +74,15 @@
                                                 'action' => 'admin-table-block',
                                                 'cancel' => 'Cancelar',
                                                 'confirm' => 'Sim'])
-                  @endif
-                  <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
-                  
-                  <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
-                    <i class="far fa-trash-alt"></i>
-                  </button>
 
-                  @include('partials.modal', ['id' => 'deleteUser'.$user->id.'Modal', 
-                                              'title' => 'Eliminar '.$user->name , 
-                                              'body' => 'Tem a certeza que quer eliminar permanentemente este Utilizador?',
-                                              'href' => '#',
-                                              'action' => 'admin-table-delete',
-                                              'cancel' => 'Cancelar',
-                                              'confirm' => 'Sim'])
+                    @include('partials.modal', ['id' => 'deleteUser'.$user->id.'Modal', 
+                                                'title' => 'Eliminar '.$user->name , 
+                                                'body' => 'Tem a certeza que quer eliminar permanentemente este Utilizador?',
+                                                'href' => '#',
+                                                'action' => 'admin-table-delete',
+                                                'cancel' => 'Cancelar',
+                                                'confirm' => 'Sim'])
+                  </section>
                 </td>
               </tr><span class="d-none">Eliminar</span>
             @endforeach
