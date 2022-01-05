@@ -30,7 +30,7 @@
           $showFollow = true;
          
           $urlParts = explode('/', $_SERVER['REQUEST_URI']);
-          if ($urlParts[1] == 'users' && $urlParts[2] != Auth::user()->id)
+          if ($urlParts[1] == 'users' && strtok($urlParts[2], '?') != Auth::user()->id)
             $showFollow = false;
         @endphp 
         @if ($showFollow)
