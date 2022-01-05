@@ -41,16 +41,36 @@ class NotificationController extends Controller
      * 
      * @param  Request  $request
      * @param  int  $id
-     * @return Uc The uc deleted.
+     * @return Notification The notification deleted.
      */
     public function delete(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
-        $uc = Uc::find($id);
-        if (is_null($uc)) return App::abort(404);
-        $this->authorize('delete', $uc);
-        $uc->delete();
-        return $uc;
+        $notification = Notification::find($id);
+        if (is_null($notification)) return App::abort(404);
+        $this->authorize('delete', $notification);
+        $notification->delete();
+        return $notification;
+    }
+
+    /**
+     * Remove the association between user and notification.
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Notification The notification removed.
+     */
+    public function remove(Request $request, $id)
+    {
+        if (!Auth::check()) return redirect('/login');
+        
+        $notification = Auth::user()->notifications()->find($id);
+        if (is_null($notification)) return App::abort(404);
+        $this->authorize('remove', $notification);
+
+        Auth::user()->notifications()->detach($notification->id);
+    
+        return $notification;
     }
 
     /**
@@ -63,11 +83,17 @@ class NotificationController extends Controller
     public function read(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
-        $uc = Uc::find($id);
-        if (is_null($uc)) return App::abort(404);
-        $this->authorize('delete', $uc);
-        $uc->delete();
-        return $uc;
+        $userNotifications = Auth::user()->notifications(); 
+
+        $notification = $userNotifications->find($id);
+        if (is_null($notification)) return App::abort(404);
+        $this->authorize('read', $notification);
+
+        $userNotifications->updateExistingPivot($notification->id, ['read' => true]);
+        
+        $notification = Notification::find($id);
+
+        return $notification;
     }
 
 }

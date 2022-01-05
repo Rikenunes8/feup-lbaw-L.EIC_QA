@@ -10,28 +10,40 @@ class Notification extends Model
     public $timestamps  = false;
   
     /**
-     * The table associated with this model is 'uc'.
+     * The table associated with this model is 'notification'.
      */
     protected $table = 'notification';
-
+    
     /**
-     * The interventions that belong to this uc. Only questions.
+     * The users who have received this notification.
      */
-    public function interventions() {
-        return $this->hasMany('App\Models\Intervention', 'category');
+    public function users() {
+        return $this->belongsToMany('App\Models\User', 'receive_not', 'id_notification', 'id_user');
     }
 
     /**
-     * The users responsible for this uc. Only teachers.
+     * The intervention this notification is associated with.
      */
-    public function teachers() {
-        return $this->belongsToMany('App\Models\User', 'teacher_uc', 'id_uc', 'id_teacher');
+    public function intervention() {
+        return $this->hasOne('App\Models\Intervention', 'id_intervention');
     }
 
-    /**
-     * The users who follow this uc. Only students.
-     */
-    public function followers() {
-        return $this->belongsToMany('App\Models\User', 'follow_uc', 'id_uc', 'id_student');
+    public function isQuestion() {
+        return $this->type == 'question';
     }
+    public function isAnswer() {
+        return $this->type == 'answer';
+    }
+    public function isComment() {
+        return $this->type == 'comment';
+    }
+    public function isValidation() {
+        return $this->type == 'validation';
+    }
+    public function isReport() {
+        return $this->type == 'report';
+    }
+    public function isAccount_status() {
+        return $this->type == 'account_status';
+    } 
 }

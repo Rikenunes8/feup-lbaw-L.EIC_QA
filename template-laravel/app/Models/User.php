@@ -80,8 +80,13 @@ class User extends Authenticatable
                   ->withPivot('valid');
     }
 
-    // Notifications
-    
+    /**
+    * The notifications that belongs to this user.
+    */
+    public function notifications() {
+      return $this->belongsToMany('App\Models\Notification', 'receive_not', 'id_user', 'id_notification')
+                  ->withPivot('read');
+    }    
 
     /**
      * Filter query by Admin type.
