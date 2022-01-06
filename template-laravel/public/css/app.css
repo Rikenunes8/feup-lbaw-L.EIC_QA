@@ -28,6 +28,9 @@ section#faq-page .accordion-button:not(.collapsed) {
 .home-icons-icon i {
   font-size: 2rem;
 }
+.d-contents {
+  display:contents;
+}
 .about-icons-item {
   max-width: 20rem;
 }
@@ -68,15 +71,14 @@ section#faq-page .accordion-button:not(.collapsed) {
   color: #e42e0d;
 }
 #question-page .question-detail > .row {
-  margin-right: 1rem;
-  width: 100%;
+  margin-right: 0;
 }
 #question-page .answer-detail > .row {
-  margin-right: 1rem;
+  margin-right: 0;
   width: 94%;
 }
 #question-page .comment-detail > .row {
-  margin-right: 1rem;
+  margin-right: 0;
   width: 88%;
 }
 #question-page .intervention-votes {
@@ -104,6 +106,17 @@ section#faq-page .accordion-button:not(.collapsed) {
   margin-right: 8rem;
   margin-bottom: 1rem;
 }
+#question-page .comment-detail .card {
+  box-shadow: none;
+  border: 1px solid #efefef;
+}
+#question-page .comment-detail .card-body {
+  padding: .5rem;
+}
+#question-page .comment-detail .card-body p {
+  margin-bottom: .5rem;
+  font-size: smaller;
+}
 .uc-card-icon, .question-card-icon {
   position: absolute;
   top: 0;
@@ -123,7 +136,8 @@ div.admin-action-add a {
   right: 0.75rem;
   top: 0;
 }
-td.admin-table-uc-actions, td.admin-table-user-actions {
+td.admin-table-uc-actions section.actions-buttons, 
+td.admin-table-user-actions section.actions-buttons {
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -143,9 +157,31 @@ footer > p {
   font-size: small;
 }
 
+@media (max-width: 575px) {
+  #header-logo-column, #header-options-column,
+  #navbar-column, #content-column {
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+  #header-logo-column {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  #navbar-column {
+    border-bottom: 1px solid #e0e0e0;
+    border-right: 0px!important;
+  }
+  .navbar-nav {
+    min-height: auto;
+  }
+}
 @media (max-width: 767px) {
   #form-login, #form-uc-create, #form-uc-edit {
     width: 100%!important;
+  }
+
+  .home-icons-icon {
+    text-align: center!important;
   }
 }
 @media (max-width: 1199px) {

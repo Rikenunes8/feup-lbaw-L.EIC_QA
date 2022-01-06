@@ -1,11 +1,11 @@
 <header class="py-2 bg-light border-bottom sticky-top">
   <div id="header-container" class="container-fluid d-grid gap-0 align-items-center">
   
-    <a href="{{ url('/home') }}" class="d-block text-decoration-none">
+    <a href="{{ url('/home') }}" id="header-logo-column" class="d-block text-decoration-none">
       <img src="{{ asset('images/logo.png') }}" alt="Logo" id="logo-img" class="w-auto">
     </a>
     
-    <div class="d-flex align-items-center">
+    <div id="header-options-column" class="d-flex align-items-center">
       <form class="w-100 me-3" action="/search">
         <input type="search" id="search-input" class="form-control" placeholder="Pesquisa..." aria-label="Search" name="q">
       </form>
