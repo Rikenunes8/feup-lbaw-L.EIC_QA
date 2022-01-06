@@ -1,5 +1,7 @@
 <?php
 
+
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,13 +38,11 @@ Route::post('register', 'Auth\RegisterController@register');
 // Route::post('reset-password'       , 'X@resetPassowrd')->name('password.update');
 // Route::get('reset-password/{token}', 'X@showResetPasswordForm')->name('password.reset');
 
-// Route::prefix('google')->name('google.')->group( function(){
-//   Route::get('login', 'Auth\LoginController@loginWithGoogle')->name('login');
-//   Route::any('callback', 'Auth\LoginController@callbackFromGoogle')->name('callback');
-// });
+Route::get('/', function () {
+  return view('welcome');
+});
+Route::view('forgot_password', 'auth.reset_password')->name('password.reset');
 
-Route::get('login/google', 'Auth\LoginController@loginWithGoogle');
-Route::get('login/google/callback', 'Auth\LoginController@callbackFromGoogle');
 
 // API
 Route::delete('api/interventions/{id}/delete' , 'InterventionController@delete');

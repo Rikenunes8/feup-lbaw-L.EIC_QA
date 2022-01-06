@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -87,6 +89,7 @@ class User extends Authenticatable
       return $this->belongsToMany('App\Models\Notification', 'receive_not', 'id_user', 'id_notification')
                   ->withPivot('read');
     }    
+
 
     /**
      * Filter query by Admin type.

@@ -13,4 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', 'Auth\LoginController@getUser');
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+
+Route::middleware(['api'])->group(function ($router) {
+Route::post('password/email', [ForgotPasswordController::class, 'forgot']);
+Route::post('password/reset', [ForgotPasswordController::class, 'reset']);
+});
