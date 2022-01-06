@@ -5,6 +5,10 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Notifications\NotificationEmail;
+use App\Models\Notification;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 
 class Kernel extends ConsoleKernel
 {
@@ -27,10 +31,11 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->call(function() {
-            $notificationsToSend = DB::table('receive_not')->where('toEmail', true)->get();
-
+            $notificationsToSend = DB::table('receive_not')->where('to_email', true)->get();
+            
             foreach($notificationsToSend as $not_user) {
-                $not_user->update(['toEmail' => false]);
+                $not_user->update(['to_email' => false]);
+                $not_user->save();
                 if ($not_user->read) continue;
                 
                 $notification = Notification::find($not_user->id_notification);
@@ -40,6 +45,7 @@ class Kernel extends ConsoleKernel
             }
 
         })->everyMinute();
+
         //->everyFiveMinutes();
     }
 
