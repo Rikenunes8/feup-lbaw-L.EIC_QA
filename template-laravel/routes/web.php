@@ -79,12 +79,14 @@ Route::post('api/users/{user_id}/follow/{uc_id}', 'UserController@follow');
 
 
 // Notifications
-/*
 Route::get('notifications'               , 'NotificationController@list');
 Route::get('notifications/{id}'          , 'NotificationController@show');
+Route::post('notifications/{id}/read', 'NotificationController@read')->name('notifications.read');
+Route::post('api/notifications/{id}/read', 'NotificationController@apiRead');
+Route::post('api/notifications/{id}/remove', 'NotificationController@remove');
 Route::delete('api/notifications/{id}/delete', 'NotificationController@delete');
-Route::post('api/notifications/{id}/read', 'NotificationController@read');
-*/
+
+
 
 
 // UCs
