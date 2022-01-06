@@ -149,6 +149,12 @@ class InterventionController extends Controller
         $question->type = 'question';
         $question->save();
 
+        $uc = Uc::find($question->category);
+        $followers = $uc->followers();
+        $usersNotified = $uc->teachers()->union($followers);
+        // $notification = Notification:: TODO
+        event(new NotifyUsersEvent($usersNotified));
+
         return redirect('questions/'.$question->id);
     }
 
