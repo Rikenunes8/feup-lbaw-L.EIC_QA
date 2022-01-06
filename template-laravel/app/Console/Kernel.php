@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        /*$schedule->call(function() {
+        $schedule->call(function() {
             $notificationsToSend = DB::table('receive_not')->where('toEmail', true)->get();
 
             foreach($notificationsToSend as $not_user) {
@@ -39,7 +39,8 @@ class Kernel extends ConsoleKernel
                     $user->notify(new NotificationEmail($notification));
             }
 
-        })->everyFiveMinutes();*/
+        })->everyMinute();
+        //->everyFiveMinutes();
     }
 
     /**

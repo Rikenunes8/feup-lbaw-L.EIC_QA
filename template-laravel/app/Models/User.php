@@ -85,7 +85,7 @@ class User extends Authenticatable
     */
     public function notifications() {
       return $this->belongsToMany('App\Models\Notification', 'receive_not', 'id_user', 'id_notification')
-                  ->withPivot('read');
+                  ->withPivot('read')->withPivot('to_email');
     }    
 
     /**

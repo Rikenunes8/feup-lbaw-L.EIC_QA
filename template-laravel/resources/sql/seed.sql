@@ -114,7 +114,8 @@ CREATE TABLE "notification" (
 CREATE TABLE "receive_not" (
     id_notification INTEGER REFERENCES "notification" ON DELETE CASCADE ON UPDATE CASCADE,
     id_user         INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
-    read            BOOLEAN NOT NULL,
+    read            BOOLEAN NOT NULL DEFAULT FALSE,
+    to_email        BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (id_notification, id_user)
 );
 
@@ -361,11 +362,11 @@ BEGIN
         INSERT INTO "notification"(type, id_intervention) VALUES ('question', NEW.id) RETURNING id INTO notificationId;
         
         FOR userId IN (SELECT id_student FROM "follow_uc" WHERE id_uc=NEW.category) LOOP 
-            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, userId, FALSE);
+            INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, userId);
         END LOOP;
 
         FOR userId IN (SELECT id_teacher FROM "teacher_uc" WHERE id_uc=NEW.category) LOOP 
-            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, userId, FALSE);
+            INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, userId);
         END LOOP;
     END IF;
     RETURN NEW;
@@ -389,7 +390,7 @@ BEGIN
         INSERT INTO "notification"(type, id_intervention) VALUES ('answer', NEW.id) RETURNING id INTO notificationId;
         
         FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_intervention) LOOP
-            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
+            INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, author);
         END LOOP;
     END IF;
     RETURN NEW;
@@ -413,7 +414,7 @@ BEGIN
         INSERT INTO "notification"(type, id_intervention) VALUES ('comment', NEW.id) RETURNING id INTO notificationId;
         
         FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_intervention) LOOP
-            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
+            INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, author);
         END LOOP;
     END IF;
     RETURN NEW;
@@ -440,7 +441,7 @@ BEGIN
     END IF;
 
     FOR author IN (SELECT id_author FROM intervention WHERE id=NEW.id_answer) LOOP
-        INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
+        INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, author);
     END LOOP;
 
     RETURN NEW;
@@ -532,7 +533,7 @@ INSERT INTO "users" (email, username, password, type, name, about, registry_date
 
 -- Student
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, photo) VALUES (
-    'up201805455@fc.up.pt', 'up201805455', 
+    'up201805455@fc.up.pt.LEIC.QA', 'up201805455', 
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
     'Student', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01', '10_1641229580_vBEUWTuB0f.jpg'
 );
@@ -542,12 +543,12 @@ INSERT INTO "users" (email, username, password, type, name, birthdate, entry_yea
     'Student', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01', '11_1641229484_onzioN1AGD.png'
 );
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date) VALUES (
-    'up201905427@fe.up.pt', 'up201905427', 
+    'up201905427@fe.up.pt.LEIC.QA', 'up201905427', 
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
     'Student', 'Patrícia Oliveira', '2001-03-19 17:00:00', 2019, '2021-11-01'
 );
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date) VALUES (
-    'up201805327@fc.up.pt', 'up201805327', 
+    'up201805327@fc.up.pt.LEIC.QA', 'up201805327', 
     '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 
     'Student', 'Tiago Antunes', '2000-06-10 11:00:00', 2018, '2021-11-01'
 );
