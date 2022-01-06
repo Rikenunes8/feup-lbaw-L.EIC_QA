@@ -513,3 +513,8 @@ $('#deleteUserModal a').on('click', function (event) {
     window.location.href = $href;
   });
 })
+
+$("#user-profile-tabs.nav .nav-link").on("click", function() {
+  $("#user-profile-tabs.nav").find(".active").removeClass("active");
+  $(this).addClass("active");
+});
