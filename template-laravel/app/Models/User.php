@@ -18,8 +18,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-      'name', 'email', 'password', 'username', 'about', 'birthdate', 'photo', 
-      'score', 'blocked', 'type', 'entry_year',
+      'name', 'email', 'password', 'username', 'about', 'birthdate', 'photo',
+      'score', 'blocked', 'type', 'entry_year', 'google_id',
     ];
 
     /**
@@ -28,9 +28,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-      'password',
+      'password', 'reme,ber_token',
   ];
-    
+
     public function isAdmin() {
       return $this->type == 'Admin';
     }
@@ -86,7 +86,7 @@ class User extends Authenticatable
     public function notifications() {
       return $this->belongsToMany('App\Models\Notification', 'receive_not', 'id_user', 'id_notification')
                   ->withPivot('read');
-    }    
+    }
 
     /**
      * Filter query by Admin type.
@@ -94,15 +94,15 @@ class User extends Authenticatable
     public function scopeAdmins($query) {
         return $query->whereType('Admin');
     }
- 
+
     /**
      * Filter query by Teacher type.
      */
     public function scopeTeachers($query) {
         return $query->whereType('Teacher');
     }
-    
-    
+
+
     /**
      * Filter query by Student type.
      */

@@ -3,7 +3,7 @@
 @section('title', 'Iniciar Sessão')
 
 @section('content')
-<h2 class="text-center">Login</h2> 
+<h2 class="text-center">Login</h2>
 
 <form method="POST" action="{{ route('login') }}" id="form-login" class="row w-50 mx-auto">
     {{ csrf_field() }}
@@ -15,7 +15,7 @@
             @include('layouts.error', ['error' => $errors->first('email')])
         @endif
     </div>
-    
+
     <div class="mb-3 col-12">
         <label for="password" class="form-label required">Password</label>
         <input type="password" id="password" class="form-control" name="password" required>
@@ -36,11 +36,11 @@
     </div>
 
     <div class ="col-12" style="padding-top:5px;">
-        <a href="{{ url('login/google') }}" class="btn btn-google btn-user btn-block">     
+        <a href="{{ url('auth/google') }}" class="btn btn-google btn-user btn-block">
             <i class="fab fa-google fa-fw"></i> Iniciar Sessão com Google
         </a>
     </div>
-    
+
     <div class="col-12 d-flex justify-content-center mt-3">
         <a href="{{ url('/recover') }}" class="app-link">Recuperar Password?</a>
     </div>

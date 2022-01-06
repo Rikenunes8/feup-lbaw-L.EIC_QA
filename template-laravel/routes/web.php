@@ -31,18 +31,14 @@ Route::post('login'   , 'Auth\LoginController@login');
 Route::get('logout'   , 'Auth\LoginController@logout')->name('logout');
 Route::get('register' , 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
-//Route::get('forgot-password', 'Auth\ForgotPasswordController@showForgotPasswordForm')->name('password.request'); 
+//Route::get('forgot-password', 'Auth\ForgotPasswordController@showForgotPasswordForm')->name('password.request');
 //Route::post('forgot-password', 'Auth\ForgotPasswordController@ForgotPassword')->name('password.email');
 // Route::post('reset-password'       , 'X@resetPassowrd')->name('password.update');
 // Route::get('reset-password/{token}', 'X@showResetPasswordForm')->name('password.reset');
 
-// Route::prefix('google')->name('google.')->group( function(){
-//   Route::get('login', 'Auth\LoginController@loginWithGoogle')->name('login');
-//   Route::any('callback', 'Auth\LoginController@callbackFromGoogle')->name('callback');
-// });
-
-Route::get('login/google', 'Auth\LoginController@loginWithGoogle');
-Route::get('login/google/callback', 'Auth\LoginController@callbackFromGoogle');
+// Google Authentication
+Route::get('auth/google', 'Auth\GoogleController@redirectToGoogle');
+Route::get('auth/google/callback', 'Auth\GoogleController@handleGoogleCallback');
 
 // API
 Route::delete('api/interventions/{id}/delete' , 'InterventionController@delete');
@@ -73,9 +69,9 @@ Route::post('comments/{id}/edit'          , 'InterventionController@updateCommen
 
 
 // Users
-Route::get('user' , function () { 
+Route::get('user' , function () {
   if (!Auth::check()) return redirect('/login');
-  return redirect('/users'.'/'.Auth::user()->id); 
+  return redirect('/users'.'/'.Auth::user()->id);
 });
 Route::get('users'       , 'UserController@list');
 Route::get('users/{id}'  , 'UserController@show');
@@ -117,9 +113,9 @@ Route::get('search', 'InterventionController@searchList');
 
 
 // Admin
-Route::get('admin'                      , function () { 
-  if (!Auth::check()) return redirect('/login'); 
-  return redirect('/users'.'/'.Auth::user()->id); 
+Route::get('admin'                      , function () {
+  if (!Auth::check()) return redirect('/login');
+  return redirect('/users'.'/'.Auth::user()->id);
 });
 Route::get('admin/ucs/{id}'             , function ($id) { return redirect('/ucs'.'/'.$id); });
 
