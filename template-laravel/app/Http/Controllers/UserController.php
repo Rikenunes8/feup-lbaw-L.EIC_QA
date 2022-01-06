@@ -37,6 +37,8 @@ class UserController extends Controller
         $user = User::find($id);
         if (is_null($user)) return App::abort(404);
 
+        $active = 'questions';
+
         $searchQuestions = $request->searchQuestions;
         $queryQuestions = $user->interventions()->questions()->orderBy('votes', 'DESC');
         if(!empty($searchQuestions)) {
@@ -48,6 +50,7 @@ class UserController extends Controller
         $queryAnswers = $user->interventions()->answers()->orderBy('votes', 'DESC');
         if(!empty($searchAnswers)) {
             $queryAnswers = $user->interventions()->answers()->where('text', 'ilike', '%'.$searchAnswers.'%')->orderBy('votes', 'DESC');
+            $active = 'answers';
         }
         $answers = $queryAnswers->paginate(5, ['*'], 'answersPage');
 
@@ -55,6 +58,7 @@ class UserController extends Controller
         $queryValidatedAnswers = $user->validates()->orderBy('votes', 'DESC');
         if(!empty($searchValidatedAnswers)) {
             $queryValidatedAnswers = $user->validates()->where('text', 'ilike', '%'.$searchValidatedAnswers.'%')->orderBy('votes', 'DESC');
+            $active = 'validated-answers';
         }
         $validatedAnswers = $queryValidatedAnswers->paginate(5, ['*'], 'validatedAnswersPage');
 
@@ -71,24 +75,11 @@ class UserController extends Controller
             } else if ($user->isTeacher()) {
                 $queryUcs = $user->teaches()->where('name', 'ilike', '%'.$searchUcs.'%')->orderBy('name');
             }
+            $active = 'ucs';
         }
         $associatedUcs = $queryUcs->paginate(6, ['*'], 'associatedUcsPage');
 
-        return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs', 'searchQuestions', 'searchAnswers', 'searchValidatedAnswers', 'searchUcs'));
-
-        /*
-        $questions = $user->interventions()->questions()->orderBy('votes', 'DESC')->paginate(5, ['*'], 'questionsPage');
-        $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->paginate(5, ['*'], 'answersPage');
-        $validatedAnswers = $user->validates()->orderBy('votes', 'DESC')->paginate(5, ['*'], 'validatedAnswersPage');
-        $associatedUcs = [];
-        if ($user->isStudent()) {
-            $associatedUcs = $user->follows()->orderBy('name')->paginate(6, ['*'], 'associatedUcsPage');
-        } else if ($user->isTeacher()) {
-            $associatedUcs = $user->teaches()->orderBy('name')->paginate(6, ['*'], 'associatedUcsPage');
-        }
-
-        return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs'));
-        */
+        return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs', 'searchQuestions', 'searchAnswers', 'searchValidatedAnswers', 'searchUcs', 'active'));
     }
 
     /**

@@ -80,25 +80,25 @@
 
       @if (!$user->isAdmin())
       <div id="user-profile-sections">
-        <ul class="nav nav-tabs border-bottom" role="tablist">
+        <ul id="user-profile-tabs" class="nav nav-tabs border-bottom" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#section-questions" role="tab" aria-current="page">Questões</a>
+            <a class="nav-link {{ ($active == 'questions')?'active':'' }}" data-toggle="tab" href="#section-questions" role="tab" aria-current="page">Questões</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#section-answers"  role="tab">Respostas</a>
+            <a class="nav-link {{ ($active == 'answers')?'active':'' }}" data-toggle="tab" href="#section-answers"  role="tab">Respostas</a>
           </li>
           @if ($user->isTeacher()) 
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#section-validated-answers"  role="tab">Validações</a>
+            <a class="nav-link {{ ($active == 'validated-answers')?'active':'' }}" data-toggle="tab" href="#section-validated-answers"  role="tab">Validações</a>
           </li>
           @endif
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#section-associated-ucs"  role="tab">Ucs</a>
+            <a class="nav-link {{ ($active == 'ucs')?'active':'' }}" data-toggle="tab" href="#section-associated-ucs"  role="tab">Ucs</a>
           </li>
         </ul>
 	
         <div class="tab-content">
-          <div class="tab-pane active" id="section-questions" role="tabpanel">
+          <div class="tab-pane {{ ($active == 'questions')?'active':'' }}" id="section-questions" role="tabpanel">
             <section class="mt-4">
               @if ( Auth::check() && Auth::user()->id == $user->id )
                 <div>
@@ -127,8 +127,7 @@
               <div class="row">
                 <div class="col-12 d-flex justify-content-end">
                   {{ $questions->appends(['answersPage' => $answers->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage(),
-                                          'searchQuestions' => isset($searchQuestions) ? $searchQuestions : '', 'searchAnswers' => isset($searchAnswers) ? $searchAnswers : '', 
-                                          'searchValidatedAnswers' => isset($searchValidatedAnswers) ? $searchValidatedAnswers : '', 'searchUcs' => isset($searchUcs) ? $searchUcs : ''])->links() }}
+                                          'searchQuestions' => isset($searchQuestions) ? $searchQuestions : ''])->links() }}
                 </div>
               </div>
               @else 
@@ -137,7 +136,7 @@
             </section>
           </div>
 
-          <div class="tab-pane" id="section-answers" role="tabpanel">
+          <div class="tab-pane {{ ($active == 'answers')?'active':'' }}" id="section-answers" role="tabpanel">
             <section class="mt-4">
               <div class="float-end">
                 <form method="GET" action="{{ url('/users/'.$user->id) }}">
@@ -158,8 +157,7 @@
               <div class="row">
                 <div class="col-12 d-flex justify-content-end">
                   {{ $answers->appends(['questionsPage' => $questions->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage(),
-                                          'searchQuestions' => isset($searchQuestions) ? $searchQuestions : '', 'searchAnswers' => isset($searchAnswers) ? $searchAnswers : '', 
-                                          'searchValidatedAnswers' => isset($searchValidatedAnswers) ? $searchValidatedAnswers : '', 'searchUcs' => isset($searchUcs) ? $searchUcs : ''])->links() }}
+                                          'searchAnswers' => isset($searchAnswers) ? $searchAnswers : ''])->links() }}
                 </div>
               </div>
               @else 
@@ -169,7 +167,7 @@
           </div>
 
           @if ($user->isTeacher()) 
-          <div class="tab-pane" id="section-validated-answers" role="tabpanel">
+          <div class="tab-pane {{ ($active == 'validated-answers')?'active':'' }}" id="section-validated-answers" role="tabpanel">
             <section class="mt-4">
               <div class="float-end">
                 <form method="GET" action="{{ url('/users/'.$user->id) }}">
@@ -190,8 +188,7 @@
               <div class="row">
                 <div class="col-12 d-flex justify-content-end">
                   {{ $validatedAnswers->appends(['questionsPage' => $questions->currentPage(), 'answersPage' => $answers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage(),
-                                          'searchQuestions' => isset($searchQuestions) ? $searchQuestions : '', 'searchAnswers' => isset($searchAnswers) ? $searchAnswers : '', 
-                                          'searchValidatedAnswers' => isset($searchValidatedAnswers) ? $searchValidatedAnswers : '', 'searchUcs' => isset($searchUcs) ? $searchUcs : ''])->links() }}
+                                          'searchValidatedAnswers' => isset($searchValidatedAnswers) ? $searchValidatedAnswers : ''])->links() }}
                 </div>
               </div>
               @else 
@@ -201,7 +198,7 @@
           </div>
           @endif
 
-          <div class="tab-pane" id="section-associated-ucs" role="tabpanel">
+          <div class="tab-pane {{ ($active == 'ucs')?'active':'' }}" id="section-associated-ucs" role="tabpanel">
             <section class="mt-4">
               <div class="float-end">
                 <form method="GET" action="{{ url('/users/'.$user->id) }}">
@@ -222,8 +219,7 @@
               <div class="row">
                 <div class="col-12 d-flex justify-content-end">
                   {{ $associatedUcs->appends(['questionsPage' => $questions->currentPage(), 'answersPage' => $answers->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(),
-                                          'searchQuestions' => isset($searchQuestions) ? $searchQuestions : '', 'searchAnswers' => isset($searchAnswers) ? $searchAnswers : '', 
-                                          'searchValidatedAnswers' => isset($searchValidatedAnswers) ? $searchValidatedAnswers : '', 'searchUcs' => isset($searchUcs) ? $searchUcs : ''])->links() }}
+                                          'searchUcs' => isset($searchUcs) ? $searchUcs : ''])->links() }}
                 </div>
               </div>
               @else 
