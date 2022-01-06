@@ -53,7 +53,7 @@ class UserPolicy
      */
     public function block(User $user, User $user2)
     {
-        return $user->isAdmin() && !$user2->isAdmin() && !$user->blocked;
+        return $user->isAdmin() && !$user2->isAdmin() && !$user->blocked && ($user2->active == 1);
     }
 
     /**
