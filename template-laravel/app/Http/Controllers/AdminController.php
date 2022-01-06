@@ -68,5 +68,19 @@ class AdminController extends Controller
         // Notifications of type report
         return; //view('pages.admin.reports', ['reports' => $reports]);
     }
+
+    /**
+     * Shows all account activation requests in admin format.
+     *
+     * @return Response
+     */
+    public function listRequests()
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $this->authorize('showToAdmin', User::class);
+        $users = User::where('active', '!=', '1')->orderBy('name')->get();
+        return view('pages.admin.requests', ['users' => $users]);
+    }
     
 }

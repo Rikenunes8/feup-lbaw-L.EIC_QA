@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Administração Utilizadores')
+@section('title', 'Administração Pedidos de Ativação de Contas')
 
 @section('content')
 
-<section id="admin-users-page">
+<section id="admin-requests-page">
   <section class="error-msg"></section>
 
-  <h2>Utilizadores</h2> 
+  <h2>Pedidos de Ativação de Contas</h2> 
 
   <div class="row mt-3 mb-4">
     <div class="col-12">
-      <small class="text-mutted">Gestão de Utilizadores</small>
+      <small class="text-mutted">Gestão de pedidos para ativação de contas</small>
     </div>
   </div>
 
@@ -24,7 +24,7 @@
               <th scope="col">Tipo</th>
               <th scope="col">Nome</th>
               <th scope="col">Email</th>
-              <th scope="col">Razão Bloqueio</th>
+              <th scope="col">Username</th>
               <th scope="col">Ações</th>
             </tr>
           </thead>
@@ -39,45 +39,31 @@
                   @endphp
                   <span class="badge {{ $bg }} text-dark">{{ $user->type }}</span>
                 </td>
-                <th scope="row"><a href="{{ url('/users/'.$user->id) }}" class="app-link">{{ $user->name }}</a></th>
+                <th scope="row">{{ $user->name }}</th>
                 <td>{{ $user->email }}</td>
-                <td>
-                  @if (!$user->isAdmin())
-                  <input type="text" name="reason" value="{{ $user->block_reason }}" {{ is_null($user->block_reason)?'':'disabled' }}>
-                  @endif
-                </td>
+                <td>{{ $user->username }}</td>
                 <td class="text-center admin-table-user-actions">
                   <section class="actions-buttons">
-                    @if (!$user->isAdmin())
-                      @if (is_null($user->block_reason))
-                        <button type="button" class="btn btn-info text-dark me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
-                          <i class="fas fa-lock"></i><span class="d-none">Lock</span>
-                        </button>
-                      @else 
-                        <button type="button" class="btn btn-dark text-white me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
-                          <i class="fas fa-unlock"></i><span class="d-none">Unlock</span>
-                        </button>
-                      @endif
-                    @endif
-                    <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
-                    
+                    <button type="button" class="btn btn-success text-white me-1 block-btn" data-bs-toggle="modal" data-bs-target="#activeUser{{ $user->id }}Modal">
+                      <i class="far fa-thumbs-up"></i>
+                    </button>
                     <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
-                      <i class="far fa-trash-alt"></i><span class="d-none">Eliminar</span>
+                      <i class="far fa-thumbs-down"></i>
                     </button>
                   </section>
                   
                   <section class="actions-modals">
-                    @include('partials.modal', ['id' => 'blockUser'.$user->id.'Modal', 
-                                                'title' => 'Bloqueio '.$user->name , 
-                                                'body' => 'Tem a certeza que quer alterar o estado de bloqueio deste Utilizador?',
+                    @include('partials.modal', ['id' => 'activeUser'.$user->id.'Modal', 
+                                                'title' => 'Activar '.$user->email , 
+                                                'body' => 'Tem a certeza que quer aceitar o pedido para ativação da conta deste Utilizador?',
                                                 'href' => '#',
-                                                'action' => 'admin-table-block',
+                                                'action' => 'admin-table-active',
                                                 'cancel' => 'Cancelar',
                                                 'confirm' => 'Sim'])
 
                     @include('partials.modal', ['id' => 'deleteUser'.$user->id.'Modal', 
-                                                'title' => 'Eliminar '.$user->name , 
-                                                'body' => 'Tem a certeza que quer eliminar permanentemente este Utilizador?',
+                                                'title' => 'Eliminar '.$user->email , 
+                                                'body' => 'Tem a certeza que quer recusar permanentemente o pedido para ativação da conta deste Utilizador?',
                                                 'href' => '#',
                                                 'action' => 'admin-table-delete',
                                                 'cancel' => 'Cancelar',

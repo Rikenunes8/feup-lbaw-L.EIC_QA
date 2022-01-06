@@ -117,4 +117,5 @@ Route::get('admin/users'                , 'AdminController@listUsers');
 Route::get('admin/ucs'                  , 'AdminController@listUcs');
 Route::get('admin/ucs/{id}/teachers'    , 'AdminController@listTeachers');
 Route::get('admin/reports'              , 'AdminController@listReports');
+Route::get('admin/requests'             , 'AdminController@listRequests');
 
