@@ -43,9 +43,24 @@
                 @endif
               </td>
               <td class="text-center admin-table-uc-actions">
-                <a href="{{ url('admin/ucs/'.$uc->id.'/teachers') }}" class="btn btn-info text-black me-1"><i class="far fa-address-card"></i></a>
-                <a href="{{ url('ucs/'.$uc->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
-                <a href="#" class="btn btn-danger text-white admin-table-delete"><i class="far fa-trash-alt"></i></a>
+                <section class="actions-buttons">
+                  <a href="{{ url('admin/ucs/'.$uc->id.'/teachers') }}" class="btn btn-info text-black me-1"><i class="far fa-address-card"></i></a>
+                  <a href="{{ url('ucs/'.$uc->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
+                  
+                  <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUc{{ $uc->id }}Modal">
+                    <i class="far fa-trash-alt"></i>
+                  </button>
+                </section>
+                  
+                <section class="actions-modals">
+                  @include('partials.modal', ['id' => 'deleteUc'.$uc->id.'Modal', 
+                                              'title' => 'Eliminar '.$uc->name , 
+                                              'body' => 'Tem a certeza que quer eliminar permanentemente esta Unidade Curricular?',
+                                              'href' => '#',
+                                              'action' => 'admin-table-delete',
+                                              'cancel' => 'Cancelar',
+                                              'confirm' => 'Sim'])
+                </section>
               </td>
             </tr>
             @endforeach

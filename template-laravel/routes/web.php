@@ -81,7 +81,7 @@ Route::get('users'       , 'UserController@list');
 Route::get('users/{id}'  , 'UserController@show');
 Route::get('users/{id}/edit'  , 'UserController@showEditForm');
 Route::post('users/{id}/edit' , 'UserController@update')->name('users.edit');
-Route::get('users/{id}/delete', 'UserController@delete')->name('users.delete');
+Route::get('users/{id}/delete', 'UserController@delete');
 
 Route::post('api/users/{id}/block'    , 'UserController@block');
 Route::delete('api/users/{id}/delete' , 'UserController@delete');
@@ -89,12 +89,14 @@ Route::post('api/users/{user_id}/follow/{uc_id}', 'UserController@follow');
 
 
 // Notifications
-/*
 Route::get('notifications'               , 'NotificationController@list');
 Route::get('notifications/{id}'          , 'NotificationController@show');
+Route::post('notifications/{id}/read', 'NotificationController@read')->name('notifications.read');
+Route::post('api/notifications/{id}/read', 'NotificationController@apiRead');
+Route::post('api/notifications/{id}/remove', 'NotificationController@remove');
 Route::delete('api/notifications/{id}/delete', 'NotificationController@delete');
-Route::post('api/notifications/{id}/read', 'NotificationController@read');
-*/
+
+
 
 
 // UCs

@@ -1,4 +1,4 @@
-<section class="intervention-detail {{ $intervention->type }}-detail {{ $intervention->isComment()?'mt-2':'mt-3' }} {{ $intervention->isQuestion()?'':'d-flex flex-row-reverse' }}" data-id="{{ $intervention->id }}">
+<section class="intervention-detail {{ $intervention->type }}-detail {{ $intervention->isComment()?'mt-2 comment-parent-'.$intervention->parent->id:'mt-3' }} {{ $intervention->isQuestion()?'':'d-flex flex-row-reverse' }}" data-id="{{ $intervention->id }}">
   <div class="row">
     <div class="col-1 intervention-votes">
       @if (!$intervention->isComment())
@@ -53,11 +53,11 @@
               @endif
             </div>
           @endif
-
+           
           <div class="text-center question-page-actions p-3">
             @if ( !Auth::user()->isAdmin() && !$intervention->isComment())
               @if ($intervention->isQuestion())
-                <a href="#answer-form" class="btn btn-primary text-white me-1"><i class="fas fa-reply"></i></a>
+                <a href="#answer-form" class="btn btn-primary text-white me-1" onclick="focusAnswerInput()"><i class="fas fa-reply"></i></a>
               @else
                 <a href="#comment-answer-form-{{ $intervention->id }}" class="btn btn-primary text-white me-1" data-value="{{ $intervention->id }}" onclick="showCommentCreateForm(this)"><i class="fas fa-reply"></i></a>
               @endif
@@ -66,22 +66,39 @@
             <a href="{{ url($intervention->type.'s/'.$intervention->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
             @endif
             <a href="#" class="btn btn-dark text-white question-page-report me-1"><i class="fas fa-exclamation-triangle"></i></a>
-            @if ( Auth::user()->id == $intervention->id_author || Auth::user()->isAdmin() )
-            <a href="#" class="btn btn-danger text-white question-page-delete me-1"><i class="far fa-trash-alt"></i></a>
+            @if ( Auth::user()->id == $intervention->id_author || Auth::user()->isAdmin() ) 
+            <button type="button" class="btn btn-danger text-white me-1" data-bs-toggle="modal" data-bs-target="#deleteIntervention{{ $intervention->id }}Modal">
+              <i class="far fa-trash-alt"></i>
+            </button>
             @endif
           </div>
+
+          @if ( Auth::user()->id == $intervention->id_author || Auth::user()->isAdmin() ) 
+            <div class="question-page-actions-modals">
+              @include('partials.modal', ['id' => 'deleteIntervention'.$intervention->id.'Modal', 
+                                          'title' => 'Eliminar '.$intervention->title , 
+                                          'body' => 'Tem a certeza que quer eliminar permanentemente esta Intervenção?',
+                                          'href' => '#',
+                                          'action' => 'question-page-delete',
+                                          'cancel' => 'Cancelar',
+                                          'confirm' => 'Sim'])
+            </div> 
+          @endif
+
         @endif
       </div>  
     </div>
   </div>
+  @if ($intervention->isQuestion())
+  <hr>
+  @endif
 </section>
 
 @if (!$intervention->isComment())
   @each('partials.intervention', $intervention->childs, 'intervention')
 
   @if ($intervention->isAnswer())
-    
-    <section id="comment-answer-form-{{ $intervention->id }}" class="comment-detail mt-2 d-none">
+    <section id="comment-answer-form-{{ $intervention->id }}" class="comment-detail mt-2 comment-parent-{{ $intervention->id }} d-none">
       <div class="row">
         <div class="col-1"></div>
         <div class="col-11">

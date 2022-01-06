@@ -10,7 +10,18 @@
       @if ( Auth::check() && (Auth::user()->id == $user->id || Auth::user()->isAdmin()) )
         <div class="float-end">
           <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-primary text-white">Editar<i class="far fa-edit ms-2"></i></a>
-          <a href="{{ url('users/'.$user->id.'/delete') }}" class="btn btn-danger text-white">Eliminar<i class="far fa-trash-alt ms-2"></i></a>
+          <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUserModal">
+            Eliminar<i class="far fa-trash-alt ms-2"></i>
+          </button>
+
+          @include('partials.modal', ['id' => 'deleteUserModal', 
+                                      'title' => (Auth::user()->id == $user->id)?'Eliminar a Minha Conta':'Eliminar '.$user->username , 
+                                      'body' => 'Tem a certeza que quer eliminar permanentemente esta Conta?',
+                                      'href' => url('users/'.$user->id.'/delete'),
+                                      'action' => '',
+                                      'cancel' => 'Cancelar',
+                                      'confirm' => 'Sim'])
+
         </div>
       @endif
       <h2 class="me-4">{{ $user->name }}</h2> 
@@ -65,107 +76,159 @@
         </div>
       </section>
 
+      <hr>
+
       @if (!$user->isAdmin())
-      <hr>
-      <section class="mt-4">
-        @if ( Auth::check() && Auth::user()->id == $user->id )
-          <div>
-            <div class="float-end">
-              <a href="{{ url('questions/create') }}" class="btn btn-primary text-white">Nova Questão <i class="fas fa-plus ms-2"></i></a>
-            </div>
-            <h5 class="me-4">As minhas Questões</h5>
+      <div id="user-profile-sections">
+        <ul id="user-profile-tabs" class="nav nav-tabs border-bottom" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link {{ ($active == 'questions')?'active':'' }}" data-toggle="tab" href="#section-questions" role="tab" aria-current="page">Questões</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{ ($active == 'answers')?'active':'' }}" data-toggle="tab" href="#section-answers"  role="tab">Respostas</a>
+          </li>
+          @if ($user->isTeacher()) 
+          <li class="nav-item">
+            <a class="nav-link {{ ($active == 'validated-answers')?'active':'' }}" data-toggle="tab" href="#section-validated-answers"  role="tab">Validações</a>
+          </li>
+          @endif
+          <li class="nav-item">
+            <a class="nav-link {{ ($active == 'ucs')?'active':'' }}" data-toggle="tab" href="#section-associated-ucs"  role="tab">Ucs</a>
+          </li>
+        </ul>
+	
+        <div class="tab-content">
+          <div class="tab-pane {{ ($active == 'questions')?'active':'' }}" id="section-questions" role="tabpanel">
+            <section class="mt-4">
+              @if ( Auth::check() && Auth::user()->id == $user->id )
+                <div>
+                  <div class="float-end d-inline-flex">
+                    <form method="GET" action="{{ url('/users/'.$user->id) }}">
+                      <input type="search" id="search-user-questions-input" class="form-control" placeholder="Questão..." aria-label="Search Question" name="searchQuestions">
+                    </form>
+                    <a href="{{ url('questions/create') }}" class="btn btn-primary text-white ms-2">Nova Questão <i class="fas fa-plus ms-2"></i></a>
+                  </div>
+                  <h5 class="me-4">As minhas Questões</h5>
+                </div>
+              @else
+                <div class="float-end">
+                  <form method="GET" action="{{ url('/users/'.$user->id) }}">
+                    <input type="search" id="search-user-questions-input" class="form-control" placeholder="Questão..." aria-label="Search Question" name="searchQuestions">
+                  </form>
+                </div>
+                <h5 class="me-4">Questões</h5> 
+              @endif
+              
+              @if ( count($questions) != 0 )
+              <div class="row mt-4">
+                @each('partials.question', $questions, 'question') 
+              </div>
+              
+              <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                  {{ $questions->appends(['answersPage' => $answers->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage(),
+                                          'searchQuestions' => isset($searchQuestions) ? $searchQuestions : ''])->links() }}
+                </div>
+              </div>
+              @else 
+              <p>Nenhuma Questão</p>
+              @endif
+            </section>
           </div>
-        @else
-          <h5>Questões</h5> 
-        @endif
-        
-        @if ( count($questions) != 0 )
-        <div class="row mt-4  clear">
-          @each('partials.question', $questions, 'question') 
-        </div>
-        
-        <div class="row">
-          <div class="col-12 d-flex justify-content-end">
-            {!! $questions->appends(['answersPage' => $answers->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage()])->links() !!}
+
+          <div class="tab-pane {{ ($active == 'answers')?'active':'' }}" id="section-answers" role="tabpanel">
+            <section class="mt-4">
+              <div class="float-end">
+                <form method="GET" action="{{ url('/users/'.$user->id) }}">
+                  <input type="search" id="search-user-answers-input" class="form-control" placeholder="Resposta..." aria-label="Search Answer" name="searchAnswers">
+                </form>
+              </div>
+              @if ( Auth::check() && Auth::user()->id == $user->id )
+                <h5 class="me-4">As minhas Respostas</h5>
+              @else
+                <h5 class="me-4">Respostas</h5> 
+              @endif
+
+              @if ( count($answers) != 0 )
+              <div class="row mt-4">
+                @each('partials.answer', $answers, 'answer') 
+              </div>
+
+              <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                  {{ $answers->appends(['questionsPage' => $questions->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage(),
+                                          'searchAnswers' => isset($searchAnswers) ? $searchAnswers : ''])->links() }}
+                </div>
+              </div>
+              @else 
+              <p>Nenhuma Resposta</p>
+              @endif
+            </section>
           </div>
-        </div>
-        @else 
-        <p>Ainda não realizou Questões</p>
-        @endif
-      </section>
 
-      <hr>
-      <section class="mt-4">
-        @if ( Auth::check() && Auth::user()->id == $user->id )
-          <h5>As minhas Respostas</h5>
-        @else
-          <h5>Respostas</h5> 
-        @endif
+          @if ($user->isTeacher()) 
+          <div class="tab-pane {{ ($active == 'validated-answers')?'active':'' }}" id="section-validated-answers" role="tabpanel">
+            <section class="mt-4">
+              <div class="float-end">
+                <form method="GET" action="{{ url('/users/'.$user->id) }}">
+                  <input type="search" id="search-user-validated-answers-input" class="form-control" placeholder="Resposta..." aria-label="Search Validated Answer" name="searchValidatedAnswers">
+                </form>
+              </div>
+              @if ( Auth::check() && Auth::user()->id == $user->id )
+                <h5 class="me-4">As minhas Respostas Validadas</h5>
+              @else
+                <h5 class="me-4">Respostas Validadas</h5> 
+              @endif
 
-        @if ( count($questions) != 0 )
-        <div class="row mt-2">
-          @each('partials.answer', $answers, 'answer') 
-        </div>
+              @if ( count($validatedAnswers) != 0 )
+              <div class="row mt-4">
+                @each('partials.answer', $validatedAnswers, 'answer') 
+              </div>
 
-        <div class="row">
-          <div class="col-12 d-flex justify-content-end">
-            {!! $answers->appends(['questionsPage' => $questions->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage()])->links() !!}
+              <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                  {{ $validatedAnswers->appends(['questionsPage' => $questions->currentPage(), 'answersPage' => $answers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage(),
+                                          'searchValidatedAnswers' => isset($searchValidatedAnswers) ? $searchValidatedAnswers : ''])->links() }}
+                </div>
+              </div>
+              @else 
+              <p>Nenhuma Resposta Validada</p>
+              @endif
+            </section>
           </div>
-        </div>
-        @else 
-        <p>Ainda não realizou Respostas</p>
-        @endif
-      </section>
-
-
-      @if ($user->isTeacher()) 
-        <hr>
-        <section class="mt-4">
-          @if ( Auth::check() && Auth::user()->id == $user->id )
-            <h5>As minhas Respostas Validadas</h5>
-          @else
-            <h5>Respostas Validadas</h5> 
           @endif
 
-          @if ( count($validatedAnswers) != 0 )
-          <div class="row mt-2">
-            @each('partials.answer', $validatedAnswers, 'answer') 
-          </div>
+          <div class="tab-pane {{ ($active == 'ucs')?'active':'' }}" id="section-associated-ucs" role="tabpanel">
+            <section class="mt-4">
+              <div class="float-end">
+                <form method="GET" action="{{ url('/users/'.$user->id) }}">
+                  <input type="search" id="search-user-ucs-input" class="form-control" placeholder="UC..." aria-label="Search UC" name="searchUcs">
+                </form>
+              </div>
+              @if ($user->isStudent()) 
+                <h5 class="me-4">Unidades Curriculares que Segue</h5> 
+              @else
+                <h5 class="me-4">Unidades Curriculares que Leciona</h5> 
+              @endif
 
-          <div class="row">
-            <div class="col-12 d-flex justify-content-end">
-              {!! $validatedAnswers->appends(['questionsPage' => $questions->currentPage(), 'answersPage' => $answers->currentPage(), 'associatedUcsPage' => $associatedUcs->currentPage()])->links() !!}
-            </div>
-          </div>
-          @else 
-          <p>Ainda não validou Respostas</p>
-          @endif
-        </section>
-      @endif
+              @if ( count($associatedUcs) != 0 )
+              <div class="row mt-4">
+                @each('partials.uc', $associatedUcs, 'uc') 
+              </div>
 
-      <hr>
-      <section class="mt-4">
-        @if ($user->isStudent()) 
-          <h5>Unidades Curriculares que Segue</h5> 
-        @else
-          <h5>Unidades Curriculares que Leciona</h5> 
-        @endif
-
-        @if ( count($associatedUcs) != 0 )
-        <div class="row mt-2">
-          @each('partials.uc', $associatedUcs, 'uc') 
-        </div>
-
-        <div class="row">
-          <div class="col-12 d-flex justify-content-end">
-            {!! $associatedUcs->appends(['questionsPage' => $questions->currentPage(), 'answersPage' => $answers->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage()])->links() !!}
+              <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                  {{ $associatedUcs->appends(['questionsPage' => $questions->currentPage(), 'answersPage' => $answers->currentPage(), 'validatedAnswersPage' => $validatedAnswers->currentPage(),
+                                          'searchUcs' => isset($searchUcs) ? $searchUcs : ''])->links() }}
+                </div>
+              </div>
+              @else 
+              <p>Nenhuma UC</p>
+              @endif
+            </section>
           </div>
         </div>
-        @else 
-        <p>Ainda não está associado a nenhuma UC</p>
-        @endif
-      </section>
-
+      </div>
       @endif
     
     </div>

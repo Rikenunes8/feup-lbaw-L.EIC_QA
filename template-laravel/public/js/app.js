@@ -31,7 +31,7 @@ function addEventListeners() {
     blocker.addEventListener('click', sendBlockUserRequest);
   });
 
-  let interventionDeleters = document.querySelectorAll('.intervention-detail div.question-page-actions a.question-page-delete');
+  let interventionDeleters = document.querySelectorAll('.intervention-detail div.question-page-actions-modals a.question-page-delete');
   [].forEach.call(interventionDeleters, function(deleter) {
     deleter.addEventListener('click', sendDeleteInterventionRequest);
   });
@@ -57,6 +57,15 @@ function addEventListeners() {
   let answerNoneValidaters = document.querySelectorAll('.intervention-detail .question-card-icon a.invalidate');
   [].forEach.call(answerNoneValidaters, function(validater) {
     validater.addEventListener('click', sendNoneAnswerRequest);
+  });
+
+  let notificationReadMarkers = document.querySelectorAll('.notification-card .notifications-page-actions a.notifications-page-envelope');
+  [].forEach.call(notificationReadMarkers, function(markers) {
+    markers.addEventListener('click', sendMarkReadNotificationRequest);
+  });
+  let notificationRemovers = document.querySelectorAll('.notification-card .notifications-page-actions a.notifications-page-remove');
+  [].forEach.call(notificationRemovers, function(removers) {
+    removers.addEventListener('click', sendRemoveNotificationRequest);
   });
 
 }
@@ -89,11 +98,7 @@ function sendFollowUcRequest() {
 function sendDeleteUcRequest(event) {
   let id = this.closest('tr').getAttribute('data-id');
   
-  const flag = confirm('Tem a certeza que quer eliminar permanentemente esta Unidade Curricular?');
-  if (flag)
-    sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler)
-
-  event.preventDefault();
+  sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler)
 }
 
 function sendRemoveUcTeacherRequest() {
@@ -113,11 +118,7 @@ function sendAddUcTeacherRequest() {
 function sendDeleteUserRequest(event) {
   let id = this.closest('tr').getAttribute('data-id');
   
-  const flag = confirm('Tem a certeza que quer eliminar permanentemente este Utilizador?');
-  if (flag)
-    sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
-
-  event.preventDefault();
+  sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
 }
 
 function sendBlockUserRequest(event) {
@@ -126,9 +127,10 @@ function sendBlockUserRequest(event) {
   let reason = user.querySelector('input[name=reason]').value;
 
   if (reason != '') {
-    const flag = confirm('Tem a certeza que quer alterar o estado de bloqueio deste Utilizador?');
-    if (flag)
       sendAjaxRequest('post', '/api/users/' + id + '/block', {block_reason: reason}, userBlockedHandler);
+  } else {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Não é possível bloquear um utilizador sem uma razão."));
   }
 
   event.preventDefault();
@@ -137,11 +139,7 @@ function sendBlockUserRequest(event) {
 function sendDeleteInterventionRequest(event) {
   let id = this.closest('section').getAttribute('data-id');
 
-  const flag = confirm('Tem a certeza que quer eliminar permanentemente esta Intervenção?');
-  if (flag)
-    sendAjaxRequest('delete', '/api/interventions/' + id + '/delete', null, interventionDeletedHandler);
-
-  event.preventDefault();
+  sendAjaxRequest('delete', '/api/interventions/' + id + '/delete', null, interventionDeletedHandler);
 }
 
 function sendUpVoteInterventionRequest() {
@@ -169,6 +167,19 @@ function sendNoneAnswerRequest() {
   let id = this.closest('section').getAttribute('data-id');
 
   sendAjaxRequest('post', '/api/interventions/' + id + '/validate', {valid: null}, answerValidatedHandler);
+}
+
+function sendMarkReadNotificationRequest() {
+  let card = this.closest('div.notification-card');
+  let id = card.getAttribute('data-id');
+  
+  sendAjaxRequest('post', '/api/notifications/' + id + '/read', {read: card.classList.contains('notification-read')}, notificationMarkReadHandler);
+}
+
+function sendRemoveNotificationRequest() {
+  let id = this.closest('div.notification-card').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/notifications/' + id + '/remove', null, notificationRemoveHandler);
 }
 
 function ucFollowHandler() {
@@ -252,7 +263,7 @@ function userBlockedHandler() {
   if (!user.blocked)
     input.value = '';
   
-  let element = document.querySelector('tr[data-id="' + user.id + '"] td.admin-table-user-actions a.admin-table-block');
+  let element = document.querySelector('tr[data-id="' + user.id + '"] td.admin-table-user-actions button.block-btn');
   let icon = element.querySelector('i');
   let span = element.querySelector('span');
 
@@ -278,11 +289,17 @@ function interventionDeletedHandler() {
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
   let element = document.querySelector('section.intervention-detail[data-id="' + intervention.id + '"]');
-  if (element.classList.contains('question-detail'))
+  if (element.classList.contains('question-detail')) {
     location.reload();
-  else
+  } else if (element.classList.contains('answer-detail')) {
     element.remove();
-
+    let answerComments = document.querySelectorAll('section.comment-parent-' + intervention.id);
+    [].forEach.call(answerComments, function(comment) {
+      comment.remove();
+    });
+  } else {
+    element.remove();
+  }
 }
 
 function interventionVotedHandler() {
@@ -343,8 +360,52 @@ function answerValidatedHandler() {
   }
 }
 
+function notificationMarkReadHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Ação não autorizada"));
+    return;
+  } 
+  if (this.status != 200) window.location = '/';
+  let notification = JSON.parse(this.responseText);
+  let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
+  let element = card.querySelector('a.notifications-page-envelope i');
+
+
+  if (card.classList.contains('notification-read')) {
+    card.classList.replace('notification-read', 'notification-unread');
+    element.classList.replace('fa-envelope', 'fa-envelope-open');
+  }
+  else {
+    card.classList.replace('notification-unread', 'notification-read');
+    element.classList.replace('fa-envelope-open', 'fa-envelope');
+  }
+}
+
+
+function notificationRemoveHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Ação não autorizada"));
+    return;
+  } 
+  if (this.status != 200) window.location = '/';
+  let notification = JSON.parse(this.responseText);
+  let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
+  let element = card.closest('section');
+  let icon = document.querySelector('#header-notification-icon span');
+  if (card.classList.contains('notification-unread')) icon.innerHTML -= 1;
+  if (icon.innerHTML == 0) icon.innerHTML = '';
+
+  element.remove();
+}
+
 function focusSearchInput() {
   document.querySelector('input#search-input').focus(); 
+}
+
+function focusAnswerInput() {
+  tinyMCE.get('answer-textarea').focus();
 }
 
 function showRegisterFormFields() {
@@ -442,4 +503,18 @@ $('.dropdown.dropdown-keep-open').on('hide.bs.dropdown', function (e) {
   if (!e.clickEvent) { return true; }
   var target = $(e.clickEvent.target);
   return !(target.hasClass('dropdown-keep-open') || target.parents('.dropdown-keep-open').length);
+});
+
+$('#deleteUserModal a').on('click', function (event) {
+  var $action = $(event.target);
+  event.preventDefault();
+  $(this).closest('.modal').on('hidden.bs.modal', function(ev) {
+    var $href = $action.attr('href');
+    window.location.href = $href;
+  });
+})
+
+$("#user-profile-tabs.nav .nav-link").on("click", function() {
+  $("#user-profile-tabs.nav").find(".active").removeClass("active");
+  $(this).addClass("active");
 });

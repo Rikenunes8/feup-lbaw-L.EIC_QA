@@ -21,33 +21,65 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function list()
+    public function list(Request $request)
     {
-        $users = User::where('type', '!=', "Admin")->orderBy('score', 'DESC')->paginate(18);
-        return view('pages.users', ['users' => $users]);
+        $search = $request->search;
+        $query = User::where('type', '!=', "Admin")->orderBy('score', 'DESC');
+        if(!empty($search)) {
+            $query = User::where('type', '!=', "Admin")->where('name', 'ilike', '%'.$search.'%')->orderBy('score', 'DESC');
+        }
+        $users =  $query->paginate(12);
+        return view('pages.users', ['users' => $users, 'search' => $search]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $user = User::find($id);
         if (is_null($user)) return App::abort(404);
-        $questions = $user->interventions()->questions()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'questionsPage');
-        $answers = $user->interventions()->answers()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'answersPage');
-        $validatedAnswers = $user->validates()->orderBy('votes', 'DESC')->paginate(3, ['*'], 'validatedAnswersPage');
-        $associatedUcs = [];
-        if ($user->isStudent()) {
-            $associatedUcs = $user->follows()->orderBy('name')->paginate(3, ['*'], 'associatedUcsPage');
-        } else if ($user->isTeacher()) {
-            $associatedUcs = $user->teaches()->orderBy('name')->paginate(3, ['*'], 'associatedUcsPage');
-        }
 
-        return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs'));
+        $active = 'questions';
+
+        $searchQuestions = $request->searchQuestions;
+        $queryQuestions = $user->interventions()->questions()->orderBy('votes', 'DESC');
+        if(!empty($searchQuestions)) {
+            $queryQuestions = $user->interventions()->questions()->where('title', 'ilike', '%'.$searchQuestions.'%')->orderBy('votes', 'DESC');
+        }
+        $questions = $queryQuestions->paginate(5, ['*'], 'questionsPage');
+
+        $searchAnswers = $request->searchAnswers;
+        $queryAnswers = $user->interventions()->answers()->orderBy('votes', 'DESC');
+        if(!empty($searchAnswers)) {
+            $queryAnswers = $user->interventions()->answers()->where('text', 'ilike', '%'.$searchAnswers.'%')->orderBy('votes', 'DESC');
+            $active = 'answers';
+        }
+        $answers = $queryAnswers->paginate(5, ['*'], 'answersPage');
+
+        $searchValidatedAnswers = $request->searchValidatedAnswers;
+        $queryValidatedAnswers = $user->validates()->orderBy('votes', 'DESC');
+        if(!empty($searchValidatedAnswers)) {
+            $queryValidatedAnswers = $user->validates()->where('text', 'ilike', '%'.$searchValidatedAnswers.'%')->orderBy('votes', 'DESC');
+            $active = 'validated-answers';
+        }
+        $validatedAnswers = $queryValidatedAnswers->paginate(5, ['*'], 'validatedAnswersPage');
+
+        $searchUcs = $request->searchUcs;
+        $queryUcs = [];
+        if ($user->isStudent()) {
+            $queryUcs = $user->follows()->orderBy('name');
+        } else if ($user->isTeacher()) {
+            $queryUcs = $user->teaches()->orderBy('name');
+        }
+        if(!empty($searchUcs)) {
+            if ($user->isStudent()) {
+                $queryUcs = $user->follows()->where('name', 'ilike', '%'.$searchUcs.'%')->orderBy('name');
+            } else if ($user->isTeacher()) {
+                $queryUcs = $user->teaches()->where('name', 'ilike', '%'.$searchUcs.'%')->orderBy('name');
+            }
+            $active = 'ucs';
+        }
+        $associatedUcs = $user->isAdmin()? [] : $queryUcs->paginate(6, ['*'], 'associatedUcsPage');;
+
+        return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs', 'searchQuestions', 'searchAnswers', 'searchValidatedAnswers', 'searchUcs', 'active'));
     }
 
     /**
@@ -164,9 +196,12 @@ class UserController extends Controller
         
         $url = $request->path();
         
-        if ($self) return redirect('/home');
-        else if (substr_compare($url, "api", 0, 3) != 0) return redirect("/admin/users");
-        else return $user;
+        if ($self) 
+            return redirect('/home'); 
+        else if (substr_compare($url, "api", 0, 3) != 0) 
+            return redirect("/users");
+        else 
+            return $user;
     }
 
     public function follow(Request $request, $user_id, $uc_id) 

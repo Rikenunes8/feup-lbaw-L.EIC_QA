@@ -70,8 +70,12 @@ class Intervention extends Model
                   ->withPivot('valid');
   }
 
-  // Notifications
-
+  /**
+     * The notifications this intervention is associated with.
+     */
+    public function notifications() {
+      return $this->hasMany('App\Models\Notification', 'id_intervention');
+  }
 
     /**
      * Filter query by question type.

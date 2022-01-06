@@ -9,5 +9,9 @@
   type="text/javascript"
   src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.js"
 ></script>
-
+<!-- Working Bootstrap Tabs -->
+<script 
+  src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+></script>
+    
 @yield('scripts')
