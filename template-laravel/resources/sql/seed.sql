@@ -35,6 +35,7 @@ CREATE TABLE "users" (
     blocked        BOOLEAN DEFAULT FALSE,
     block_reason   TEXT,
     entry_year     INTEGER,
+    receive_email  BOOLEAN NOT NULL DEFAULT FALSE,
     type type_user NOT NULL,
 
     CONSTRAINT name_NN          CHECK ((type='Admin' AND name IS NULL) OR (type<>'Admin' AND name IS NOT NULL)),
