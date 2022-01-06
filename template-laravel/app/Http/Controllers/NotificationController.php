@@ -68,10 +68,29 @@ class NotificationController extends Controller
         
         $notification = Auth::user()->notifications()->find($id);
         if (is_null($notification)) return App::abort(404);
-        $this->authorize('remove', $notification);
 
         Auth::user()->notifications()->detach($notification->id);
     
+        return $notification;
+    }
+
+    /**
+     * Mark notification as read.
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Notification The notification read.
+     */
+    public function apiRead(Request $request, $id)
+    {
+        if (!Auth::check()) return redirect('/login');
+        $read = $request->input('read');
+
+        $userNotifications = Auth::user()->notifications(); 
+
+        $notification = $userNotifications->find($id);
+        if (is_null($notification)) return App::abort(404);
+        $userNotifications->updateExistingPivot($notification->id, ['read' => !$read]);
         return $notification;
     }
 

@@ -59,6 +59,15 @@ function addEventListeners() {
     validater.addEventListener('click', sendNoneAnswerRequest);
   });
 
+  let notificationReadMarkers = document.querySelectorAll('.notification-card .notifications-page-actions a.notifications-page-envelope');
+  [].forEach.call(notificationReadMarkers, function(markers) {
+    markers.addEventListener('click', sendMarkReadNotificationRequest);
+  });
+  let notificationRemovers = document.querySelectorAll('.notification-card .notifications-page-actions a.notifications-page-remove');
+  [].forEach.call(notificationRemovers, function(removers) {
+    removers.addEventListener('click', sendRemoveNotificationRequest);
+  });
+
 }
 
 function encodeForAjax(data) {
@@ -169,6 +178,19 @@ function sendNoneAnswerRequest() {
   let id = this.closest('section').getAttribute('data-id');
 
   sendAjaxRequest('post', '/api/interventions/' + id + '/validate', {valid: null}, answerValidatedHandler);
+}
+
+function sendMarkReadNotificationRequest() {
+  let card = this.closest('div.notification-card');
+  let id = card.getAttribute('data-id');
+  
+  sendAjaxRequest('post', '/api/notifications/' + id + '/read', {read: card.classList.contains('notification-read')}, notificationMarkReadHandler);
+}
+
+function sendRemoveNotificationRequest() {
+  let id = this.closest('div.notification-card').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/notifications/' + id + '/remove', null, notificationRemoveHandler);
 }
 
 function ucFollowHandler() {
@@ -341,6 +363,46 @@ function answerValidatedHandler() {
     a2.addEventListener('click', sendNoneAnswerRequest);
     cardIcon.appendChild(a2);
   }
+}
+
+function notificationMarkReadHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Ação não autorizada"));
+    return;
+  } 
+  if (this.status != 200) window.location = '/';
+  let notification = JSON.parse(this.responseText);
+  let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
+  let element = card.querySelector('a.notifications-page-envelope i');
+
+
+  if (card.classList.contains('notification-read')) {
+    card.classList.replace('notification-read', 'notification-unread');
+    element.classList.replace('fa-envelope', 'fa-envelope-open');
+  }
+  else {
+    card.classList.replace('notification-unread', 'notification-read');
+    element.classList.replace('fa-envelope-open', 'fa-envelope');
+  }
+}
+
+
+function notificationRemoveHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Ação não autorizada"));
+    return;
+  } 
+  if (this.status != 200) window.location = '/';
+  let notification = JSON.parse(this.responseText);
+  let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
+  let element = card.closest('section');
+  let icon = document.querySelector('#header-notification-icon span');
+  if (card.classList.contains('notification-unread')) icon.innerHTML -= 1;
+  if (icon.innerHTML == 0) icon.innerHTML = '';
+
+  element.remove();
 }
 
 function focusSearchInput() {
