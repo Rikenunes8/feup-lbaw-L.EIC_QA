@@ -77,7 +77,7 @@ class UserController extends Controller
             }
             $active = 'ucs';
         }
-        $associatedUcs = $queryUcs->paginate(6, ['*'], 'associatedUcsPage');
+        $associatedUcs = $user->isAdmin()? [] : $queryUcs->paginate(6, ['*'], 'associatedUcsPage');;
 
         return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs', 'searchQuestions', 'searchAnswers', 'searchValidatedAnswers', 'searchUcs', 'active'));
     }
