@@ -13,7 +13,11 @@
           <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUserModal">
             Eliminar<i class="far fa-trash-alt ms-2"></i>
           </button>
-
+          <div class="form-check form-switch mt-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" {{ $user->receive_email? 'checked':''}}>
+            <label class="form-check-label" for="flexSwitchCheckDefault">Receber Emails?</label>
+          </div>
+          
           @include('partials.modal', ['id' => 'deleteUserModal', 
                                       'title' => (Auth::user()->id == $user->id)?'Eliminar a Minha Conta':'Eliminar '.$user->username , 
                                       'body' => 'Tem a certeza que quer eliminar permanentemente esta Conta?',

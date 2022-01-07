@@ -118,3 +118,17 @@ Route::get('admin/users'                , 'AdminController@listUsers');
 Route::get('admin/ucs'                  , 'AdminController@listUcs');
 Route::get('admin/ucs/{id}/teachers'    , 'AdminController@listTeachers');
 Route::get('admin/reports'              , 'AdminController@listReports');
+
+Route::get('email', function(){
+  foreach(User::get() as $user) {
+    if (!$user->receive_email) continue;
+
+    $notifications = $user->notifications()->wherePivot('to_email', true)->wherePivot('read', false)->get();
+    foreach($notifications as $notification) {
+      $user->notify(new NotificationEmail($notification));
+    }
+  }
+  DB::table('receive_not')->where('to_email', true)->update(['to_email' => false]);
+  
+  return redirect('/');
+});

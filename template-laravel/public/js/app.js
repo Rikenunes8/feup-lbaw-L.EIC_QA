@@ -68,6 +68,10 @@ function addEventListeners() {
     removers.addEventListener('click', sendRemoveNotificationRequest);
   });
 
+  let receiveEmailsSwitcher = document.querySelectorAll('#user-profile-page div.form-switch input');
+  [].forEach.call(receiveEmailsSwitcher, function(switcher) {
+    switcher.addEventListener('click', switchReceiveEmailRequest);
+  });
 }
 
 function encodeForAjax(data) {
@@ -180,6 +184,13 @@ function sendRemoveNotificationRequest() {
   let id = this.closest('div.notification-card').getAttribute('data-id');
 
   sendAjaxRequest('post', '/api/notifications/' + id + '/remove', null, notificationRemoveHandler);
+}
+
+
+function switchReceiveEmailRequest() {
+  let id = this.closest('div.user-profile').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/users/' + id + '/email', null, switchReceiveEmailHandler);
 }
 
 function ucFollowHandler() {
@@ -399,6 +410,16 @@ function notificationRemoveHandler() {
 
   element.remove();
 }
+
+function switchReceiveEmailHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Ação não autorizada"));
+    return;
+  } 
+  if (this.status != 200) window.location = '/';
+}
+
 
 function focusSearchInput() {
   document.querySelector('input#search-input').focus(); 

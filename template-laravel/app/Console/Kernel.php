@@ -31,22 +31,16 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->call(function() {
-            $notificationsToSend = DB::table('receive_not')->where('to_email', true)->get();
+            foreach(User::get() as $user) {
+                if (!$user->receive_email) continue;
             
-            foreach($notificationsToSend as $not_user) {
-                $not_user->update(['to_email' => false]);
-                $not_user->save();
-                if ($not_user->read) continue;
-                
-                $notification = Notification::find($not_user->id_notification);
-                $user = User::find($not_user->id_user);
-                if ($user->receive_email)
+                $notifications = $user->notifications()->wherePivot('to_email', true)->wherePivot('read', false)->get();
+                foreach($notifications as $notification) {
                     $user->notify(new NotificationEmail($notification));
+                }
             }
-
-        })->everyMinute();
-
-        //->everyFiveMinutes();
+            DB::table('receive_not')->where('to_email', true)->update(['to_email' => false]);
+        })->everyFiveMinutes();
     }
 
     /**
