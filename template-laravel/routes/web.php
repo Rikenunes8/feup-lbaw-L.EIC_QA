@@ -37,8 +37,12 @@ Route::post('register', 'Auth\RegisterController@register');
 // Route::get('reset-password/{token}', 'X@showResetPasswordForm')->name('password.reset');
 
 // Google Authentication
-Route::get('auth/google', 'Auth\GoogleController@redirectToGoogle');
-Route::get('auth/google/callback', 'Auth\GoogleController@handleGoogleCallback');
+// Route::get('auth/google/redirect', 'Auth\GoogleController@redirectToGoogle');
+// Route::get('auth/google/callback', 'Auth\GoogleController@handleGoogleCallback');
+Route::prefix('google')->name('google.')->group( function(){
+    Route::get('login', 'Auth\GoogleController@loginWithGoogle')->name('login');
+    Route::any('callback', 'Auth\GoogleController@callbackFromGoogle')->name('callback');
+});
 
 // API
 Route::delete('api/interventions/{id}/delete' , 'InterventionController@delete');

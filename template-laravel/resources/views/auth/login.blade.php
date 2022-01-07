@@ -36,7 +36,7 @@
     </div>
 
     <div class ="col-12" style="padding-top:5px;">
-        <a href="{{ url('auth/google') }}" class="btn btn-google btn-user btn-block">
+        <a href="{{ route('google.login') }}" class="btn btn-google btn-user btn-block">
             <i class="fab fa-google fa-fw"></i> Iniciar Sessão com Google
         </a>
     </div>
