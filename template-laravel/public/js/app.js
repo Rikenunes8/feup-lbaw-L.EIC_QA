@@ -31,6 +31,11 @@ function addEventListeners() {
     blocker.addEventListener('click', sendBlockUserRequest);
   });
 
+  let userActivaters = document.querySelectorAll('td.admin-table-user-actions a.admin-table-active');
+  [].forEach.call(userActivaters, function(activater) {
+    activater.addEventListener('click', sendActiveUserRequest);
+  });
+
   let interventionDeleters = document.querySelectorAll('.intervention-detail div.question-page-actions-modals a.question-page-delete');
   [].forEach.call(interventionDeleters, function(deleter) {
     deleter.addEventListener('click', sendDeleteInterventionRequest);
@@ -95,7 +100,7 @@ function sendFollowUcRequest() {
   sendAjaxRequest('post', '/api/users/' + user_id + '/follow/' + uc_id, {follow: element.classList.contains('far')}, ucFollowHandler);
 }
 
-function sendDeleteUcRequest(event) {
+function sendDeleteUcRequest() {
   let id = this.closest('tr').getAttribute('data-id');
   
   sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler)
@@ -115,7 +120,7 @@ function sendAddUcTeacherRequest() {
   sendAjaxRequest('put', '/api/ucs/' + uc_id + '/teachers/' + teacher_id + '/add', null, ucTeacherAddedHandler);
 }
 
-function sendDeleteUserRequest(event) {
+function sendDeleteUserRequest() {
   let id = this.closest('tr').getAttribute('data-id');
   
   sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
@@ -136,7 +141,13 @@ function sendBlockUserRequest(event) {
   event.preventDefault();
 }
 
-function sendDeleteInterventionRequest(event) {
+function sendActiveUserRequest() {
+  let id = this.closest('tr').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/users/' + id + '/active', null, userActivatedHandler);
+}
+
+function sendDeleteInterventionRequest() {
   let id = this.closest('section').getAttribute('data-id');
 
   sendAjaxRequest('delete', '/api/interventions/' + id + '/delete', null, interventionDeletedHandler);
@@ -278,6 +289,15 @@ function userBlockedHandler() {
     icon.classList.replace('fa-unlock', 'fa-lock');
     span.innerHTML = "Lock";
   }
+}
+
+function userActivatedHandler() {
+  if (this.status != 200) window.location = '/';
+  let user = JSON.parse(this.responseText);
+  let element = document.querySelector('tr[data-id="' + user.id + '"]');
+  element.remove();
+
+  admin_table.row(element).remove().draw(false);
 }
 
 function interventionDeletedHandler() {

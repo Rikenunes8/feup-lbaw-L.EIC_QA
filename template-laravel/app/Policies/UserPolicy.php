@@ -45,6 +45,19 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can active the model.
+     *
+     * @param  User  $user
+     * @param  User  $user2
+     * @return Response|bool
+     */
+    public function active(User $user, User $user2)
+    {
+        return $user->isAdmin() && !$user->blocked;
+    }
+
+
+    /**
      * Determine whether the user can block the model.
      *
      * @param  User  $user

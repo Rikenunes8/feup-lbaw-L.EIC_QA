@@ -151,6 +151,26 @@ class UserController extends Controller
     }
 
     /**
+     * Active user.
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function active(Request $request, $id)
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $user = User::find($id);
+        $this->authorize('active', $user);
+
+        $user->active = TRUE;
+        $user->save();
+
+        return $user;
+    }
+
+    /**
      * Block user.
      * 
      * @param  Request  $request
