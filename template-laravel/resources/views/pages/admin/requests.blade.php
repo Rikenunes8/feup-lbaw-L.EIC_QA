@@ -21,16 +21,19 @@
         <table id="admin-table" class="table table-striped table-bordered">
           <thead>
             <tr>
+              <th scope="col"></th>
               <th scope="col">Tipo</th>
               <th scope="col">Nome</th>
               <th scope="col">Email</th>
               <th scope="col">Username</th>
+              <th scope="col">Data do Pedido</th>
               <th scope="col">Ações</th>
             </tr>
           </thead>
           <tbody>
             @foreach($users as $user)
-              <tr data-id="{{ $user->id }}">
+              <tr data-id="{{ $user->id }}" data-details="{{ $user }}">
+                <td class="{{ ($user->isAdmin()?'':'expand-button') }}">{{ ($user->isAdmin()?'':'+') }}</td> 
                 <td>
                   @php 
                     $bg = 'bg-info';
@@ -42,13 +45,14 @@
                 <th scope="row">{{ $user->name }}</th>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->username }}</td>
+                <td>{{ date('d/m/Y H:i', strtotime($user->registry_date)) }}</td>
                 <td class="text-center admin-table-user-actions">
                   <section class="actions-buttons">
                     <button type="button" class="btn btn-success text-white me-1 block-btn" data-bs-toggle="modal" data-bs-target="#activeUser{{ $user->id }}Modal">
-                      <i class="far fa-thumbs-up"></i>
+                      <i class="fas fa-check"></i>
                     </button>
                     <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
-                      <i class="far fa-thumbs-down"></i>
+                      <i class="fas fa-times"></i>
                     </button>
                   </section>
                   
