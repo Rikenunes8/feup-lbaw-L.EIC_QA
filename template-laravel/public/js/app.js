@@ -176,7 +176,7 @@ function sendNoneAnswerRequest() {
 function sendMarkReadNotificationRequest() {
   let card = this.closest('div.notification-card');
   let id = card.getAttribute('data-id');
-  
+  console.log(card.classList.contains('notification-read'));
   sendAjaxRequest('post', '/api/notifications/' + id + '/read', {read: card.classList.contains('notification-read')}, notificationMarkReadHandler);
 }
 
@@ -381,16 +381,23 @@ function notificationMarkReadHandler() {
   let notification = JSON.parse(this.responseText);
   let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
   let element = card.querySelector('a.notifications-page-envelope i');
+  let icon = document.querySelector('#header-notification-icon span');
 
 
   if (card.classList.contains('notification-read')) {
     card.classList.replace('notification-read', 'notification-unread');
     element.classList.replace('fa-envelope', 'fa-envelope-open');
+    if (icon.innerHTML == '') icon.innerHTML = 1;
+    else if (icon.innerHTML != '+99') icon.innerHTML = parseInt(icon.innerHTML) + 1;
+    if (icon.innerHTML >= 100) icon.innerHTML = '+99';
   }
   else {
     card.classList.replace('notification-unread', 'notification-read');
     element.classList.replace('fa-envelope-open', 'fa-envelope');
+    icon.innerHTML -= 1;
+    if (icon.innerHTML == 0) icon.innerHTML = '';
   }
+
 }
 
 
