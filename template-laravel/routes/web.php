@@ -1,5 +1,8 @@
 <?php
-
+use App\Notifications\NotificationEmail;
+use App\Models\Notification;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -120,12 +123,14 @@ Route::get('admin/ucs/{id}/teachers'    , 'AdminController@listTeachers');
 Route::get('admin/reports'              , 'AdminController@listReports');
 
 Route::get('email', function(){
+  $delay = now()->addSeconds(10);
   foreach(User::get() as $user) {
     if (!$user->receive_email) continue;
 
     $notifications = $user->notifications()->wherePivot('to_email', true)->wherePivot('read', false)->get();
     foreach($notifications as $notification) {
-      $user->notify(new NotificationEmail($notification));
+      $delay = $delay->addSeconds(5);
+      $user->notify((new NotificationEmail($notification))->delay($delay));
     }
   }
   DB::table('receive_not')->where('to_email', true)->update(['to_email' => false]);
