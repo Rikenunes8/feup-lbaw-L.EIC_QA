@@ -224,6 +224,30 @@ class UserController extends Controller
             return $user;
     }
 
+    /**
+     * Change receive_email field.
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function email(Request $request, $id)
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $user = User::find($id);
+        $this->authorize('adminOrSelf', $user);
+
+        if ($user->receive_email) {
+            $user->receive_email = FALSE;
+        } else {
+            $user->receive_email = TRUE;
+        }
+        $user->save();
+
+        return $user;
+    }
+
     public function follow(Request $request, $user_id, $uc_id) 
     {
         if (!Auth::check()) return redirect('/login');

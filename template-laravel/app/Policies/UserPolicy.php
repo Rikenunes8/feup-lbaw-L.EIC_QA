@@ -56,6 +56,17 @@ class UserPolicy
         return $user->isAdmin() && !$user->blocked;
     }
 
+    /**
+     * Determine whether the user is admin or his/her self.
+     *
+     * @param  User  $user
+     * @param  User  $user2
+     * @return Response|bool
+     */
+    public function adminOrSelf(User $user, User $user2)
+    {
+        return ($user->isAdmin() || $user->id == $user2->id) && !$user->blocked;
+    }
 
     /**
      * Determine whether the user can block the model.

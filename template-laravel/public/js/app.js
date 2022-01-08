@@ -73,6 +73,10 @@ function addEventListeners() {
     removers.addEventListener('click', sendRemoveNotificationRequest);
   });
 
+  let receiveEmailsSwitcher = document.querySelectorAll('#user-profile-page div.form-switch input');
+  [].forEach.call(receiveEmailsSwitcher, function(switcher) {
+    switcher.addEventListener('click', switchReceiveEmailRequest);
+  });
 }
 
 function encodeForAjax(data) {
@@ -183,7 +187,7 @@ function sendNoneAnswerRequest() {
 function sendMarkReadNotificationRequest() {
   let card = this.closest('div.notification-card');
   let id = card.getAttribute('data-id');
-  
+  console.log(card.classList.contains('notification-read'));
   sendAjaxRequest('post', '/api/notifications/' + id + '/read', {read: card.classList.contains('notification-read')}, notificationMarkReadHandler);
 }
 
@@ -191,6 +195,13 @@ function sendRemoveNotificationRequest() {
   let id = this.closest('div.notification-card').getAttribute('data-id');
 
   sendAjaxRequest('post', '/api/notifications/' + id + '/remove', null, notificationRemoveHandler);
+}
+
+
+function switchReceiveEmailRequest() {
+  let id = this.closest('div.user-profile').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/users/' + id + '/email', null, switchReceiveEmailHandler);
 }
 
 function ucFollowHandler() {
@@ -390,16 +401,23 @@ function notificationMarkReadHandler() {
   let notification = JSON.parse(this.responseText);
   let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
   let element = card.querySelector('a.notifications-page-envelope i');
+  let icon = document.querySelector('#header-notification-icon span');
 
 
   if (card.classList.contains('notification-read')) {
     card.classList.replace('notification-read', 'notification-unread');
     element.classList.replace('fa-envelope', 'fa-envelope-open');
+    if (icon.innerHTML == '') icon.innerHTML = 1;
+    else if (icon.innerHTML != '+99') icon.innerHTML = parseInt(icon.innerHTML) + 1;
+    if (icon.innerHTML >= 100) icon.innerHTML = '+99';
   }
   else {
     card.classList.replace('notification-unread', 'notification-read');
     element.classList.replace('fa-envelope-open', 'fa-envelope');
+    icon.innerHTML -= 1;
+    if (icon.innerHTML == 0) icon.innerHTML = '';
   }
+
 }
 
 
@@ -419,6 +437,16 @@ function notificationRemoveHandler() {
 
   element.remove();
 }
+
+function switchReceiveEmailHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Ação não autorizada"));
+    return;
+  } 
+  if (this.status != 200) window.location = '/';
+}
+
 
 function focusSearchInput() {
   document.querySelector('input#search-input').focus(); 
