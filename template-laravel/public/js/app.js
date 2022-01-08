@@ -31,6 +31,11 @@ function addEventListeners() {
     blocker.addEventListener('click', sendBlockUserRequest);
   });
 
+  let userActivaters = document.querySelectorAll('td.admin-table-user-actions a.admin-table-active');
+  [].forEach.call(userActivaters, function(activater) {
+    activater.addEventListener('click', sendActiveUserRequest);
+  });
+
   let interventionDeleters = document.querySelectorAll('.intervention-detail div.question-page-actions-modals a.question-page-delete');
   [].forEach.call(interventionDeleters, function(deleter) {
     deleter.addEventListener('click', sendDeleteInterventionRequest);
@@ -95,7 +100,7 @@ function sendFollowUcRequest() {
   sendAjaxRequest('post', '/api/users/' + user_id + '/follow/' + uc_id, {follow: element.classList.contains('far')}, ucFollowHandler);
 }
 
-function sendDeleteUcRequest(event) {
+function sendDeleteUcRequest() {
   let id = this.closest('tr').getAttribute('data-id');
   
   sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler)
@@ -115,7 +120,7 @@ function sendAddUcTeacherRequest() {
   sendAjaxRequest('put', '/api/ucs/' + uc_id + '/teachers/' + teacher_id + '/add', null, ucTeacherAddedHandler);
 }
 
-function sendDeleteUserRequest(event) {
+function sendDeleteUserRequest() {
   let id = this.closest('tr').getAttribute('data-id');
   
   sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
@@ -136,7 +141,13 @@ function sendBlockUserRequest(event) {
   event.preventDefault();
 }
 
-function sendDeleteInterventionRequest(event) {
+function sendActiveUserRequest() {
+  let id = this.closest('tr').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/users/' + id + '/active', null, userActivatedHandler);
+}
+
+function sendDeleteInterventionRequest() {
   let id = this.closest('section').getAttribute('data-id');
 
   sendAjaxRequest('delete', '/api/interventions/' + id + '/delete', null, interventionDeletedHandler);
@@ -278,6 +289,15 @@ function userBlockedHandler() {
     icon.classList.replace('fa-unlock', 'fa-lock');
     span.innerHTML = "Lock";
   }
+}
+
+function userActivatedHandler() {
+  if (this.status != 200) window.location = '/';
+  let user = JSON.parse(this.responseText);
+  let element = document.querySelector('tr[data-id="' + user.id + '"]');
+  element.remove();
+
+  admin_table.row(element).remove().draw(false);
 }
 
 function interventionDeletedHandler() {
@@ -487,6 +507,29 @@ function createError(msg) {
 
 addEventListeners();
 
+function formatDetails ( details ) {
+  const data = JSON.parse(details);
+
+  let img_src = (data.photo != null) ? '/images/users/' + data.photo : '/images/users/default.jpg';
+  let about = (data.about != null) ? data.about : 'Não definida';
+  let birthdate = (data.birthdate != null) ? data.birthdate.substring(0, 10) : 'Não definido';
+  let entry_year = (data.type != 'Student') ? '' : '<p><i class="fas fa-user-graduate me-2"></i>Ano de Ingresso: ' + data.entry_year + '</p>';
+
+  return  '<div class="row mt-4">' + 
+            '<div class="col-2">' + 
+              '<img src="' + img_src + '" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">' + 
+            '</div>' + 
+            '<div class="col-10">' + 
+              '<h5>Sobre mim</h5>' + 
+              '<div class="ms-3">' +
+                '<p>Apresentação: ' + about + '</p>' + 
+                '<p><i class="fas fa-birthday-cake me-2"></i>Aniversário: ' + birthdate + '</p>' +
+                entry_year + 
+              '</div>' +
+            '</div>' +
+          '</div>';
+}
+
 var admin_table;
 $(document).ready(function () {
   admin_table = $('#admin-table').DataTable({
@@ -494,6 +537,25 @@ $(document).ready(function () {
     "pagingType": "simple_numbers",
   });
   $('.dataTables_length').addClass('bs-select');
+
+  // Add event listener for opening and closing details of a row (used in admin requests page)
+  $('#admin-table tbody').on('click', 'td.expand-button', function () {
+    var tr = $(this).closest('tr');
+    var row = admin_table.row( tr );
+
+    if ( row.child.isShown() ) {
+        // This row is already open - close it
+        $(this).html('+');
+        row.child.hide();
+        tr.removeClass('shown');
+    }
+    else {
+        // Open this row
+        $(this).html('-');
+        row.child( formatDetails( tr.attr('data-details') ) ).show();
+        tr.addClass('shown');
+    }
+  });
 
   tinymce.init({selector:'textarea.text-editor'});
   showRegisterFormFields();

@@ -27,6 +27,7 @@ CREATE TABLE "users" (
     username       TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
     password       TEXT NOT NULL,
     registry_date  TIMESTAMP  NOT NULL DEFAULT now(),
+    active         BOOLEAN NOT NULL DEFAULT FALSE,
     name           TEXT,
     photo          TEXT,
     about          TEXT,

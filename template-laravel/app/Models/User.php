@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-      'name', 'email', 'password', 'username', 'about', 'birthdate', 'photo', 
+      'name', 'email', 'password', 'active', 'username', 'about', 'birthdate', 'photo', 
       'score', 'blocked', 'type', 'entry_year',
     ];
 
@@ -29,7 +29,13 @@ class User extends Authenticatable
      */
     protected $hidden = [
       'password',
-  ];
+    ];
+
+    /*
+    public function findForPassport($identifier) {
+      return User::orWhere('email', $identifier)->where('active', 1)->first();
+    }
+    */
     
     public function isAdmin() {
       return $this->type == 'Admin';

@@ -19,7 +19,7 @@ class AdminController extends Controller
         if (!Auth::check()) return redirect('/login');
 
         $this->authorize('showToAdmin', User::class);
-        $users = User::where('id', '!=', Auth::user()->id)->orderBy('name')->get();
+        $users = User::where('active', '=', '1')->where('id', '!=', Auth::user()->id)->orderBy('name')->get();
         return view('pages.admin.users', ['users' => $users]);
     }
 
@@ -52,7 +52,7 @@ class AdminController extends Controller
         if (is_null($uc)) return App::abort(404);
         $teachersAssoc = $uc->teachers()->orderBy('name')->get();
         $uc_teachers_ids = $teachersAssoc->pluck('id')->toArray();
-        $teachersNotAssoc = User::teachers()->whereNotIn('id', $uc_teachers_ids)->orderBy('name')->get();
+        $teachersNotAssoc = User::teachers()->where('active', '=', '1')->whereNotIn('id', $uc_teachers_ids)->orderBy('name')->get();
         
         return view('pages.admin.ucTeachers', ['uc' => $uc, 'teachersAssoc' => $teachersAssoc, 'teachersNotAssoc' => $teachersNotAssoc]);
     }
@@ -67,6 +67,20 @@ class AdminController extends Controller
         // TODO
         // Notifications of type report
         return; //view('pages.admin.reports', ['reports' => $reports]);
+    }
+
+    /**
+     * Shows all account activation requests in admin format.
+     *
+     * @return Response
+     */
+    public function listRequests()
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $this->authorize('showToAdmin', User::class);
+        $users = User::where('active', '!=', '1')->orderBy('name')->get();
+        return view('pages.admin.requests', ['users' => $users]);
     }
     
 }

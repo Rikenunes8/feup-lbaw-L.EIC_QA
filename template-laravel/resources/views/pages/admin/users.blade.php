@@ -4,7 +4,7 @@
 
 @section('content')
 
-<section id="admin-ucs-page">
+<section id="admin-users-page">
   <section class="error-msg"></section>
 
   <h2>Utilizadores</h2> 
@@ -62,7 +62,7 @@
                     <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
                     
                     <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
-                      <i class="far fa-trash-alt"></i>
+                      <i class="far fa-trash-alt"></i><span class="d-none">Eliminar</span>
                     </button>
                   </section>
                   
@@ -84,7 +84,7 @@
                                                 'confirm' => 'Sim'])
                   </section>
                 </td>
-              </tr><span class="d-none">Eliminar</span>
+              </tr>
             @endforeach
           </tbody>
         </table>

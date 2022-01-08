@@ -73,6 +73,7 @@ Route::get('users/{id}/edit'  , 'UserController@showEditForm');
 Route::post('users/{id}/edit' , 'UserController@update')->name('users.edit');
 Route::get('users/{id}/delete', 'UserController@delete');
 
+Route::post('api/users/{id}/active'    , 'UserController@active');
 Route::post('api/users/{id}/block'    , 'UserController@block');
 Route::delete('api/users/{id}/delete' , 'UserController@delete');
 Route::post('api/users/{user_id}/follow/{uc_id}', 'UserController@follow');
@@ -117,4 +118,5 @@ Route::get('admin/users'                , 'AdminController@listUsers');
 Route::get('admin/ucs'                  , 'AdminController@listUcs');
 Route::get('admin/ucs/{id}/teachers'    , 'AdminController@listTeachers');
 Route::get('admin/reports'              , 'AdminController@listReports');
+Route::get('admin/requests'             , 'AdminController@listRequests');
 

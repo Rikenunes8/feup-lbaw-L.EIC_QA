@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -29,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/user';
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
@@ -39,6 +41,25 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        // TODO middleware vai ser o "email verification"
+    }
+
+    /**
+     * Handle a registration Request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return 
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        // $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
     }
 
     /**

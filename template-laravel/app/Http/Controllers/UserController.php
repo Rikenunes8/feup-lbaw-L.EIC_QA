@@ -24,9 +24,9 @@ class UserController extends Controller
     public function list(Request $request)
     {
         $search = $request->search;
-        $query = User::where('type', '!=', "Admin")->orderBy('score', 'DESC');
+        $query = User::where('active', '=', '1')->where('type', '!=', "Admin")->orderBy('score', 'DESC');
         if(!empty($search)) {
-            $query = User::where('type', '!=', "Admin")->where('name', 'ilike', '%'.$search.'%')->orderBy('score', 'DESC');
+            $query = User::where('active', '=', '1')->where('type', '!=', "Admin")->where('name', 'ilike', '%'.$search.'%')->orderBy('score', 'DESC');
         }
         $users =  $query->paginate(12);
         return view('pages.users', ['users' => $users, 'search' => $search]);
@@ -35,7 +35,7 @@ class UserController extends Controller
     public function show(Request $request, $id)
     {
         $user = User::find($id);
-        if (is_null($user)) return App::abort(404);
+        if ((is_null($user)) || ($user->active != 1)) return App::abort(404);
 
         $active = 'questions';
 
@@ -148,6 +148,26 @@ class UserController extends Controller
         $user->save();
 
         return redirect("/users/$user->id"); 
+    }
+
+    /**
+     * Active user.
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function active(Request $request, $id)
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $user = User::find($id);
+        $this->authorize('active', $user);
+
+        $user->active = TRUE;
+        $user->save();
+
+        return $user;
     }
 
     /**
