@@ -141,6 +141,9 @@ td.admin-table-user-actions section.actions-buttons {
   white-space: nowrap;
   vertical-align: middle;
 }
+#admin-requests-page .expand-button:hover {
+	cursor: pointer;
+}
 .form-label.required:after {
   content:" *";
   color:red;

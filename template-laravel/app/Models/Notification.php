@@ -18,7 +18,8 @@ class Notification extends Model
      * The users who have received this notification.
      */
     public function users() {
-        return $this->belongsToMany('App\Models\User', 'receive_not', 'id_notification', 'id_user');
+        return $this->belongsToMany('App\Models\User', 'receive_not', 'id_notification', 'id_user')
+                    ->withPivot('read')->withPivot('to_email');
     }
 
     /**

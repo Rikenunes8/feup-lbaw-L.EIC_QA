@@ -24,9 +24,9 @@ class UserController extends Controller
     public function list(Request $request)
     {
         $search = $request->search;
-        $query = User::where('type', '!=', "Admin")->orderBy('score', 'DESC');
+        $query = User::where('active', '=', '1')->where('type', '!=', "Admin")->orderBy('score', 'DESC');
         if(!empty($search)) {
-            $query = User::where('type', '!=', "Admin")->where('name', 'ilike', '%'.$search.'%')->orderBy('score', 'DESC');
+            $query = User::where('active', '=', '1')->where('type', '!=', "Admin")->where('name', 'ilike', '%'.$search.'%')->orderBy('score', 'DESC');
         }
         $users =  $query->paginate(12);
         return view('pages.users', ['users' => $users, 'search' => $search]);
@@ -35,7 +35,7 @@ class UserController extends Controller
     public function show(Request $request, $id)
     {
         $user = User::find($id);
-        if (is_null($user)) return App::abort(404);
+        if ((is_null($user)) || ($user->active != 1)) return App::abort(404);
 
         $active = 'questions';
 
@@ -77,7 +77,7 @@ class UserController extends Controller
             }
             $active = 'ucs';
         }
-        $associatedUcs = $queryUcs->paginate(6, ['*'], 'associatedUcsPage');
+        $associatedUcs = $user->isAdmin()? [] : $queryUcs->paginate(6, ['*'], 'associatedUcsPage');;
 
         return view('pages.user', compact('user', 'questions', 'answers', 'validatedAnswers', 'associatedUcs', 'searchQuestions', 'searchAnswers', 'searchValidatedAnswers', 'searchUcs', 'active'));
     }
@@ -151,6 +151,26 @@ class UserController extends Controller
     }
 
     /**
+     * Active user.
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function active(Request $request, $id)
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $user = User::find($id);
+        $this->authorize('active', $user);
+
+        $user->active = TRUE;
+        $user->save();
+
+        return $user;
+    }
+
+    /**
      * Block user.
      * 
      * @param  Request  $request
@@ -202,6 +222,30 @@ class UserController extends Controller
             return redirect("/users");
         else 
             return $user;
+    }
+
+    /**
+     * Change receive_email field.
+     * 
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function email(Request $request, $id)
+    {
+        if (!Auth::check()) return redirect('/login');
+
+        $user = User::find($id);
+        $this->authorize('adminOrSelf', $user);
+
+        if ($user->receive_email) {
+            $user->receive_email = FALSE;
+        } else {
+            $user->receive_email = TRUE;
+        }
+        $user->save();
+
+        return $user;
     }
 
     public function follow(Request $request, $user_id, $uc_id) 

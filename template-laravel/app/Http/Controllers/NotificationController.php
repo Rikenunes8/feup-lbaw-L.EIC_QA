@@ -84,13 +84,18 @@ class NotificationController extends Controller
     public function apiRead(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
+        
         $read = $request->input('read');
+        if ($read == 'true') $read = true;
+        else if ($read == 'false') $read = false;
 
         $userNotifications = Auth::user()->notifications(); 
 
         $notification = $userNotifications->find($id);
         if (is_null($notification)) return App::abort(404);
+
         $userNotifications->updateExistingPivot($notification->id, ['read' => !$read]);
+        
         return $notification;
     }
 

@@ -45,6 +45,30 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can active the model.
+     *
+     * @param  User  $user
+     * @param  User  $user2
+     * @return Response|bool
+     */
+    public function active(User $user, User $user2)
+    {
+        return $user->isAdmin() && !$user->blocked;
+    }
+
+    /**
+     * Determine whether the user is admin or his/her self.
+     *
+     * @param  User  $user
+     * @param  User  $user2
+     * @return Response|bool
+     */
+    public function adminOrSelf(User $user, User $user2)
+    {
+        return ($user->isAdmin() || $user->id == $user2->id) && !$user->blocked;
+    }
+
+    /**
      * Determine whether the user can block the model.
      *
      * @param  User  $user
@@ -53,7 +77,7 @@ class UserPolicy
      */
     public function block(User $user, User $user2)
     {
-        return $user->isAdmin() && !$user2->isAdmin() && !$user->blocked;
+        return $user->isAdmin() && !$user2->isAdmin() && !$user->blocked && ($user2->active == 1);
     }
 
     /**
