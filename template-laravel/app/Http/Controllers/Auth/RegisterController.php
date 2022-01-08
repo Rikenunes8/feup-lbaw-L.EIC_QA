@@ -111,7 +111,7 @@ class RegisterController extends Controller
         if ($data['usertype'] == "Admin") {
             return User::create([
                 'email' => $data['email'],
-                'username' => $data['usertype'],
+                'username' => $data['username'],
                 'password' => bcrypt($data['password']),
                 'score' => null,
                 'blocked' => null,
