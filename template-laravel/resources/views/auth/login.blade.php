@@ -38,7 +38,7 @@
    
     
     <div class="col-12 d-flex justify-content-center mt-3">
-        <a href="{{ url('/forgot_password') }}" class="app-link">Recuperar Password?</a>
+        <a href="{{ url('/forget-password') }}" class="app-link">Recuperar Password?</a>
     </div>
 </form>
 @endsection

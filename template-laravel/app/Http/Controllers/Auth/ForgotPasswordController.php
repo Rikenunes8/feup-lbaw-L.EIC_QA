@@ -1,53 +1,96 @@
-<?php
-
-namespace App\Http\Controllers\Auth;
+<?php 
+  
+namespace App\Http\Controllers\Auth; 
+  
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Sentinel;
-use Reminder;
-use App\Models\User;
-use Mail;
+use Illuminate\Http\Request; 
+use DB; 
+use Carbon\Carbon; 
+use App\Models\User; 
+use Mail; 
+use Illuminate\Mail\MailManager;
+use Hash;
+use Illuminate\Support\Str;
+use Illuminate\Database\Migrations\Migration;
 
 
+  
 class ForgotPasswordController extends Controller
 {
-    public function forgot() {
-   
-        return view('auth.reset_password');
-   
-   
-        //     $credentials = request()->validate(['email' => 'required|email']);
-
-    //     Password::sendResetLink($credentials);
-
-    //    // return response()->json(["msg" => 'Reset password link sent on your email id.']);
-    //    return $this->respondWithMessage('Reset password link sent on your email id.');
-    }
-
-    public function password(Request $request) {
-
-    $user = User::whereEmail($request->email)->first();
-
-    if($user== null){
-        return redirect()->back()->with(['error'=> 'Email não existente']);
-    }
-
-    $user = Sentinel::findById($user->id);
-    $reminder = Reminder::exists($user) ?: Reminder::create($user);
-    $this-> sendEmail($user, $reminder->code);
-    return redirect ()->back()->with(['success'=> 'Email enviado']);
-    }
-
-    public function sendEmail($user,$code){
-        Mail::send(
-            'email.forgot',
-            ['user' => $user, 'code' => $code],
-            function ($message) use($user){
-                $message->to($user->email);
-                $message->subject("$user->name, Recuperar password");
-            }
-        );
-    }
-
+      /**
+       * Write code on Method
+       *
+       * @return response()
+       */
+      public function showForgetPasswordForm()
+      {
+         return view('auth.reset_password');
+      }
+  
+      /**
+       * Write code on Method
+       *
+       * @return response()
+       */
+      public function submitForgetPasswordForm(Request $request)
+      {
+          $request->validate([
+              'email' => 'required|email|exists:users',
+          ]);
+  
+          $token = Str::random(64);
+  
+          DB::table('password_resets')->insert([
+              'email' => $request->email, 
+              'token' => $token, 
+              'created_at' => Carbon::now()
+            ]);
+  
+          Mail::send('auth.forgot', ['token' => $token], function($message) use($request){
+              $message->to($request->email);
+              $message->subject('Reset Password');
+          });
+  
+          return back()->with('message', 'We have e-mailed your password reset link!');
+      }
+      /**
+       * Write code on Method
+       *
+       * @return response()
+       */
+      public function showResetPasswordForm($token) { 
+         return view('auth.forgetPasswordLink', ['token' => $token]);
+      }
+  
+      /**
+       * Write code on Method
+       *
+       * @return response()
+       */
+      public function submitResetPasswordForm(Request $request)
+      {
+          $request->validate([
+              'email' => 'required|email|exists:users',
+              'password' => 'required|string|min:6|confirmed',
+              'password_confirmation' => 'required'
+          ]);
+  
+          $updatePassword = DB::table('password_resets')
+                              ->where([
+                                'email' => $request->email, 
+                                'token' => $request->token
+                              ])
+                              ->first();
+  
+          if(!$updatePassword){
+              return back()->withInput()->with('error', 'Invalid token!');
+          }
+  
+          $user = User::where('email', $request->email)
+                      ->update(['password' => Hash::make($request->password)]);
+ 
+          DB::table('password_resets')->where(['email'=> $request->email])->delete();
+  
+          return redirect('/login')->with('message', 'Your password has been changed!');
+      }
 }

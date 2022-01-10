@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="flex-center position-ref full-height">
-    <form  action="{{ url('/forgot_password')}}" method="POST">
+    <form  action="{{ route('forget.password.post')}}" method="POST">
         <h2>Alterar Password?</h2>
         
         {{csrf_field()}}

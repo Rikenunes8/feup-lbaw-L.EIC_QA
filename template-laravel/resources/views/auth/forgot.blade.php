@@ -9,7 +9,7 @@
     
      <p>
          Please click resert.....
-         <a href="{{url('reset_password/'.$user->email.'/'.$code)}}">reset password</a>
+         <a href="{{route('reset.password.get', $token)}}">reset password</a>
     </p>
 </div>
 @endsection

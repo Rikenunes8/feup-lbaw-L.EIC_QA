@@ -21,7 +21,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
       'name', 'email', 'password', 'username', 'about', 'birthdate', 'photo', 
-      'score', 'blocked', 'type', 'entry_year',
+      'score', 'blocked', 'type', 'entry_year', 'token', 'created_at'
     ];
 
     /**
@@ -32,6 +32,8 @@ class User extends Authenticatable
     protected $hidden = [
       'password',
   ];
+
+  protected $table = 'schema_name.table_name';
     
     public function isAdmin() {
       return $this->type == 'Admin';
