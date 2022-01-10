@@ -24,6 +24,7 @@ Route::get('home'    , function () { return view('pages.static.home'    ); });
 Route::get('about'   , function () { return view('pages.static.about'   ); });
 Route::get('faq'     , function () { return view('pages.static.faq'     ); });
 Route::get('contact' , function () { return view('pages.static.contact' ); });
+Route::post('contact', 'ContactController@store');
 
 // Authentication
 Route::get('login'    , 'Auth\LoginController@showLoginForm')->name('login');
@@ -66,9 +67,9 @@ Route::post('comments/{id}/edit'          , 'InterventionController@updateCommen
 
 
 // Users
-Route::get('user' , function () { 
+Route::get('user' , function () {
   if (!Auth::check()) return redirect('/login');
-  return redirect('/users'.'/'.Auth::user()->id); 
+  return redirect('/users'.'/'.Auth::user()->id);
 });
 Route::get('users'       , 'UserController@list');
 Route::get('users/{id}'  , 'UserController@show');
@@ -112,9 +113,9 @@ Route::get('search', 'InterventionController@searchList');
 
 
 // Admin
-Route::get('admin'                      , function () { 
-  if (!Auth::check()) return redirect('/login'); 
-  return redirect('/users'.'/'.Auth::user()->id); 
+Route::get('admin'                      , function () {
+  if (!Auth::check()) return redirect('/login');
+  return redirect('/users'.'/'.Auth::user()->id);
 });
 Route::get('admin/ucs/{id}'             , function ($id) { return redirect('/ucs'.'/'.$id); });
 
@@ -136,6 +137,6 @@ Route::get('email', function(){
     }
   }
   DB::table('receive_not')->where('to_email', true)->update(['to_email' => false]);
-  
+
   return redirect('/');
 });
