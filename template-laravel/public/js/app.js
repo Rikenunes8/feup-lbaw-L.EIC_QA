@@ -64,6 +64,11 @@ function addEventListeners() {
     validater.addEventListener('click', sendNoneAnswerRequest);
   });
 
+  let interventionReporters = document.querySelectorAll('#question-page .intervention-detail a.question-page-report');
+  [].forEach.call(interventionReporters, function(reporter) {
+    reporter.addEventListener('click', sendInterventionReportRequest);
+  });
+
   let notificationReadMarkers = document.querySelectorAll('.notification-card .notifications-page-actions a.notifications-page-envelope');
   [].forEach.call(notificationReadMarkers, function(markers) {
     markers.addEventListener('click', sendMarkReadNotificationRequest);
@@ -184,6 +189,12 @@ function sendNoneAnswerRequest() {
   sendAjaxRequest('post', '/api/interventions/' + id + '/validate', {valid: null}, answerValidatedHandler);
 }
 
+function sendInterventionReportRequest() {
+  let id = this.closest('section').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/interventions/' + id + '/report', {valid: null}, interventionReportHandler);
+}
+
 function sendMarkReadNotificationRequest() {
   let card = this.closest('div.notification-card');
   let id = card.getAttribute('data-id');
@@ -277,8 +288,7 @@ function userDeletedHandler() {
 }
 
 function userBlockedHandler() {
-  console.log(this.responseText)
-  //if (this.status != 200) window.location = '/';
+  if (this.status != 200) window.location = '/';
   let user = JSON.parse(this.responseText);
   let input = document.querySelector('tr[data-id="' + user.id + '"] input[name=reason]');
   
@@ -390,6 +400,16 @@ function answerValidatedHandler() {
     a2.addEventListener('click', sendNoneAnswerRequest);
     cardIcon.appendChild(a2);
   }
+}
+
+function interventionReportHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Denúncia não autorizada"));
+    return;
+  } 
+  if (this.status != 200) window.location = '/';
+  let intervention = JSON.parse(this.responseText);
 }
 
 function notificationMarkReadHandler() {

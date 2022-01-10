@@ -5,24 +5,28 @@
   <div class="card notification-card {{ $read? 'notification-read':'notification-unread'}} h-100" data-id="{{ $notification->id }}">
     <div class="card-body">
       @php 
-        if ($notification->type == 'question') {
-          $type = 'Nova Questão';
-          $link = url('/questions/'.$notification->intervention->id);
-        } else if ($notification->type == 'answer') {
-          $type = 'Nova Resposta';
-          $link = url('/questions/'.$notification->intervention->parent->id);
-        } else if ($notification->type == 'comment') {
-          $type = 'Novo Comentário';
-          $link = url('/questions/'.$notification->intervention->parent->parent->id);
-        } else if ($notification->type == 'validation') {
-          $type = 'Nova Validação';
-          $link = url('/questions/'.$notification->intervention->parent->id);
-        } else if ($notification->type == 'report') {
-          $type = 'Nova Denúncia';
-          $link = url('/home');
-        } else {
+        if (!is_null($notification->intervention)) {
+          $intervention = $notification->intervention;
+          if ($intervention->isAnswer()) $intervention = $intervention->parent;
+          else if ($intervention->isComment()) $intervention = $intervention->parent->parent;
+        }
+        if ($notification->type == 'account_status') {
           $type = 'Novo Estado de Conta';
           $link = url('/users/'.Auth::user()->id);
+        } 
+        else {
+          $link = url('/questions/'.$intervention->id);          
+          if ($notification->type == 'question') {
+            $type = 'Nova Questão';
+          } else if ($notification->type == 'answer') {
+            $type = 'Nova Resposta';
+          } else if ($notification->type == 'comment') {
+            $type = 'Novo Comentário';
+          } else if ($notification->type == 'validation') {
+            $type = 'Nova Validação';
+          } else if ($notification->type == 'report') {
+            $type = 'Nova Denúncia';
+          }
         }
       @endphp
       <a href="#" class="app-link" onclick="document.getElementById('redirect-form-{{ $notification->id }}').submit();">
