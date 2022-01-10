@@ -87,6 +87,13 @@ class User extends Authenticatable
     }
 
     /**
+     * The notifications this user is associated with.
+     */
+    public function statusChanges() {
+      return $this->hasMany('App\Models\Notification', 'id_user');
+    }
+
+    /**
     * The notifications that belongs to this user.
     */
     public function notifications() {

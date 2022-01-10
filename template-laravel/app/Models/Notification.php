@@ -28,6 +28,12 @@ class Notification extends Model
     public function intervention() {
         return $this->belongsTo('App\Models\Intervention', 'id_intervention');
     }
+    /**
+     * The user this notification is associated with.
+     */
+    public function user() {
+        return $this->belongsTo('App\Models\User', 'id_user');
+    }
 
     public function isQuestion() {
         return $this->type == 'question';
