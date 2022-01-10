@@ -23,7 +23,7 @@ CREATE TYPE "type_validation" AS ENUM ('acceptance', 'rejection');
 
 CREATE TABLE "users" (
     id             SERIAL PRIMARY KEY,
-    email          TEXT NOT NULL CONSTRAINT email_uk UNIQUE ,
+    email           TEXT NOT NULL CONSTRAINT email_uk UNIQUE ,
     username       TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
     password       TEXT NOT NULL,
     registry_date  TIMESTAMP  NOT NULL DEFAULT now(),
@@ -102,12 +102,14 @@ CREATE TABLE "notification" (
     id              SERIAL PRIMARY KEY,
     date            TIMESTAMP  NOT NULL DEFAULT now(),
     id_intervention INTEGER REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_user         INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
     status     type_status,
     validation type_validation,
     type       type_notification NOT NULL,
 
     CONSTRAINT date_smaller_now CHECK (date <= now()),
     CONSTRAINT intervention_NN  CHECK ((type<>'account_status' AND id_intervention IS NOT NULL) OR (type='account_status' AND id_intervention IS NULL)),
+    CONSTRAINT user_NN          CHECK ((type<>'account_status' AND id_user IS NULL) OR (type='account_status' AND id_user IS NOT NULL)),
     CONSTRAINT status_NN        CHECK ((type='account_status' AND status IS NOT NULL) OR (type<>'account_status' AND status IS NULL)),
     CONSTRAINT validation_NN    CHECK ((type='validation' AND validation IS NOT NULL) OR (type<>'validation' AND validation IS NULL))
 );
@@ -115,7 +117,8 @@ CREATE TABLE "notification" (
 CREATE TABLE "receive_not" (
     id_notification INTEGER REFERENCES "notification" ON DELETE CASCADE ON UPDATE CASCADE,
     id_user         INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
-    read            BOOLEAN NOT NULL,
+    read            BOOLEAN NOT NULL DEFAULT FALSE,
+    to_email        BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (id_notification, id_user)
 );
 
@@ -362,11 +365,11 @@ BEGIN
         INSERT INTO "notification"(type, id_intervention) VALUES ('question', NEW.id) RETURNING id INTO notificationId;
         
         FOR userId IN (SELECT id_student FROM "follow_uc" WHERE id_uc=NEW.category) LOOP 
-            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, userId, FALSE);
+            INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, userId);
         END LOOP;
 
         FOR userId IN (SELECT id_teacher FROM "teacher_uc" WHERE id_uc=NEW.category) LOOP 
-            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, userId, FALSE);
+            INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, userId);
         END LOOP;
     END IF;
     RETURN NEW;
@@ -390,7 +393,7 @@ BEGIN
         INSERT INTO "notification"(type, id_intervention) VALUES ('answer', NEW.id) RETURNING id INTO notificationId;
         
         FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_intervention) LOOP
-            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
+            INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, author);
         END LOOP;
     END IF;
     RETURN NEW;
@@ -414,7 +417,7 @@ BEGIN
         INSERT INTO "notification"(type, id_intervention) VALUES ('comment', NEW.id) RETURNING id INTO notificationId;
         
         FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_intervention) LOOP
-            INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
+            INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, author);
         END LOOP;
     END IF;
     RETURN NEW;
@@ -440,8 +443,8 @@ BEGIN
         INSERT INTO "notification"(type, id_intervention, validation) VALUES ('validation', NEW.id_answer, 'rejection') RETURNING id INTO notificationId;
     END IF;
 
-    FOR author IN (SELECT id_author FROM intervention WHERE id=NEW.id_answer) LOOP
-        INSERT INTO "receive_not"(id_notification, id_user, read) VALUES (notificationId, author, FALSE);
+    FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_answer) LOOP
+        INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, author);
     END LOOP;
 
     RETURN NEW;
@@ -453,3 +456,26 @@ CREATE TRIGGER generate_notification_validation
 AFTER INSERT OR UPDATE OF valid ON "validation"
 FOR EACH ROW
 EXECUTE PROCEDURE generate_notification_validation();
+
+-- TRIGGER15
+CREATE FUNCTION generate_notification_account_status() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+notificationId BIGINT;
+BEGIN
+    IF NEW.blocked = TRUE THEN
+        INSERT INTO "notification"(type, id_user, status) VALUES ('account_status', NEW.id, 'block') RETURNING id INTO notificationId;
+    ELSE
+        INSERT INTO "notification"(type, id_user, status) VALUES ('account_status', NEW.id, 'active') RETURNING id INTO notificationId;
+    END IF;
+
+    INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, NEW.id);
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER generate_notification_account_status
+AFTER UPDATE OF blocked ON "users"
+FOR EACH ROW
+EXECUTE PROCEDURE generate_notification_account_status();

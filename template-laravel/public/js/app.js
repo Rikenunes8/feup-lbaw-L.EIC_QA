@@ -277,7 +277,8 @@ function userDeletedHandler() {
 }
 
 function userBlockedHandler() {
-  if (this.status != 200) window.location = '/';
+  console.log(this.responseText)
+  //if (this.status != 200) window.location = '/';
   let user = JSON.parse(this.responseText);
   let input = document.querySelector('tr[data-id="' + user.id + '"] input[name=reason]');
   

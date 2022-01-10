@@ -76,7 +76,7 @@ INSERT INTO "users" (email, username, password, type, name, about, registry_date
 
 -- Student
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, active, photo) VALUES (
-    'up201805455@fc.up.pt', 'up201805455', 
+    'up201805455@fc.up.pt.LEIC.QA', 'up201805455', 
     '$2y$10$ZVT1VxJoxAsw3TbaRdyBbOyCz7WiNyIn6P1F.mXtLFd1LQ9fvigFC', 
     'Student', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01', TRUE, '10_1641229580_vBEUWTuB0f.jpg'
 ); -- Password: hUdQ!Q6?
@@ -91,7 +91,7 @@ INSERT INTO "users" (email, username, password, type, name, birthdate, entry_yea
     'Student', 'Patrícia Oliveira', '2001-03-19 17:00:00', 2019, '2021-11-01', TRUE
 ); -- Password: cL@Az7HY
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, active) VALUES (
-    'up201805327@fc.up.pt', 'up201805327', 
+    'up201805327@fc.up.pt.LEIC.QA', 'up201805327', 
     '$2y$10$fyDBC/Y9xLDeHnAgmwg5PeHELVH5ZPqy2ErdvhMo7KuWJdHT0AbhO', 
     'Student', 'Tiago Antunes', '2000-06-10 11:00:00', 2018, '2021-11-01', TRUE
 ); -- Password: GKhg6j&T
@@ -319,7 +319,7 @@ INSERT INTO "validation" (id_answer, id_teacher, valid) VALUES (16, 8, FALSE);
 -- notification
 -----------------------------------------
 
-INSERT INTO "notification" (date, type, status) VALUES ('2021-11-10 15:00:00', 'account_status', 'active');
+INSERT INTO "notification" (date, type, id_user, status) VALUES ('2021-11-10 15:00:00', 'account_status', 9, 'active');
 
 -----------------------------------------
 -- receive_not
