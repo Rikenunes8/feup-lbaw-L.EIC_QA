@@ -35,6 +35,13 @@ class Notification extends Model
         return $this->belongsTo('App\Models\User', 'id_user');
     }
 
+    /**
+     * Filter query by report type.
+     */
+    public function scopeReports($query) {
+        return $query->whereType('report');
+    }
+
     public function isQuestion() {
         return $this->type == 'question';
     }

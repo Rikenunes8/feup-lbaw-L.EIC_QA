@@ -1,4 +1,4 @@
-<section class="intervention-detail {{ $intervention->type }}-detail {{ $intervention->isComment()?'mt-2 comment-parent-'.$intervention->parent->id:'mt-3' }} {{ $intervention->isQuestion()?'':'d-flex flex-row-reverse' }}" data-id="{{ $intervention->id }}">
+<section id="{{ $intervention->id }}" class="intervention-detail {{ $intervention->type }}-detail {{ $intervention->isComment()?'mt-2 comment-parent-'.$intervention->parent->id:'mt-3' }} {{ $intervention->isQuestion()?'':'d-flex flex-row-reverse' }}" data-id="{{ $intervention->id }}">
   <div class="row">
     <div class="col-1 intervention-votes">
       @if (!$intervention->isComment())

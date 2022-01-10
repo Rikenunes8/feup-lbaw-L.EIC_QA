@@ -64,9 +64,12 @@ class AdminController extends Controller
      */
     public function listReports()
     {
-        // TODO
-        // Notifications of type report
-        return; //view('pages.admin.reports', ['reports' => $reports]);
+        if (!Auth::check()) return redirect('/login');
+
+        $this->authorize('showToAdmin', User::class);
+        $reports = Auth::user()->notifications()->reports()->orderBy('date', 'DESC')->get();
+
+        return view('pages.admin.reports', ['reports' => $reports]);
     }
 
     /**
