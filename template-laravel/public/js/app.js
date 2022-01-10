@@ -64,6 +64,11 @@ function addEventListeners() {
     validater.addEventListener('click', sendNoneAnswerRequest);
   });
 
+  let interventionReporters = document.querySelectorAll('#question-page .intervention-detail a.question-page-report');
+  [].forEach.call(interventionReporters, function(reporter) {
+    reporter.addEventListener('click', sendInterventionReportRequest);
+  });
+
   let notificationReadMarkers = document.querySelectorAll('.notification-card .notifications-page-actions a.notifications-page-envelope');
   [].forEach.call(notificationReadMarkers, function(markers) {
     markers.addEventListener('click', sendMarkReadNotificationRequest);
@@ -72,11 +77,17 @@ function addEventListeners() {
   [].forEach.call(notificationRemovers, function(removers) {
     removers.addEventListener('click', sendRemoveNotificationRequest);
   });
+  
+  let reportRemovers = document.querySelectorAll('td.admin-table-reports-actions a.reports-page-remove');
+  [].forEach.call(reportRemovers, function(deleter) {
+    deleter.addEventListener('click', sendRemoveReportRequest);
+  });
 
   let receiveEmailsSwitcher = document.querySelectorAll('#user-profile-page div.form-switch input');
   [].forEach.call(receiveEmailsSwitcher, function(switcher) {
     switcher.addEventListener('click', switchReceiveEmailRequest);
   });
+
 }
 
 function encodeForAjax(data) {
@@ -184,6 +195,12 @@ function sendNoneAnswerRequest() {
   sendAjaxRequest('post', '/api/interventions/' + id + '/validate', {valid: null}, answerValidatedHandler);
 }
 
+function sendInterventionReportRequest() {
+  let id = this.closest('section').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/interventions/' + id + '/report', {valid: null}, interventionReportHandler);
+}
+
 function sendMarkReadNotificationRequest() {
   let card = this.closest('div.notification-card');
   let id = card.getAttribute('data-id');
@@ -197,12 +214,18 @@ function sendRemoveNotificationRequest() {
   sendAjaxRequest('post', '/api/notifications/' + id + '/remove', null, notificationRemoveHandler);
 }
 
+function sendRemoveReportRequest() {
+  let id = this.closest('tr').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/notifications/' + id + '/remove', null, reportRemovedHandler);
+}
 
 function switchReceiveEmailRequest() {
   let id = this.closest('div.user-profile').getAttribute('data-id');
 
   sendAjaxRequest('post', '/api/users/' + id + '/email', null, switchReceiveEmailHandler);
 }
+
 
 function ucFollowHandler() {
   if (this.status == 403) {
@@ -391,6 +414,16 @@ function answerValidatedHandler() {
   }
 }
 
+function interventionReportHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Denúncia não autorizada"));
+    return;
+  } 
+  if (this.status != 200) window.location = '/';
+  let intervention = JSON.parse(this.responseText);
+}
+
 function notificationMarkReadHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
@@ -420,7 +453,6 @@ function notificationMarkReadHandler() {
 
 }
 
-
 function notificationRemoveHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
@@ -438,6 +470,20 @@ function notificationRemoveHandler() {
   element.remove();
 }
 
+function reportRemovedHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createError("Ação não autorizada"));
+    return;
+  } 
+  if (this.status != 200) window.location = '/';
+  let report = JSON.parse(this.responseText);
+  let element = document.querySelector('tr[data-id="' + report.id + '"]');
+  element.remove();
+
+  admin_table.row(element).remove().draw(false);
+}
+
 function switchReceiveEmailHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
@@ -446,6 +492,8 @@ function switchReceiveEmailHandler() {
   } 
   if (this.status != 200) window.location = '/';
 }
+
+
 
 
 function focusSearchInput() {

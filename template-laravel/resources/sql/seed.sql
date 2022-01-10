@@ -102,12 +102,14 @@ CREATE TABLE "notification" (
     id              SERIAL PRIMARY KEY,
     date            TIMESTAMP  NOT NULL DEFAULT now(),
     id_intervention INTEGER REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_user         INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
     status     type_status,
     validation type_validation,
     type       type_notification NOT NULL,
 
     CONSTRAINT date_smaller_now CHECK (date <= now()),
     CONSTRAINT intervention_NN  CHECK ((type<>'account_status' AND id_intervention IS NOT NULL) OR (type='account_status' AND id_intervention IS NULL)),
+    CONSTRAINT user_NN          CHECK ((type<>'account_status' AND id_user IS NULL) OR (type='account_status' AND id_user IS NOT NULL)),
     CONSTRAINT status_NN        CHECK ((type='account_status' AND status IS NOT NULL) OR (type<>'account_status' AND status IS NULL)),
     CONSTRAINT validation_NN    CHECK ((type='validation' AND validation IS NOT NULL) OR (type<>'validation' AND validation IS NULL))
 );
@@ -441,7 +443,7 @@ BEGIN
         INSERT INTO "notification"(type, id_intervention, validation) VALUES ('validation', NEW.id_answer, 'rejection') RETURNING id INTO notificationId;
     END IF;
 
-    FOR author IN (SELECT id_author FROM intervention WHERE id=NEW.id_answer) LOOP
+    FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_answer) LOOP
         INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, author);
     END LOOP;
 
@@ -454,6 +456,29 @@ CREATE TRIGGER generate_notification_validation
 AFTER INSERT OR UPDATE OF valid ON "validation"
 FOR EACH ROW
 EXECUTE PROCEDURE generate_notification_validation();
+
+-- TRIGGER15
+CREATE FUNCTION generate_notification_account_status() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+notificationId BIGINT;
+BEGIN
+    IF NEW.blocked = TRUE THEN
+        INSERT INTO "notification"(type, id_user, status) VALUES ('account_status', NEW.id, 'block') RETURNING id INTO notificationId;
+    ELSE
+        INSERT INTO "notification"(type, id_user, status) VALUES ('account_status', NEW.id, 'active') RETURNING id INTO notificationId;
+    END IF;
+
+    INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, NEW.id);
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER generate_notification_account_status
+AFTER UPDATE OF blocked ON "users"
+FOR EACH ROW
+EXECUTE PROCEDURE generate_notification_account_status();
 
 -----------------------------------------
 -- TRANSACTIONS
@@ -776,7 +801,7 @@ INSERT INTO "validation" (id_answer, id_teacher, valid) VALUES (16, 8, FALSE);
 -- notification
 -----------------------------------------
 
-INSERT INTO "notification" (date, type, status) VALUES ('2021-11-10 15:00:00', 'account_status', 'active');
+INSERT INTO "notification" (date, type, id_user, status) VALUES ('2021-11-10 15:00:00', 'account_status', 9, 'active');
 
 -----------------------------------------
 -- receive_not

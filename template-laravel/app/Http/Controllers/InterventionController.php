@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App;
 use App\Models\Intervention;
 use App\Models\Uc;
+use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -365,9 +367,22 @@ class InterventionController extends Controller
 
     public function report(Request $request, $id)
     {
+        if (!Auth::check()) return redirect('/login');
+
         $intervention = Intervention::find($id);
-        // TODO: notification
-        return true;
+        if (is_null($intervention)) return App::abort(404);
+
+        $notification = new Notification();
+        $notification->id_intervention = $intervention->id;
+        $notification->type = "report";
+        $notification->save();
+
+        $users = User::admins()->get();
+        foreach ($users as $user) {
+            $notification->users()->attach($user->id);
+        }
+
+        return $intervention;
     }
 
     /**
