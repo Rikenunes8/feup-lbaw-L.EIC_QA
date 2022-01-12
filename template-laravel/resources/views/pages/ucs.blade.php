@@ -7,7 +7,7 @@
 <section id="ucs-page" data-id="{{ Auth::check()?Auth::user()->id:''}}">
   <div class="float-end">
     <form method="GET" action="{{ url('/ucs') }}">
-      <input type="search" id="search-ucs-input" class="form-control" placeholder="Unidade Curricular..." aria-label="Search UC" name="search">
+      <input type="search" id="search-ucs-input" class="form-control" placeholder="Pesquisar Unidade Curricular..." aria-label="Search UC" name="search">
     </form>
   </div>
   <h2>Unidades Curriculares</h2> 

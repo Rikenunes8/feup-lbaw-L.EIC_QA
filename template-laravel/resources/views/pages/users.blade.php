@@ -7,7 +7,7 @@
 <section id="users-page">
   <div class="float-end">
     <form method="GET" action="{{ url('/users') }}">
-      <input type="search" id="search-users-input" class="form-control" placeholder="Utilizador..." aria-label="Search User" name="search">
+      <input type="search" id="search-users-input" class="form-control" placeholder="Pesquisar Utilizador..." aria-label="Search User" name="search">
     </form>
   </div>
   <h2>Utilizadores</h2> 

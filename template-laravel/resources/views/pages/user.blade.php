@@ -97,7 +97,7 @@
           </li>
           @endif
           <li class="nav-item">
-            <a class="nav-link {{ ($active == 'ucs')?'active':'' }}" data-toggle="tab" href="#section-associated-ucs"  role="tab">Ucs</a>
+            <a class="nav-link {{ ($active == 'ucs')?'active':'' }}" data-toggle="tab" href="#section-associated-ucs"  role="tab">Unidades Curriculares</a>
           </li>
         </ul>
 	
@@ -108,7 +108,7 @@
                 <div>
                   <div class="float-end d-inline-flex">
                     <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                      <input type="search" id="search-user-questions-input" class="form-control" placeholder="Questão..." aria-label="Search Question" name="searchQuestions">
+                      <input type="search" id="search-user-questions-input" class="form-control" placeholder="Pesquisar Questão..." aria-label="Search Question" name="searchQuestions">
                     </form>
                     <a href="{{ url('questions/create') }}" class="btn btn-primary text-white ms-2">Nova Questão <i class="fas fa-plus ms-2"></i></a>
                   </div>
@@ -117,7 +117,7 @@
               @else
                 <div class="float-end">
                   <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                    <input type="search" id="search-user-questions-input" class="form-control" placeholder="Questão..." aria-label="Search Question" name="searchQuestions">
+                    <input type="search" id="search-user-questions-input" class="form-control" placeholder="Pesquisar Questão..." aria-label="Search Question" name="searchQuestions">
                   </form>
                 </div>
                 <h5 class="me-4">Questões</h5> 
@@ -144,7 +144,7 @@
             <section class="mt-4">
               <div class="float-end">
                 <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                  <input type="search" id="search-user-answers-input" class="form-control" placeholder="Resposta..." aria-label="Search Answer" name="searchAnswers">
+                  <input type="search" id="search-user-answers-input" class="form-control" placeholder="Pesquisar Resposta..." aria-label="Search Answer" name="searchAnswers">
                 </form>
               </div>
               @if ( Auth::check() && Auth::user()->id == $user->id )
@@ -175,7 +175,7 @@
             <section class="mt-4">
               <div class="float-end">
                 <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                  <input type="search" id="search-user-validated-answers-input" class="form-control" placeholder="Resposta..." aria-label="Search Validated Answer" name="searchValidatedAnswers">
+                  <input type="search" id="search-user-validated-answers-input" class="form-control" placeholder="Pesquisar Resposta..." aria-label="Search Validated Answer" name="searchValidatedAnswers">
                 </form>
               </div>
               @if ( Auth::check() && Auth::user()->id == $user->id )
@@ -206,7 +206,7 @@
             <section class="mt-4">
               <div class="float-end">
                 <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                  <input type="search" id="search-user-ucs-input" class="form-control" placeholder="UC..." aria-label="Search UC" name="searchUcs">
+                  <input type="search" id="search-user-ucs-input" class="form-control" placeholder="Pesquisar UC..." aria-label="Search UC" name="searchUcs">
                 </form>
               </div>
               @if ($user->isStudent()) 
