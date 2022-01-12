@@ -4,11 +4,26 @@
       
       <div class="row">
         <div class="col-1">
-          <span class="question-card-score text-dark w-100 h-100">{{ $answer->votes }}<br>votos</span>
+          <span class="question-card-score text-dark w-100 h-100">
+            {{ $answer->votes }}<br>votos
+
+            @php
+              $icon = '';
+              $validations = DB::table('validation')->where('id_answer', $answer->id)->get();
+              foreach ($validations as $validation) {
+                if ($validation->valid) $icon = 'fa-check question-valid-icon';
+                else $icon = 'fa-times question-invalid-icon';
+              }
+            @endphp
+            @if ($icon != '') 
+            <br>
+            <i class="fas {{ $icon }}"></i>
+            @endif
+          </span>
         </div>
 
         <div class="col-11 p-relative">
-          <h5 class="card-title me-4"><a href="{{ url('/questions/'.$answer->parent->id) }}" class="app-link">{{ $answer->parent->title }}</a></h5>
+          <h5 class="card-title"><a href="{{ url('/questions/'.$answer->parent->id) }}" class="app-link">{{ $answer->parent->title }}</a></h5>
           <h6 class="card-subtitle mt-1 mb-2">
             <a href="{{ url('ucs/'.$answer->parent->uc->id) }}" class="badge bg-info text-dark">{{ $answer->parent->uc->code }}</a>
             <span class="text-muted">{{ date('d/m/Y H:i', strtotime($answer->parent->date)); }}, por 
@@ -39,18 +54,6 @@
             @if (strlen($str) > 70)
             ...
             @endif
-          </p>
-          
-          @php
-            $icon = '';
-            $validations = DB::table('validation')->where('id_answer', $answer->id)->get();
-            foreach ($validations as $validation) {
-              if ($validation->valid) $icon = 'fa-check question-valid-icon';
-              else $icon = 'fa-times question-invalid-icon';
-            }
-          @endphp
-          <p class="question-card-icon p-4">
-            <i class="fas {{ $icon }}"></i>
           </p>
           
         </div>

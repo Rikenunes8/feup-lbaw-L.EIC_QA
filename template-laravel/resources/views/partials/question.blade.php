@@ -4,11 +4,27 @@
       
       <div class="row">
         <div class="col-1">
-          <span class="question-card-score text-dark w-100 h-100">{{ $question->votes }}<br>votos</span>
+          <span class="question-card-score text-dark w-100 h-100">
+            {{ $question->votes }}<br>votos
+
+            @php
+            $valid = false;
+            foreach ($question->childs as $answer) {
+              $validations = DB::table('validation')->where('id_answer', $answer->id)->get();
+              foreach ($validations as $validation) {
+                if ($validation->valid) $valid = true;
+              }
+            }
+            @endphp
+            @if ($valid)
+            <br>
+            <i class="fas fa-check question-valid-icon"></i>
+            @endif
+          </span>
         </div>
 
         <div class="col-11 p-relative">
-          <h5 class="card-title me-4"><a href="{{ url('/questions/'.$question->id) }}" class="app-link">{{ $question->title }}</a></h5>
+          <h5 class="card-title"><a href="{{ url('/questions/'.$question->id) }}" class="app-link">{{ $question->title }}</a></h5>
           <h6 class="card-subtitle mt-1 mb-2">
             <a href="{{ url('ucs/'.$question->uc->id) }}" class="badge bg-info text-dark">{{ $question->uc->code }}</a>
             <span class="text-muted">{{ date('d/m/Y H:i', strtotime($question->date)); }}, por 
@@ -30,21 +46,7 @@
             ...
             @endif
           </p>
-          
-          @php
-            $valid = false;
-            foreach ($question->childs as $answer) {
-              $validations = DB::table('validation')->where('id_answer', $answer->id)->get();
-              foreach ($validations as $validation) {
-                if ($validation->valid) $valid = true;
-              }
-            }
-          @endphp
-          @if ($valid)
-          <p class="question-card-icon p-4">
-            <i class="fas fa-check question-valid-icon"></i>
-          </p>
-          @endif
+        
         </div>
       </div>
 

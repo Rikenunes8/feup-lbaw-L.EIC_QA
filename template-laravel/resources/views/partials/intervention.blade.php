@@ -1,5 +1,27 @@
 <section id="{{ $intervention->id }}" class="intervention-detail {{ $intervention->type }}-detail {{ $intervention->isComment()?'mt-2 comment-parent-'.$intervention->parent->id:'mt-3' }} {{ $intervention->isQuestion()?'':'d-flex flex-row-reverse' }}" data-id="{{ $intervention->id }}">
   <div class="row">
+      @if ($intervention->isAnswer())
+        <div class="col-1 question-details-validation-icon">
+        @php 
+          $check = 'fa-check';
+          $times = 'fa-times';
+
+          $validations = DB::table('validation')->where('id_answer', $intervention->id)->get();
+          $valid = null;
+          foreach ($validations as $validation) {
+            if ($validation->valid) $valid = true;
+            else $valid = false;
+          }
+
+          if (Auth::check()) {
+            $isTeacherResponsible = $intervention->parent->uc->teachers()->wherePivot('id_teacher', '=', Auth::user()->id)->exists();
+          }
+        @endphp
+        @if ( !is_null($valid) &&  ( !Auth::check() || (Auth::check() && !$isTeacherResponsible) ) )
+          <i class="fas {{ $valid ? $check.' question-valid-icon' : $times.' question-invalid-icon' }}"></i>
+        @endif
+        </div>
+      @endif
     <div class="col-1 intervention-votes">
       @if (!$intervention->isComment())
       <a href="#" class="app-link intervention-vote intervention-upvote"><h3 class="text-center">&#x25B2;</h3></a>
@@ -7,8 +29,21 @@
       <a href="#" class="app-link intervention-vote intervention-downvote"><h3 class="text-center">&#x25BC;</h3></a>
       @endif
     </div>
-    <div class="col-11 card">
-      <div class="card-body">
+    <div class="{{ $intervention->isAnswer() ? 'col-10':'col-11' }} card">
+      <div class="card-body ps-2 pe-1">
+
+        @if ( $intervention->isAnswer() && Auth::check() && $isTeacherResponsible && Auth::user()->id != $intervention->id_author )
+          <div class="text-center question-card-icon-validate p-0 ms-1">
+
+            @if ( is_null($valid) )
+              <a class="btn btn-outline-success text-success me-1 validate-valid"> <i class="fas {{ $check }} "></i></a>
+              <a class="btn btn-outline-danger text-danger me-1 validate-invalid"> <i class="fas {{ $times }} "></i></a>
+            @else
+              <a class="btn {{ $valid ? 'btn-success text-white invalidate' : 'btn-outline-success text-success validate-valid' }} me-1"> <i class="fas {{ $check }} "></i></a>
+              <a class="btn {{ $valid ? 'btn-outline-danger text-danger validate-invalid' : 'btn-danger text-white invalidate' }} me-1"> <i class="fas {{ $times }} "></i></a>
+            @endif
+          </div>
+        @endif
 
         <p>{!! $intervention->text !!}</p>
         @if (!$intervention->isQuestion())
@@ -22,37 +57,6 @@
         @endif
         
         @if ( Auth::check() )
-
-          @if ($intervention->isAnswer())
-            <div class="text-center question-card-icon p-3">
-              @php
-                $check = 'fa-check';
-                $times = 'fa-times';
-                $isTeacherResponsible = $intervention->parent->uc->teachers()->wherePivot('id_teacher', '=', Auth::user()->id)->exists();
-                
-                $validations = DB::table('validation')->where('id_answer', $intervention->id)->get();
-
-                $valid = null;
-                foreach ($validations as $validation) {
-                  if ($validation->valid) $valid = true;
-                  else $valid = false;
-                }
-              @endphp
-
-              @if ( is_null($valid) )
-                @if ( $isTeacherResponsible && Auth::user()->id != $intervention->id_author )
-                <a href="#" class="btn btn-success text-white me-1 validate-valid"> <i class="fas {{ $check }} "></i></a>
-                <a href="#" class="btn btn-danger text-white me-1 validate-invalid"> <i class="fas {{ $times }} "></i></a>
-                @endif
-              @else
-                @if ( $isTeacherResponsible && Auth::user()->id != $intervention->id_author )
-                <a href="#" class="btn {{ $valid ? 'btn-success' : 'btn-danger' }} text-white me-1 invalidate"> <i class="fas {{ $valid ? $check : $times }} "></i></a>
-                @else
-                <i class="fas {{ $valid ? $check.' question-valid-icon' : $times.' question-invalid-icon' }}"></i>
-                @endif
-              @endif
-            </div>
-          @endif
            
           <div class="text-center question-page-actions p-3">
             @if ( !Auth::user()->isAdmin() && !$intervention->isComment())

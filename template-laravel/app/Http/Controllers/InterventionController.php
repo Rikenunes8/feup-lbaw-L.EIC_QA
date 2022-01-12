@@ -438,11 +438,9 @@ class InterventionController extends Controller
         else if ($validAux == 'false') $valid = false;
 
         $this->authorize('valid', $intervention);
-
-        if (is_null($valid)) {
-            DB::table('validation')->where('id_answer', $intervention->id)->delete();
-        }
-        else {
+        
+        DB::table('validation')->where('id_answer', $intervention->id)->delete();
+        if (!is_null($valid)) {
             $intervention->valid()->attach($user->id, ['valid' => $valid]);
         }
 

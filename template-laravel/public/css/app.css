@@ -44,13 +44,19 @@ section#faq-page .accordion-button:not(.collapsed) {
   display: flex;
   justify-content: space-between;
 }
-.question-card .question-card-score,
+.question-card .question-card-score, 
 .notification-card .notification-card-read-mark {
-  display: flex;
   align-items: center;
-  justify-content: center;
   text-align: center;
   background-color: rgb(255,255,255)!important;
+}
+.question-card .question-card-score {
+  display: grid!important;
+  align-content: center;
+}
+.notification-card .notification-card-read-mark {
+  display: flex;
+  justify-content: center;
 }
 .question-card span.text-muted, 
 .user-profile span.text-muted,
@@ -64,6 +70,11 @@ section#faq-page .accordion-button:not(.collapsed) {
   justify-content: space-between;
   text-align: end;
 }
+.question-valid-icon, 
+.question-invalid-icon {
+  font-size: x-large;
+  margin-top: .5rem;
+}
 .question-valid-icon {
   color: #00b74a;
 }
@@ -75,16 +86,25 @@ section#faq-page .accordion-button:not(.collapsed) {
 }
 #question-page .answer-detail > .row {
   margin-right: 0;
-  width: 94%;
+  width: 100%;
 }
 #question-page .comment-detail > .row {
   margin-right: 0;
-  width: 88%;
+  width: 85%;
+}
+#question-page .question-details-validation-icon {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+#question-page .question-details-validation-icon i {
+  font-size: xx-large;
+  margin-top: 2.5rem;
 }
 #question-page .intervention-votes {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 #question-page .question-detail .question-page-actions,
 #question-page .answer-detail .question-page-actions,
@@ -103,7 +123,7 @@ section#faq-page .accordion-button:not(.collapsed) {
 }
 #question-page .card-body > p:first-of-type,
 #notifications-page .card-body >p:first-of-type {
-  margin-right: 8rem;
+  /*margin-right: 8rem;*/
   margin-bottom: 1rem;
 }
 #question-page .comment-detail .card {
@@ -121,6 +141,9 @@ section#faq-page .accordion-button:not(.collapsed) {
   position: absolute;
   top: 0;
   right: 0;
+}
+.question-card-icon-validate {
+  float: right;
 }
 #notifications-page .notification-unread .card-body {
   border-left: 5px solid blue;
