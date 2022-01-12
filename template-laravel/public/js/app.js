@@ -150,7 +150,7 @@ function sendBlockUserRequest(event) {
       sendAjaxRequest('post', '/api/users/' + id + '/block', {block_reason: reason}, userBlockedHandler);
   } else {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Não é possível bloquear um utilizador sem uma razão."));
+    error_section.appendChild(createAlert('alert-danger', "Não é possível bloquear um utilizador sem uma razão."));
   }
 
   event.preventDefault();
@@ -230,7 +230,7 @@ function switchReceiveEmailRequest() {
 function ucFollowHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -331,13 +331,16 @@ function userActivatedHandler() {
   let element = document.querySelector('tr[data-id="' + user.id + '"]');
   element.remove();
 
+  let error_section = document.querySelector('section.error-msg');
+  error_section.appendChild(createAlert('alert-success', "Conta '" + user.email + "' ativada com sucesso!"));
+
   admin_table.row(element).remove().draw(false);
 }
 
 function interventionDeletedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Eliminação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Eliminação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -359,7 +362,7 @@ function interventionDeletedHandler() {
 function interventionVotedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Votação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Votação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -372,7 +375,7 @@ function interventionVotedHandler() {
 function answerValidatedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Validação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Validação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -416,24 +419,20 @@ function answerValidatedHandler() {
 }
 
 function interventionReportHandler() {
+  let error_section = document.querySelector('section.error-msg');
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Denúncia não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Denúncia não autorizada"));
     return;
   } 
-  // if (this.status != 200) window.location = '/';
+  if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
-  /*
-  TODO createAlert success
-  let error_section = document.querySelector('section.error-msg');
-  error_section.appendChild(createError("Denúncia não autorizada"));
-  */
+  error_section.appendChild(createAlert('alert-success', "Denúncia realizada com sucesso!"));
 }
 
 function notificationMarkReadHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -462,7 +461,7 @@ function notificationMarkReadHandler() {
 function notificationRemoveHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -479,7 +478,7 @@ function notificationRemoveHandler() {
 function reportRemovedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -493,7 +492,7 @@ function reportRemovedHandler() {
 function switchReceiveEmailHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -570,9 +569,9 @@ function showFilterForm() {
   }
 }
 
-function createError(msg) {
+function createAlert(type, msg) {
   let error_div = document.createElement('div');
-  error_div.classList.add('mt-1', 'py-2', 'alert', 'alert-danger', 'alert-dismissible', 'fade', 'show');
+  error_div.classList.add('mt-1', 'py-2', 'alert', type, 'alert-dismissible', 'fade', 'show');
 
   let close_btn = document.createElement('button');
   close_btn.setAttribute('type', 'button');
