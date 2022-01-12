@@ -634,7 +634,32 @@ $(document).ready(function () {
     }
   });
 
-  tinymce.init({selector:'textarea.text-editor'});
+  tinymce.init({
+    selector:'textarea.text-editor',
+    menubar: false,
+    toolbar_sticky: true,
+    toolbar: 'undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | table codesample link | fullscreen',
+    plugins: 'autolink link codesample advlist lists table fullscreen',
+    style_formats: [
+      { title: 'Headings', items: [
+        { title: 'Heading 1', format: 'h1' },
+        { title: 'Heading 2', format: 'h2' },
+        { title: 'Heading 3', format: 'h3' },
+        { title: 'Heading 4', format: 'h4' },
+        { title: 'Heading 5', format: 'h5' },
+        { title: 'Heading 6', format: 'h6' }
+      ]},
+      { title: 'Inline', items: [
+        { title: 'Superscript', format: 'superscript' },
+        { title: 'Subscript', format: 'subscript' },
+        { title: 'Code', format: 'code' }
+      ]},
+      { title: 'Blocks', items: [
+        { title: 'Paragraph', format: 'p' },
+        { title: 'Blockquote', format: 'blockquote' }
+      ]}
+    ]
+  });
   showRegisterFormFields();
 });
 

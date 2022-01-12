@@ -31,7 +31,7 @@
       <h2 class="me-4">{{ $user->name }}</h2> 
       
       <section>
-        <div class="row mt-4">
+        <div class="row {{ Auth::check() && (Auth::user()->id == $user->id || Auth::user()->isAdmin()) ? 'mt-5' : 'mt-4' }} ">
           <div class="col-md-4 mb-2">
             @if ( Auth::check() && !is_null($user->photo) && file_exists( public_path('images/users/'.$user->photo) ) )
             <img src="{{ asset('images/users/'.$user->photo) }}" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">

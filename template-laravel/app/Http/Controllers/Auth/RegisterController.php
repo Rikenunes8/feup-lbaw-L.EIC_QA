@@ -70,16 +70,17 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+
         if ($data['usertype'] == "Admin") {
             return Validator::make($data, [
                 'email' => 'required|string|email|max:255|unique:users,email',
-                'username' => 'required|string|max:20|unique:users,username',
+                'username' => 'required|string|alpha_dash|max:20|unique:users,username',
                 'password' => 'required|string|min:6|confirmed',
             ]);
         } else if ($data['usertype'] == "Teacher") {
             return Validator::make($data, [
                 'email' => 'required|string|email|max:255|unique:users,email',
-                'username' => 'required|string|max:20|unique:users,username',
+                'username' => 'required|string|alpha_dash|max:20|unique:users,username',
                 'password' => 'required|string|min:6|confirmed',
                 'name' => 'required|string|max:255',
                 'about' => 'nullable|string|max:500',
@@ -89,7 +90,7 @@ class RegisterController extends Controller
         } else { // ($data['usertype'] == "Student")
             return Validator::make($data, [
                 'email' => 'required|string|email|max:255|unique:users,email',
-                'username' => 'required|string|max:20|unique:users,username',
+                'username' => 'required|string|alpha_dash|max:20|unique:users,username',
                 'password' => 'required|string|min:6|confirmed',
                 'name' => 'required|string|max:255',
                 'about' => 'nullable|string|max:500',

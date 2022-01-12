@@ -112,7 +112,7 @@ class UserController extends Controller
         $this->authorize('update', $user);
 
         $request->validate([
-            'username' => 'required|string|max:20|unique:users,username,'.$id,
+            'username' => 'required|string|alpha_dash|max:20|unique:users,username,'.$id,
             'password' => 'nullable|string|min:6',
         ]);
 
