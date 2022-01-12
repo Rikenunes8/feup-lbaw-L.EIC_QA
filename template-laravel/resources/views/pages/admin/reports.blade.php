@@ -23,7 +23,8 @@
               <th scope="col">Tipo</th>
               <th scope="col">Título</th>
               <th scope="col">Texto</th>
-              <th scope="col">Autor</th>
+              <th scope="col">Autor da Intervenção</th>
+              <th scope="col">Autor da Denúncia</th>
               <th scope="col">Ações</th>
             </tr>
           </thead>
@@ -43,8 +44,8 @@
                   if ($intervention->isQuestion()) $title = $intervention->title;
                   else $title = '';
                 @endphp
-                {!! substr($title, 0, 25) !!}
-                @if (strlen($title) > 25)
+                {!! substr($title, 0, 35) !!}
+                @if (strlen($title) > 35)
                 ...
                 @endif
                 </a>
@@ -55,13 +56,14 @@
                     $str = str_replace("</p>", " ", $str);
                     $str = str_replace("&nbsp;", "", $str);
                   @endphp
-                  {!! substr($str, 0, 30) !!}
-                  @if (strlen($str) > 30)
+                  {!! substr($str, 0, 70) !!}
+                  @if (strlen($str) > 70)
                   ...
                   @endif
                 </a>
               </td>
-              <td><a href="{{ url('/users/'.$intervention->author->id) }}" class="app-link">{{ $intervention->author->name }}</a></td>
+              <td><a href="{{ url('/users/'.$intervention->author->id) }}" class="app-link">{{ $intervention->author->username }}</a></td>
+              <td><a href="{{ url('/users/'.$report->user->id) }}" class="app-link">{{ $report->user->username }}</a></td>
               <td class="text-center admin-table-reports-actions">
                 <section class="actions-buttons">
                   <a href="{{ url('/questions/'.$question->id.'#'.$intervention->id) }}" class="btn btn-info text-black me-1"><i class="fas fa-search	"></i></a>
