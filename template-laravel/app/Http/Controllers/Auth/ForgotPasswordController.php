@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Auth; 
   
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 use DB; 
 use Carbon\Carbon; 
 use App\Models\User; 
@@ -13,6 +14,9 @@ use  Illuminate\Mail\MailServiceProvider;
 use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Database\Migrations\Migration;
+use App\Mail\SendEmail;
+
+
 
 
   
@@ -38,7 +42,7 @@ class ForgotPasswordController extends Controller
           $request->validate([
               'email' => 'required|email|exists:users',
           ]);
-  
+
           $token = Str::random(64);
   
           DB::table('password_resets')->insert([
@@ -47,11 +51,12 @@ class ForgotPasswordController extends Controller
               'created_at' => Carbon::now()
             ]);
   
+            //Mail::to('test@test.com')->send(new SendEmail($request));
           Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
               $message->to($request->email);
               $message->subject('Reset Password');
           });
-  
+
           return back()->with('message', 'We have e-mailed your password reset link!');
       }
       /**

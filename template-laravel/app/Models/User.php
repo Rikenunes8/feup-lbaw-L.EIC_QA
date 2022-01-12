@@ -33,7 +33,6 @@ class User extends Authenticatable
       'password',
   ];
 
-  protected $table = 'schema_name.table_name';
     
     public function isAdmin() {
       return $this->type == 'Admin';
