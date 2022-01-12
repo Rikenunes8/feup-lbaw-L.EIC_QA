@@ -88,7 +88,7 @@ function addEventListeners() {
     switcher.addEventListener('click', switchReceiveEmailRequest);
   });
 
-  let sendEmail = document.querySelectorAll('#contact-page section_div.email-form submit_email');
+  let sendEmail = document.querySelectorAll('#contact-page div.email-form a.submit_email');
   [].forEach.call(sendEmail, function(switcher) {
     switcher.addEventListener('click', sendEmailRequest);
   });
@@ -96,8 +96,14 @@ function addEventListeners() {
 }
 
 function sendEmailRequest() {
-    sendAjaxRequest('post', '/contact');
+    let name = document.querySelector('#name').value;
+    let email = document.querySelector('#email').value;
+    let subject = document.querySelector('#subject').value;
+    let message = document.querySelector('#message').value;
+    sendAjaxRequest('post', '/contact', {'name':name, 'email':email, 'subject':subject, 'message':message}, sendEmailHandler)
+}
 
+function sendEmailHandler() {
     let msg_section = document.querySelector('section.msg');
     if (this.status == 200) {
         msg_section.appendChild(createError("Email enviado com sucesso"));

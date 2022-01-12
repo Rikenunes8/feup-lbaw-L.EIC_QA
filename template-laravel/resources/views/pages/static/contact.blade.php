@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 mt-3" class="email-form">
+    <div class="col-md-6 mt-3 email-form">
         <section class="msg"></section>
         <!-- TODO action -->
         <form role="form" id="form-contact" name="form-contact" data-toggle="validator">
@@ -54,7 +54,7 @@
 
             @csrf
 
-            <button type="submit" class="btn btn-primary btn-block" class="submit_email">Enviar</button>
+            <a class="btn btn-primary btn-block submit_email">Enviar</a>
         </form>
     </div>
   </div>
