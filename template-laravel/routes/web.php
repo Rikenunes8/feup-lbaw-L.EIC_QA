@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\DB;
 
 // ------------ LEIC Q&A ---------------
 
+
+
+
 // Home
 Route::get('/', function () { return view('pages.static.home'); });
 
@@ -32,10 +35,21 @@ Route::post('login'   , 'Auth\LoginController@login');
 Route::get('logout'   , 'Auth\LoginController@logout')->name('logout');
 Route::get('register' , 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
-// Route::get('forgot-password'       , 'X@showForgotPasswordForm')->name('password.request');
-// Route::post('forgot-password'      , 'X@forgotPassowrd')->name('password.email');
+
+
+Route::get('forgot-password'        , 'Auth\ForgotPasswordController@showForgetPasswordForm')->middleware('guest')->name('password.request');
+Route::post('forgot-password'       , 'Auth\ForgotPasswordController@submitForgetPasswordForm')->middleware('guest')->name('password.email'); 
+Route::get('reset-password/{token}' , 'Auth\ForgotPasswordController@showResetPasswordForm')->middleware('guest')->name('password.reset');
+Route::post('reset-password'        , 'Auth\ForgotPasswordController@submitResetPasswordForm')->middleware('guest')->name('password.update');
+
+
+// Route::get('/activate/{email}/{code}', 'Auth\ForgotPasswordController@activate');
+// Route::get('forgot_password', 'Auth\ForgotPasswordController@forgot'); 
+// Route::post('forgot_password', 'Auth\ForgotPasswordController@password'); 
+//Route::post('forgot-password', 'Auth\ForgotPasswordController@ForgotPassword')->name('password.email');
 // Route::post('reset-password'       , 'X@resetPassowrd')->name('password.update');
 // Route::get('reset-password/{token}', 'X@showResetPasswordForm')->name('password.reset');
+
 
 
 // API

@@ -45,7 +45,7 @@
     </div>
 
     <div class="mb-3 col-12 col-lg-6">
-      <label for="password-confirm" class="form-label required">Confirm Password</label>
+      <label for="password-confirm" class="form-label required">Confirme Password</label>
       <input type="password" id="password-confirm" class="form-control" name="password_confirmation" required>
     </div>
 

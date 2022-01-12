@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class User extends Authenticatable
+class User extends Authenticatable implements CanResetPasswordContract
 {
     use Notifiable;
 
@@ -19,7 +21,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
       'name', 'email', 'password', 'active', 'username', 'about', 'birthdate', 'photo', 
-      'score', 'blocked', 'type', 'entry_year',
+      'score', 'blocked', 'type', 'entry_year', 'token', 'created_at'
     ];
 
     /**
@@ -100,6 +102,7 @@ class User extends Authenticatable
       return $this->belongsToMany('App\Models\Notification', 'receive_not', 'id_user', 'id_notification')
                   ->withPivot('read')->withPivot('to_email');
     }    
+
 
     /**
      * Filter query by Admin type.

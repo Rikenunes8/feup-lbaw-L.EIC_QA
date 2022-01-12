@@ -11,6 +11,13 @@
 <form method="POST" action="{{ route('login') }}" id="form-login" class="row w-50 mx-auto">
     {{ csrf_field() }}
 
+    @if (Session::has('message'))
+        <div class="my-3 py-2  alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="h-auto btn-close btn-sm" data-bs-dismiss="alert"></button>  
+            {{ Session::get('message') }}
+        </div>
+    @endif
+
     <div class="mb-3 col-12">
         <label for="email" class="form-label required">E-mail</label>
         <input type="email" id="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
@@ -38,8 +45,10 @@
         <button type="submit" class="btn btn-primary btn-block">Iniciar Sessão</button>
     </div>
 
+   
+    
     <div class="col-12 d-flex justify-content-center mt-3">
-        <a href="{{ url('/recover') }}" class="app-link">Recuperar Password?</a>
+        <a href="{{ url('/forgot-password') }}" class="app-link">Recuperar Password?</a>
     </div>
 </form>
 @endsection
