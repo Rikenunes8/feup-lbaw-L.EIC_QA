@@ -176,7 +176,8 @@ footer > p {
   }
 }
 @media (max-width: 767px) {
-  #form-login, #form-uc-create, #form-uc-edit {
+  #form-login, #form-uc-create, #form-uc-edit,
+  #form-forgot-password, #form-reset-password {
     width: 100%!important;
   }
 
