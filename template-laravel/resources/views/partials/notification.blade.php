@@ -5,19 +5,19 @@
   <div class="card notification-card {{ $read? 'notification-read':'notification-unread'}} h-100" data-id="{{ $notification->id }}">
     <div class="card-body py-2">
       @php 
-        if ($notification->type == 'account_status') {
+        if ($notification->isAccount_status()) {
           $type = 'Novo Estado de Conta';
         } 
         else {
-          if ($notification->type == 'question') {
+          if ($notification->isQuestion()) {
             $type = 'Nova Questão';
-          } else if ($notification->type == 'answer') {
+          } else if ($notification->isAnswer()) {
             $type = 'Nova Resposta';
-          } else if ($notification->type == 'comment') {
+          } else if ($notification->isComment()) {
             $type = 'Novo Comentário';
-          } else if ($notification->type == 'validation') {
+          } else if ($notification->isValidation()) {
             $type = 'Nova Validação';
-          } else if ($notification->type == 'report') {
+          } else if ($notification->isReport()) {
             $type = 'Nova Denúncia';
           }
         }

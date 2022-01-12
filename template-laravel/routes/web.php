@@ -126,13 +126,13 @@ Route::get('admin/reports'              , 'AdminController@listReports');
 Route::get('admin/requests'             , 'AdminController@listRequests');
 
 Route::get('email', function(){
-  $delay = now()->addSeconds(10);
+  $delay = now();
   foreach(User::get() as $user) {
     if (!$user->receive_email) continue;
 
     $notifications = $user->notifications()->wherePivot('to_email', true)->wherePivot('read', false)->get();
     foreach($notifications as $notification) {
-      $delay = $delay->addSeconds(5);
+      $delay = $delay->addSeconds(7);
       $user->notify((new NotificationEmail($notification))->delay($delay));
     }
   }
