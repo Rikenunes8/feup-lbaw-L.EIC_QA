@@ -11,7 +11,7 @@
       </form>
 
       @if (Auth::check())
-      <a href="{{ url('/notifications') }}" id="header-notification-icon" class="d-flex me-2 link-dark text-decoration-none fs-4 far fa-envelope position-relative">
+      <a href="{{ url('/notifications') }}" id="header-notification-icon" class="d-flex me-2 link-dark text-decoration-none fs-4 far fa-bell position-relative">
         @php
           $nots = count(Auth::user()->notifications()->wherePivot('read', false)->get());
         @endphp
