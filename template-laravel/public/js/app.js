@@ -264,7 +264,8 @@ function ucTeacherRemovedHandler() {
 
   let new_a = document.createElement('a');
   new_a.classList.add('btn','btn-primary','text-white', 'admin-table-add');
-  new_a.setAttribute('href', '#');
+  new_a.setAttribute('data-toogle', 'tooltip');
+  new_a.setAttribute('title', 'Associar Docente');
   new_a.innerHTML = `<i class="fas fa-plus"></i> <span class="d-none">Adicionar</span>`;
   new_a.addEventListener('click', sendAddUcTeacherRequest);
 
@@ -283,7 +284,8 @@ function ucTeacherAddedHandler() {
 
   let new_a = document.createElement('a');
   new_a.classList.add('btn','btn-danger','text-white', 'admin-table-remove');
-  new_a.setAttribute('href', '#');
+  new_a.setAttribute('data-toogle', 'tooltip');
+  new_a.setAttribute('title', 'Desassociar Docente');
   new_a.innerHTML = `<i class="fas fa-minus"></i> <span class="d-none">Remover</span>`;
   new_a.addEventListener('click', sendRemoveUcTeacherRequest);
 
@@ -393,16 +395,21 @@ function answerValidatedHandler() {
 
   let a_validate_valid = document.createElement('a');
   a_validate_valid.setAttribute('class', "btn btn-outline-success text-success me-1 validate-valid");
+  a_validate_valid.setAttribute('data-toogle', "tooltip");
+  a_validate_valid.setAttribute('title', "Validar");
   a_validate_valid.innerHTML = '<i class="fas fa-check"></i>';
   a_validate_valid.addEventListener('click', sendValidAnswerRequest);
 
   let a_validate_invalid = document.createElement('a');
   a_validate_invalid.setAttribute('class', "btn btn-outline-danger text-danger me-1 validate-invalid");
+  a_validate_invalid.setAttribute('data-toogle', "tooltip");
+  a_validate_invalid.setAttribute('title', "Invalidar");
   a_validate_invalid.innerHTML = '<i class="fas fa-times"></i>';
   a_validate_invalid.addEventListener('click', sendInvalidAnswerRequest);
 
   let a_invalidate = document.createElement('a');
   a_invalidate.setAttribute('class', "btn text-white invalidate me-1");
+  a_invalidate.setAttribute('data-toogle', "tooltip");
   a_invalidate.innerHTML = '<i class="fas ' + (valid ? 'fa-check' : 'fa-times')+ '"></i>';
   a_invalidate.addEventListener('click', sendNoneAnswerRequest);
 
@@ -412,12 +419,14 @@ function answerValidatedHandler() {
   }
   else if (valid) {
     a_invalidate.classList.add("btn-success");
+    a_invalidate.setAttribute('title', "Remover Validação");
     cardIcon.appendChild(a_invalidate);
     cardIcon.appendChild(a_validate_invalid);
   }
   else {
     cardIcon.appendChild(a_validate_valid);
     a_invalidate.classList.add("btn-danger");
+    a_invalidate.setAttribute('title', "Remover Invalidação");
     cardIcon.appendChild(a_invalidate);
   }
 }

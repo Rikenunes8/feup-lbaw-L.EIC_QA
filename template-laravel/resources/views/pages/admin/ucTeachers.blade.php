@@ -31,7 +31,7 @@
                 <th scope="row"><a href="{{ url('/users/'.$teacher->id) }}" class="app-link">{{ $teacher->name }}</a></th>
                 <td>{{ $teacher->email }}</td>
                 <td class="text-center admin-table-teacher-actions">
-                  <a href="#" class="btn btn-danger text-white admin-table-remove"><i class="fas fa-minus"></i> <span class="d-none">Remover</span></a>
+                  <a class="btn btn-danger text-white admin-table-remove" data-toogle="tooltip" title="Desassociar Docente"><i class="fas fa-minus"></i> <span class="d-none">Remover</span></a>
                 </td>
               </tr>
               @endforeach
@@ -41,7 +41,7 @@
                 <th scope="row"><a href="{{ url('/users/'.$teacher->id) }}" class="app-link">{{ $teacher->name }}</a></td>
                 <td>{{ $teacher->email }}</td>
                 <td class="text-center admin-table-teacher-actions">
-                  <a href="#" class="btn btn-primary text-white admin-table-add"><i class="fas fa-plus"></i> <span class="d-none">Adicionar</span></a>
+                  <a class="btn btn-primary text-white admin-table-add" data-toogle="tooltip" title="Associar Docente"><i class="fas fa-plus"></i> <span class="d-none">Adicionar</span></a>
                 </td>
               </tr>
               @endforeach

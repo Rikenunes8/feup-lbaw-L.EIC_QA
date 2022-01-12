@@ -59,17 +59,17 @@
                 </a>
               </td>
               <td>
-                <a href="{{ url('/admin/users?searchDt='.$intervention->author->email) }}" class="app-link"><i class="fas fa-user-cog"></i></a>
-                <a href="{{ url('/users/'.$intervention->author->id) }}" class="app-link">{{ $intervention->author->username }}</a>
+                <a href="{{ url('/admin/users?searchDt='.$intervention->author->email) }}" class="app-link" data-toogle="tooltip" title="Gerir Utilizador"><i class="fas fa-user-cog"></i></a>
+                <a href="{{ url('/users/'.$intervention->author->id) }}" class="app-link" data-toogle="tooltip" title="Visitar Perfil">{{ $intervention->author->username }}</a>
               </td>
               <td>
-                <a href="{{ url('/admin/users?searchDt='.$report->user->email) }}" class="app-link"><i class="fas fa-user-cog"></i></a>
-                <a href="{{ url('/users/'.$report->user->id) }}" class="app-link">{{ $report->user->username }}</a>
+                <a href="{{ url('/admin/users?searchDt='.$report->user->email) }}" class="app-link" data-toogle="tooltip" title="Gerir Utilizador"><i class="fas fa-user-cog"></i></a>
+                <a href="{{ url('/users/'.$report->user->id) }}" class="app-link" data-toogle="tooltip" title="Visitar Perfil">{{ $report->user->username }}</a>
               </td>
               <td class="text-center admin-table-reports-actions">
                 <section class="actions-buttons">
-                  <a href="{{ url('/questions/'.$question->id.'#'.$intervention->id) }}" class="btn btn-info text-black me-1"><i class="fas fa-search	"></i></a>
-                  <a href="#" class="btn btn-danger text-white reports-page-remove me-1"><i class="far fa-trash-alt"></i></a>
+                  <a href="{{ url('/questions/'.$question->id.'#'.$intervention->id) }}" class="btn btn-info text-black me-1" data-toogle="tooltip" title="Visitar Intervenção"><i class="fas fa-search	"></i></a>
+                  <a class="btn btn-danger text-white reports-page-remove me-1" data-toogle="tooltip" title="Descartar Denúncia"><i class="far fa-trash-alt"></i></a>
                 </section>
               </td>
             </tr>

@@ -24,9 +24,9 @@
       @endif
     <div class="col-1 intervention-votes">
       @if (!$intervention->isComment())
-      <a href="#" class="app-link intervention-vote intervention-upvote"><h3 class="text-center">&#x25B2;</h3></a>
+      <a class="app-link intervention-vote intervention-upvote"><h3 class="text-center">&#x25B2;</h3></a>
       <h3 class="text-center intervention-votes-number">{{ $intervention->votes }}</h3>
-      <a href="#" class="app-link intervention-vote intervention-downvote"><h3 class="text-center">&#x25BC;</h3></a>
+      <a class="app-link intervention-vote intervention-downvote"><h3 class="text-center">&#x25BC;</h3></a>
       @endif
     </div>
     <div class="{{ $intervention->isAnswer() ? 'col-10':'col-11' }} card">
@@ -36,11 +36,11 @@
           <div class="text-center question-card-icon-validate p-0 ms-1">
 
             @if ( is_null($valid) )
-              <a class="btn btn-outline-success text-success me-1 validate-valid"> <i class="fas {{ $check }} "></i></a>
-              <a class="btn btn-outline-danger text-danger me-1 validate-invalid"> <i class="fas {{ $times }} "></i></a>
+              <a class="btn btn-outline-success text-success me-1 validate-valid" data-toogle="tooltip" title="Validar"> <i class="fas {{ $check }} "></i></a>
+              <a class="btn btn-outline-danger text-danger me-1 validate-invalid" data-toogle="tooltip" title="Invalidar"> <i class="fas {{ $times }} "></i></a>
             @else
-              <a class="btn {{ $valid ? 'btn-success text-white invalidate' : 'btn-outline-success text-success validate-valid' }} me-1"> <i class="fas {{ $check }} "></i></a>
-              <a class="btn {{ $valid ? 'btn-outline-danger text-danger validate-invalid' : 'btn-danger text-white invalidate' }} me-1"> <i class="fas {{ $times }} "></i></a>
+              <a class="btn {{ $valid ? 'btn-success text-white invalidate' : 'btn-outline-success text-success validate-valid' }} me-1" data-toogle="tooltip" title="{{ $valid ? 'Remover Validação' : 'Validar' }}"> <i class="fas {{ $check }} "></i></a>
+              <a class="btn {{ $valid ? 'btn-outline-danger text-danger validate-invalid' : 'btn-danger text-white invalidate' }} me-1" data-toogle="tooltip" title="{{ $valid ? 'Invalidar' : 'Remover Invalidação' }}"> <i class="fas {{ $times }} "></i></a>
             @endif
           </div>
         @endif
@@ -61,17 +61,17 @@
           <div class="text-center question-page-actions p-3">
             @if ( !Auth::user()->isAdmin() && !$intervention->isComment())
               @if ($intervention->isQuestion())
-                <a href="#answer-form" class="btn btn-primary text-white me-1" onclick="focusAnswerInput()"><i class="fas fa-reply"></i></a>
+                <a href="#answer-form" class="btn btn-primary text-white me-1" data-toogle="tooltip" title="Responder" onclick="focusAnswerInput()"><i class="fas fa-reply"></i></a>
               @else
-                <a class="btn btn-primary text-white me-1" data-value="{{ $intervention->id }}" onclick="showCommentCreateForm(this)"><i class="fas fa-reply"></i></a>
+                <a class="btn btn-primary text-white me-1" data-toogle="tooltip" title="Responder" data-value="{{ $intervention->id }}" onclick="showCommentCreateForm(this)"><i class="fas fa-reply"></i></a>
               @endif
             @endif
             @if ( Auth::user()->id == $intervention->id_author )
-            <a href="{{ url($intervention->type.'s/'.$intervention->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
+            <a href="{{ url($intervention->type.'s/'.$intervention->id.'/edit') }}" class="btn btn-warning text-black me-1" data-toogle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
             @endif
-            <a href="#" class="btn btn-dark text-white question-page-report me-1"><i class="fas fa-exclamation-triangle"></i></a>
+            <a class="btn btn-dark text-white question-page-report me-1" data-toogle="tooltip" title="Denunciar"><i class="fas fa-exclamation-triangle"></i></a>
             @if ( Auth::user()->id == $intervention->id_author || Auth::user()->isAdmin() ) 
-            <button type="button" class="btn btn-danger text-white me-1" data-bs-toggle="modal" data-bs-target="#deleteIntervention{{ $intervention->id }}Modal">
+            <button type="button" class="btn btn-danger text-white me-1" data-toogle="tooltip" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteIntervention{{ $intervention->id }}Modal">
               <i class="far fa-trash-alt"></i>
             </button>
             @endif

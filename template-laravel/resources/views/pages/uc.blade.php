@@ -64,7 +64,7 @@
       @if ( Auth::check() && Auth::user()->isStudent() )
       <p class="uc-card-icon pt-2 pe-4">
         
-        <a href="#" class="uc-card-icon-follow">
+        <a class="uc-card-icon-follow">
           <i class="{{ in_array(Auth::user()->email, $uc->followers()->pluck('email', 'id')->toArray() )?'fas':'far' }} fa-heart text-danger"></i>
         </a>
         
