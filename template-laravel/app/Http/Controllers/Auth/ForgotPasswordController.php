@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\User; 
 use Mail; 
 use Illuminate\Mail\MailManager;
+use  Illuminate\Mail\MailServiceProvider;
 use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Database\Migrations\Migration;
@@ -24,7 +25,7 @@ class ForgotPasswordController extends Controller
        */
       public function showForgetPasswordForm()
       {
-         return view('auth.reset_password');
+         return view('auth.forgetPassword');
       }
   
       /**
@@ -46,7 +47,7 @@ class ForgotPasswordController extends Controller
               'created_at' => Carbon::now()
             ]);
   
-          Mail::send('auth.forgot', ['token' => $token], function($message) use($request){
+          Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
               $message->to($request->email);
               $message->subject('Reset Password');
           });
