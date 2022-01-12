@@ -36,11 +36,11 @@
 
       <div class="text-center notifications-page-actions p-3">
         @if ($read)
-          <a class="btn btn-outline-dark bg-white text-black notifications-page-envelope me-1"><i class="far fa-envelope"></i></a>
+          <a class="btn btn-outline-dark bg-white text-black notifications-page-envelope me-1" data-toogle="tooltip" title="Marcar como Não Lida"><i class="far fa-envelope"></i></a>
         @else
-          <a class="btn btn-outline-dark bg-white text-black notifications-page-envelope me-1"><i class="far fa-envelope-open"></i></a>
+          <a class="btn btn-outline-dark bg-white text-black notifications-page-envelope me-1" data-toogle="tooltip" title="Marcar como Lida"><i class="far fa-envelope-open"></i></a>
         @endif
-        <a class="btn btn-outline-dark bg-white text-black notifications-page-remove me-1"><i class="far fa-trash-alt"></i></a>
+        <a class="btn btn-outline-dark bg-white text-black notifications-page-remove me-1" data-toogle="tooltip" title="Eliminar"><i class="far fa-trash-alt"></i></a>
       </div>
     </div>
   </div>

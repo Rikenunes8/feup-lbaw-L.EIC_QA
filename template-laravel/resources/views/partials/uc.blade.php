@@ -36,7 +36,7 @@
         @if ($showFollow)
           <p class="uc-card-icon p-4">
             
-            <a href="#" class="card-link uc-card-icon-follow">
+            <a class="card-link uc-card-icon-follow">
               <i class="{{ in_array(Auth::user()->email, $uc->followers()->pluck('email', 'id')->toArray() )?'fas':'far' }} fa-heart text-danger"></i>
             </a>
             

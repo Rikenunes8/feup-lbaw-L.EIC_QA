@@ -10,7 +10,7 @@
   <div class="row mt-3 mb-5">
     <div class="col-12 admin-action-add">
       <small class="text-mutted">Gestão de Unidadades Curriculares</small>
-      <a href="{{ url('ucs/create') }}" class="btn btn-primary text-white"><i class="fas fa-plus"></i></a>
+      <a href="{{ url('ucs/create') }}" class="btn btn-primary text-white" data-toogle="tooltip" title="Nova UC"><i class="fas fa-plus"></i></a>
     </div>
   </div>
 
@@ -44,10 +44,10 @@
               </td>
               <td class="text-center admin-table-uc-actions">
                 <section class="actions-buttons">
-                  <a href="{{ url('admin/ucs/'.$uc->id.'/teachers') }}" class="btn btn-info text-black me-1"><i class="far fa-address-card"></i></a>
-                  <a href="{{ url('ucs/'.$uc->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
+                  <a href="{{ url('admin/ucs/'.$uc->id.'/teachers') }}" class="btn btn-info text-black me-1" data-toogle="tooltip" title="Gerir os seus docentes"><i class="far fa-address-card"></i></a>
+                  <a href="{{ url('ucs/'.$uc->id.'/edit') }}" class="btn btn-warning text-black me-1" data-toogle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
                   
-                  <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUc{{ $uc->id }}Modal">
+                  <button type="button" class="btn btn-danger text-white" data-toogle="tooltip" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteUc{{ $uc->id }}Modal">
                     <i class="far fa-trash-alt"></i>
                   </button>
                 </section>

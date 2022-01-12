@@ -48,10 +48,10 @@
                 <td>{{ date('d/m/Y H:i', strtotime($user->registry_date)) }}</td>
                 <td class="text-center admin-table-user-actions">
                   <section class="actions-buttons">
-                    <button type="button" class="btn btn-success text-white me-1 block-btn" data-bs-toggle="modal" data-bs-target="#activeUser{{ $user->id }}Modal">
+                    <button type="button" class="btn btn-success text-white me-1 block-btn" data-toogle="tooltip" title="Ativar Conta" data-bs-toggle="modal" data-bs-target="#activeUser{{ $user->id }}Modal">
                       <i class="fas fa-check"></i>
                     </button>
-                    <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
+                    <button type="button" class="btn btn-danger text-white" data-toogle="tooltip" title="Rejeitar Pedido" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
                       <i class="fas fa-times"></i>
                     </button>
                   </section>

@@ -8,7 +8,10 @@
 
   <div class="row">
     <div class="col-12 user-action-add">
-      <h2>Questões</h2>
+      <h2>
+        Questões
+        @include('partials.help', ['placement' => 'right', 'content' => 'As questões que têm repostas validadas são identificadas com um certo a verde!'])
+      </h2>
       @if (Auth::check() && !Auth::user()->isAdmin())
       <div>
         <a href="{{ url('questions/create') }}" class="btn btn-primary text-white">Nova Questão<i class="fas fa-plus ms-2"></i></a>

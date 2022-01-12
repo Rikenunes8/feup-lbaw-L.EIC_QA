@@ -88,6 +88,10 @@ function addEventListeners() {
     switcher.addEventListener('click', switchReceiveEmailRequest);
   });
 
+  let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl);
+  });
 }
 
 function encodeForAjax(data) {
@@ -150,7 +154,7 @@ function sendBlockUserRequest(event) {
       sendAjaxRequest('post', '/api/users/' + id + '/block', {block_reason: reason}, userBlockedHandler);
   } else {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Não é possível bloquear um utilizador sem uma razão."));
+    error_section.appendChild(createAlert('alert-danger', "Não é possível bloquear um utilizador sem uma razão."));
   }
 
   event.preventDefault();
@@ -230,7 +234,7 @@ function switchReceiveEmailRequest() {
 function ucFollowHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -260,7 +264,8 @@ function ucTeacherRemovedHandler() {
 
   let new_a = document.createElement('a');
   new_a.classList.add('btn','btn-primary','text-white', 'admin-table-add');
-  new_a.setAttribute('href', '#');
+  new_a.setAttribute('data-toogle', 'tooltip');
+  new_a.setAttribute('title', 'Associar Docente');
   new_a.innerHTML = `<i class="fas fa-plus"></i> <span class="d-none">Adicionar</span>`;
   new_a.addEventListener('click', sendAddUcTeacherRequest);
 
@@ -279,7 +284,8 @@ function ucTeacherAddedHandler() {
 
   let new_a = document.createElement('a');
   new_a.classList.add('btn','btn-danger','text-white', 'admin-table-remove');
-  new_a.setAttribute('href', '#');
+  new_a.setAttribute('data-toogle', 'tooltip');
+  new_a.setAttribute('title', 'Desassociar Docente');
   new_a.innerHTML = `<i class="fas fa-minus"></i> <span class="d-none">Remover</span>`;
   new_a.addEventListener('click', sendRemoveUcTeacherRequest);
 
@@ -331,13 +337,16 @@ function userActivatedHandler() {
   let element = document.querySelector('tr[data-id="' + user.id + '"]');
   element.remove();
 
+  let error_section = document.querySelector('section.error-msg');
+  error_section.appendChild(createAlert('alert-success', "Conta '" + user.email + "' ativada com sucesso!"));
+
   admin_table.row(element).remove().draw(false);
 }
 
 function interventionDeletedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Eliminação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Eliminação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -359,7 +368,7 @@ function interventionDeletedHandler() {
 function interventionVotedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Votação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Votação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -372,7 +381,7 @@ function interventionVotedHandler() {
 function answerValidatedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Validação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Validação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -386,16 +395,21 @@ function answerValidatedHandler() {
 
   let a_validate_valid = document.createElement('a');
   a_validate_valid.setAttribute('class', "btn btn-outline-success text-success me-1 validate-valid");
+  a_validate_valid.setAttribute('data-toogle', "tooltip");
+  a_validate_valid.setAttribute('title', "Validar");
   a_validate_valid.innerHTML = '<i class="fas fa-check"></i>';
   a_validate_valid.addEventListener('click', sendValidAnswerRequest);
 
   let a_validate_invalid = document.createElement('a');
   a_validate_invalid.setAttribute('class', "btn btn-outline-danger text-danger me-1 validate-invalid");
+  a_validate_invalid.setAttribute('data-toogle', "tooltip");
+  a_validate_invalid.setAttribute('title', "Invalidar");
   a_validate_invalid.innerHTML = '<i class="fas fa-times"></i>';
   a_validate_invalid.addEventListener('click', sendInvalidAnswerRequest);
 
   let a_invalidate = document.createElement('a');
   a_invalidate.setAttribute('class', "btn text-white invalidate me-1");
+  a_invalidate.setAttribute('data-toogle', "tooltip");
   a_invalidate.innerHTML = '<i class="fas ' + (valid ? 'fa-check' : 'fa-times')+ '"></i>';
   a_invalidate.addEventListener('click', sendNoneAnswerRequest);
 
@@ -405,30 +419,33 @@ function answerValidatedHandler() {
   }
   else if (valid) {
     a_invalidate.classList.add("btn-success");
+    a_invalidate.setAttribute('title', "Remover Validação");
     cardIcon.appendChild(a_invalidate);
     cardIcon.appendChild(a_validate_invalid);
   }
   else {
     cardIcon.appendChild(a_validate_valid);
     a_invalidate.classList.add("btn-danger");
+    a_invalidate.setAttribute('title', "Remover Invalidação");
     cardIcon.appendChild(a_invalidate);
   }
 }
 
 function interventionReportHandler() {
+  let error_section = document.querySelector('section.error-msg');
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Denúncia não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Denúncia não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
+  error_section.appendChild(createAlert('alert-success', "Denúncia realizada com sucesso!"));
 }
 
 function notificationMarkReadHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -457,7 +474,7 @@ function notificationMarkReadHandler() {
 function notificationRemoveHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -474,7 +491,7 @@ function notificationRemoveHandler() {
 function reportRemovedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -488,7 +505,7 @@ function reportRemovedHandler() {
 function switchReceiveEmailHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   } 
   if (this.status != 200) window.location = '/';
@@ -565,9 +582,9 @@ function showFilterForm() {
   }
 }
 
-function createError(msg) {
+function createAlert(type, msg) {
   let error_div = document.createElement('div');
-  error_div.classList.add('mt-1', 'py-2', 'alert', 'alert-danger', 'alert-dismissible', 'fade', 'show');
+  error_div.classList.add('mt-1', 'py-2', 'alert', type, 'alert-dismissible', 'fade', 'show');
 
   let close_btn = document.createElement('button');
   close_btn.setAttribute('type', 'button');
@@ -580,6 +597,14 @@ function createError(msg) {
   error_div.appendChild(error_txt);
 
   return error_div;
+}
+
+function getUrlVars() {
+  var vars = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+      vars[key] = value;
+  });
+  return vars;
 }
 
 addEventListeners();
@@ -612,6 +637,10 @@ $(document).ready(function () {
   admin_table = $('#admin-table').DataTable({
     "page": 1,
     "pagingType": "simple_numbers",
+    "initComplete" : function() {
+      if (typeof getUrlVars()['searchDt'] !== 'undefined') 
+        this.api().search(decodeURI(getUrlVars()['searchDt'])).draw();   
+    },
   });
   $('.dataTables_length').addClass('bs-select');
 
