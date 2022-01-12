@@ -374,6 +374,7 @@ class InterventionController extends Controller
 
         $notification = new Notification();
         $notification->id_intervention = $intervention->id;
+        $notification->id_user = Auth::user()->id;
         $notification->type = "report";
         $notification->save();
 
