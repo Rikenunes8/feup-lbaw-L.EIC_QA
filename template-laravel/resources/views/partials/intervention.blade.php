@@ -59,7 +59,7 @@
               @if ($intervention->isQuestion())
                 <a href="#answer-form" class="btn btn-primary text-white me-1" onclick="focusAnswerInput()"><i class="fas fa-reply"></i></a>
               @else
-                <a href="#comment-answer-form-{{ $intervention->id }}" class="btn btn-primary text-white me-1" data-value="{{ $intervention->id }}" onclick="showCommentCreateForm(this)"><i class="fas fa-reply"></i></a>
+                <a class="btn btn-primary text-white me-1" data-value="{{ $intervention->id }}" onclick="showCommentCreateForm(this)"><i class="fas fa-reply"></i></a>
               @endif
             @endif
             @if ( Auth::user()->id == $intervention->id_author )
@@ -95,7 +95,6 @@
 </section>
 
 @if (!$intervention->isComment())
-  @each('partials.intervention', $intervention->childs, 'intervention')
 
   @if ($intervention->isAnswer())
     <section id="comment-answer-form-{{ $intervention->id }}" class="comment-detail mt-2 comment-parent-{{ $intervention->id }} d-none">
@@ -109,5 +108,9 @@
         </div>
       </div>
     </section>
+
+    @each('partials.intervention', $intervention->childs()->orderBy('date', 'DESC')->get(), 'intervention')
+  @else 
+    @each('partials.intervention', $intervention->childs()->orderBy('votes', 'DESC')->get(), 'intervention')
   @endif
 @endif
