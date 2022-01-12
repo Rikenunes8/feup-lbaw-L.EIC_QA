@@ -64,7 +64,7 @@
               <td><a href="{{ url('/users/'.$intervention->author->id) }}" class="app-link">{{ $intervention->author->name }}</a></td>
               <td class="text-center admin-table-reports-actions">
                 <section class="actions-buttons">
-                  <a href="{{ url('/questions/'.$question->id.'#'.$intervention->id) }}" class="btn btn-info text-black me-1"><i class="fas fa-glasses"></i></a>
+                  <a href="{{ url('/questions/'.$question->id.'#'.$intervention->id) }}" class="btn btn-info text-black me-1"><i class="fas fa-search	"></i></a>
                   <a href="#" class="btn btn-danger text-white reports-page-remove me-1"><i class="far fa-trash-alt"></i></a>
                 </section>
               </td>
