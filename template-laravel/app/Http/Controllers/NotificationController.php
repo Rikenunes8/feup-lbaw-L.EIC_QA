@@ -109,13 +109,26 @@ class NotificationController extends Controller
     public function read(Request $request, $id)
     {
         if (!Auth::check()) return redirect('/login');
-        $url = $request->input('link');
+        // $url = $request->input('link');
         $userNotifications = Auth::user()->notifications(); 
 
         $notification = $userNotifications->find($id);
         if (is_null($notification)) return App::abort(404);
         $userNotifications->updateExistingPivot($notification->id, ['read' => true]);
-        return redirect($url);
+        
+        if ($notification->type == 'account_status') {
+            $link = '/users/'.Auth::user()->id;
+        } 
+        else {
+            if (is_null($notification->intervention())) return App::abort(404);
+
+            $question = $notification->intervention()->first();
+            if ($question->isAnswer()) $question = $question->parent()->first();
+            else if ($question->isComment()) $question = $question->parent()->parent()->first();
+            
+            $link = '/questions/'.$question->id.'#'.$notification->intervention()->first()->id;          
+        }
+        return redirect($link);
     }
 
 }

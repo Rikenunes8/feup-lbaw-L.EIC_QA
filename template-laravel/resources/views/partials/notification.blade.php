@@ -5,17 +5,10 @@
   <div class="card notification-card {{ $read? 'notification-read':'notification-unread'}} h-100" data-id="{{ $notification->id }}">
     <div class="card-body">
       @php 
-        if (!is_null($notification->intervention)) {
-          $intervention = $notification->intervention;
-          if ($intervention->isAnswer()) $intervention = $intervention->parent;
-          else if ($intervention->isComment()) $intervention = $intervention->parent->parent;
-        }
         if ($notification->type == 'account_status') {
           $type = 'Novo Estado de Conta';
-          $link = url('/users/'.Auth::user()->id);
         } 
         else {
-          $link = url('/questions/'.$intervention->id);          
           if ($notification->type == 'question') {
             $type = 'Nova Questão';
           } else if ($notification->type == 'answer') {
@@ -50,7 +43,6 @@
       <form method="POST" id="redirect-form-{{ $notification->id }}" class="d-none" 
             action="{{ route('notifications.read', $notification->id)}}">
         @csrf
-        <input type="text" value="{{ $link }}" name="link">
       </form>
     </div>
   </div>
