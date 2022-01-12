@@ -9,7 +9,12 @@
     <section class="error-msg"></section>
 
     <div class="col-12 position-relative">
-      <h2 class="me-4">{{ $uc->name }}</h2> 
+      <h2 class="me-4">
+        {{ $uc->name }}
+        @if ( Auth::check() && Auth::user()->isStudent() ) 
+          @include('partials.help', ['placement' => 'right', 'title' => 'Opção de Seguir', 'content' => 'Ao clicar no coração começa a seguir esta Unidade Curricular (coração cheio). Para deixar de a seguir basta clicar outra vez (coração vazio). Quando segue uma UC passa a ser notificado de todas intervenções que lhe dizem respeito.'])
+        @endif
+      </h2> 
       <span class="badge bg-info text-dark mt-1 mb-2">{{ $uc->code }}</span>
       
       <p>{{ $uc->description }}</p>

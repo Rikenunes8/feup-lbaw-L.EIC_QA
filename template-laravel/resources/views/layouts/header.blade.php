@@ -7,7 +7,13 @@
     
     <div id="header-options-column" class="d-flex align-items-center">
       <form class="w-100 me-3" action="/search">
-        <input type="search" id="search-input" class="form-control" placeholder="Pesquisa..." aria-label="Search" name="q">
+        <div class="input-group mb-0">
+          <span class="input-group-text bg-white">
+            @include('partials.help', ['placement' => 'bottom', 'content' => 'Pesquise por uma questão em específico pelo conteúdo do seu título ou texto. Pode usar aspas (ex.:) para pesquisar por...'])
+          </span>
+
+          <input type="search" id="search-input" class="form-control" placeholder="Pesquisa..." aria-label="Search" name="q">
+        </div>
       </form>
 
       @if (Auth::check())

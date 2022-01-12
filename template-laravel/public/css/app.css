@@ -40,6 +40,13 @@ section#faq-page .accordion-button:not(.collapsed) {
 .about-icons-icon i {
   font-size: 4rem;
 }
+.contextual-help {
+  font-size: large;
+  vertical-align: middle;
+}
+form .contextual-help {
+  font-size: medium;
+}
 .user-action-add {
   display: flex;
   justify-content: space-between;
