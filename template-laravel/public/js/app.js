@@ -421,8 +421,13 @@ function interventionReportHandler() {
     error_section.appendChild(createError("Denúncia não autorizada"));
     return;
   } 
-  if (this.status != 200) window.location = '/';
+  // if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
+  /*
+  TODO createAlert success
+  let error_section = document.querySelector('section.error-msg');
+  error_section.appendChild(createError("Denúncia não autorizada"));
+  */
 }
 
 function notificationMarkReadHandler() {
@@ -582,6 +587,14 @@ function createError(msg) {
   return error_div;
 }
 
+function getUrlVars() {
+  var vars = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+      vars[key] = value;
+  });
+  return vars;
+}
+
 addEventListeners();
 
 function formatDetails ( details ) {
@@ -612,6 +625,10 @@ $(document).ready(function () {
   admin_table = $('#admin-table').DataTable({
     "page": 1,
     "pagingType": "simple_numbers",
+    "initComplete" : function() {
+      if (typeof getUrlVars()['searchDt'] !== 'undefined') 
+        this.api().search(decodeURI(getUrlVars()['searchDt'])).draw();   
+    },
   });
   $('.dataTables_length').addClass('bs-select');
 

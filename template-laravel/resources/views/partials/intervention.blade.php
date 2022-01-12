@@ -17,7 +17,7 @@
             $isTeacherResponsible = $intervention->parent->uc->teachers()->wherePivot('id_teacher', '=', Auth::user()->id)->exists();
           }
         @endphp
-        @if ( !is_null($valid) &&  ( !Auth::check() || (Auth::check() && !$isTeacherResponsible) ) )
+        @if ( !is_null($valid) &&  ( !Auth::check() || (Auth::check() && !$isTeacherResponsible) || (Auth::check() && Auth::user()->id == $intervention->id_author) ) )
           <i class="fas {{ $valid ? $check.' question-valid-icon' : $times.' question-invalid-icon' }}"></i>
         @endif
         </div>

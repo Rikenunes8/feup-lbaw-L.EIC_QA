@@ -21,7 +21,7 @@
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Tipo</th>
-              <th scope="col">Título</th>
+              <th scope="col">Título da Questão</th>
               <th scope="col">Texto</th>
               <th scope="col">Autor da Intervenção</th>
               <th scope="col">Autor da Denúncia</th>
@@ -32,20 +32,16 @@
             @foreach($reports as $report)
             <tr data-id="{{ $report->id }}">
               @php 
-              $intervention = $report->intervention;
-              if ($intervention->isQuestion())    { $question = $intervention;                 $type = "Questão";    }
-              else if ($intervention->isAnswer()) { $question = $intervention->parent;         $type = "Resposta";   }
-              else                                { $question = $intervention->parent->parent; $type = "Comentário"; }
+                $intervention = $report->intervention;
+                if ($intervention->isQuestion())    { $question = $intervention;                 $type = 'Questão';    $bg = 'bg-danger'; }
+                else if ($intervention->isAnswer()) { $question = $intervention->parent;         $type = 'Resposta';   $bg = 'bg-warning'; }
+                else                                { $question = $intervention->parent->parent; $type = 'Comentário'; $bg = 'bg-info'; }
               @endphp
               <th scope="row"><a href="{{ url('/questions/'.$question->id.'#'.$intervention->id) }}" class="app-link">{{ $intervention->id }}</a></th>
-              <td>{{ $type }}</td>
+              <td><span class="badge {{ $bg }} text-dark">{{ $type }}</span></td>
               <td><a href="{{ url('/questions/'.$question->id.'#'.$intervention->id) }}" class="app-link">
-                @php
-                  if ($intervention->isQuestion()) $title = $intervention->title;
-                  else $title = '';
-                @endphp
-                {!! substr($title, 0, 35) !!}
-                @if (strlen($title) > 35)
+                {!! substr($question->title, 0, 35) !!}
+                @if (strlen($question->title) > 35)
                 ...
                 @endif
                 </a>
@@ -62,8 +58,14 @@
                   @endif
                 </a>
               </td>
-              <td><a href="{{ url('/users/'.$intervention->author->id) }}" class="app-link">{{ $intervention->author->username }}</a></td>
-              <td><a href="{{ url('/users/'.$report->user->id) }}" class="app-link">{{ $report->user->username }}</a></td>
+              <td>
+                <a href="{{ url('/admin/users?searchDt='.$intervention->author->email) }}" class="app-link"><i class="fas fa-user-cog"></i></a>
+                <a href="{{ url('/users/'.$intervention->author->id) }}" class="app-link">{{ $intervention->author->username }}</a>
+              </td>
+              <td>
+                <a href="{{ url('/admin/users?searchDt='.$report->user->email) }}" class="app-link"><i class="fas fa-user-cog"></i></a>
+                <a href="{{ url('/users/'.$report->user->id) }}" class="app-link">{{ $report->user->username }}</a>
+              </td>
               <td class="text-center admin-table-reports-actions">
                 <section class="actions-buttons">
                   <a href="{{ url('/questions/'.$question->id.'#'.$intervention->id) }}" class="btn btn-info text-black me-1"><i class="fas fa-search	"></i></a>
