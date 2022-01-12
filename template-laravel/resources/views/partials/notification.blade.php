@@ -3,7 +3,7 @@
     $read = Auth::user()->notifications()->where('id_notification', $notification->id)->first()->pivot->read;
   @endphp
   <div class="card notification-card {{ $read? 'notification-read':'notification-unread'}} h-100" data-id="{{ $notification->id }}">
-    <div class="card-body p-2">
+    <div class="card-body py-2">
       @php 
         if ($notification->type == 'account_status') {
           $type = 'Novo Estado de Conta';
@@ -22,7 +22,7 @@
           }
         }
       @endphp
-      <a href="#" class="app-link" onclick="document.getElementById('redirect-form-{{ $notification->id }}').submit();">
+      <a href="{{ url('notifications/'.$notification->id.'/read') }}" class="app-link">
         <h5 class="card-title me-4"> {{ $type }}
         @php
           \Carbon\Carbon::setLocale('pt');
@@ -42,11 +42,6 @@
         @endif
         <a class="btn btn-outline-dark bg-white text-black notifications-page-remove me-1"><i class="far fa-trash-alt"></i></a>
       </div>
-
-      <form method="POST" id="redirect-form-{{ $notification->id }}" class="d-none" 
-            action="{{ route('notifications.read', $notification->id)}}">
-        @csrf
-      </form>
     </div>
   </div>
 </section>
