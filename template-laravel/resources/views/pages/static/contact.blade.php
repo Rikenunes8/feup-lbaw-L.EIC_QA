@@ -33,28 +33,27 @@
 
     <div class="col-md-6 mt-3 email-form">
         <section class="msg"></section>
-        <!-- TODO action -->
         <form role="form" id="form-contact" name="form-contact" data-toggle="validator">
-            <div class="mb-3">
-            <label for="name" class="form-label">Nome</label>
+          <div class="mb-3">
+            <label for="name" class="form-label required">Nome</label>
             <input type="text" id="name" class="form-control" name="name" required data-error="Introduza o seu Nome">
-            </div>
-            <div class="mb-3">
-            <label for="email" class="form-label">E-mail</label>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label required">E-mail</label>
             <input type="email" id="email" class="form-control" name="email" required data-error="Introduza o seu E-mail">
-            </div>
-            <div class="mb-3">
-            <label for="subject" class="form-label">Assunto</label>
+          </div>
+          <div class="mb-3">
+            <label for="subject" class="form-label required">Assunto</label>
             <input type="text" id="subject" class="form-control" name="subject" required data-error="Introduza o Assunto da sua mensagem">
-            </div>
-            <div class="mb-3">
-            <label for="message" class="form-label">Mensagem</label>
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label required">Mensagem</label>
             <textarea rows="3" id="message" class="form-control" name="message" required data-error="Introduza a sua mensagem"></textarea>
-            </div>
+          </div>
 
-            @csrf
+          @csrf
 
-            <a class="btn btn-primary btn-block submit_email">Enviar</a>
+          <a class="btn btn-primary btn-block submit_email">Enviar</a>
         </form>
     </div>
   </div>
