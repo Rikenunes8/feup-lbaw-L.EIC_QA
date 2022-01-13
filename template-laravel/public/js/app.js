@@ -77,7 +77,7 @@ function addEventListeners() {
   [].forEach.call(notificationRemovers, function(removers) {
     removers.addEventListener('click', sendRemoveNotificationRequest);
   });
-  
+
   let reportRemovers = document.querySelectorAll('td.admin-table-reports-actions a.reports-page-remove');
   [].forEach.call(reportRemovers, function(deleter) {
     deleter.addEventListener('click', sendRemoveReportRequest);
@@ -88,11 +88,19 @@ function addEventListeners() {
     switcher.addEventListener('click', switchReceiveEmailRequest);
   });
 
+  let contactFormEmailSender = document.querySelectorAll('#contact-page div.email-form a.submit_email');
+  [].forEach.call(contactFormEmailSender, function(sender) {
+    sender.addEventListener('click', sendContactFormEmailRequest);
+  });
+
   let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
   let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap.Popover(popoverTriggerEl);
   });
+  
+
 }
+
 
 function encodeForAjax(data) {
   if (data == null) return null;
@@ -111,17 +119,21 @@ function sendAjaxRequest(method, url, data, handler) {
   request.send(encodeForAjax(data));
 }
 
+
+
+// ----------------------- REQUESTS ---------------------------
+
 function sendFollowUcRequest() {
   let user_id = this.closest('section#ucs-page, section#uc-page, div.user-profile').getAttribute('data-id');
   let uc_id = this.closest('div.uc-card').getAttribute('data-id');
   let element = document.querySelector('div.uc-card[data-id="' + uc_id + '"] a.uc-card-icon-follow i');
-  
+
   sendAjaxRequest('post', '/api/users/' + user_id + '/follow/' + uc_id, {follow: element.classList.contains('far')}, ucFollowHandler);
 }
 
 function sendDeleteUcRequest() {
   let id = this.closest('tr').getAttribute('data-id');
-  
+
   sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler)
 }
 
@@ -141,7 +153,7 @@ function sendAddUcTeacherRequest() {
 
 function sendDeleteUserRequest() {
   let id = this.closest('tr').getAttribute('data-id');
-  
+
   sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
 }
 
@@ -230,20 +242,30 @@ function switchReceiveEmailRequest() {
   sendAjaxRequest('post', '/api/users/' + id + '/email', null, switchReceiveEmailHandler);
 }
 
+function sendContactFormEmailRequest() {
+  let name = document.querySelector('#name').value;
+  let email = document.querySelector('#email').value;
+  let subject = document.querySelector('#subject').value;
+  let message = document.querySelector('#message').value;
+  sendAjaxRequest('post', '/contact', {'name':name, 'email':email, 'subject':subject, 'message':message}, sendContactFormEmailHandler)
+}
+// ------------------- END OF REQUESTS ---------------------
+
+// ---------------------- HANDLERS -------------------------
 
 function ucFollowHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let uc = JSON.parse(this.responseText);
   let element = document.querySelector('div.uc-card[data-id="' + uc.id + '"] a.uc-card-icon-follow i');
 
   if (element.classList.contains('fas'))
     element.classList.replace('fas', 'far');
-  else 
+  else
     element.classList.replace('far', 'fas');
 }
 
@@ -309,11 +331,11 @@ function userBlockedHandler() {
   if (this.status != 200) window.location = '/';
   let user = JSON.parse(this.responseText);
   let input = document.querySelector('tr[data-id="' + user.id + '"] input[name=reason]');
-  
+
   input.disabled = user.blocked;
   if (!user.blocked)
     input.value = '';
-  
+
   let element = document.querySelector('tr[data-id="' + user.id + '"] td.admin-table-user-actions button.block-btn');
   let icon = element.querySelector('i');
   let span = element.querySelector('span');
@@ -348,7 +370,7 @@ function interventionDeletedHandler() {
     let error_section = document.querySelector('section.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Eliminação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
   let element = document.querySelector('section.intervention-detail[data-id="' + intervention.id + '"]');
@@ -370,7 +392,7 @@ function interventionVotedHandler() {
     let error_section = document.querySelector('section.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Votação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
 
@@ -383,7 +405,7 @@ function answerValidatedHandler() {
     let error_section = document.querySelector('section.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Validação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let ret = JSON.parse(this.responseText);
 
@@ -436,7 +458,7 @@ function interventionReportHandler() {
   if (this.status == 403) {
     error_section.appendChild(createAlert('alert-danger', "Denúncia não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
   error_section.appendChild(createAlert('alert-success', "Denúncia realizada com sucesso!"));
@@ -447,7 +469,7 @@ function notificationMarkReadHandler() {
     let error_section = document.querySelector('section.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let notification = JSON.parse(this.responseText);
   let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
@@ -476,7 +498,7 @@ function notificationRemoveHandler() {
     let error_section = document.querySelector('section.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let notification = JSON.parse(this.responseText);
   let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
@@ -493,7 +515,7 @@ function reportRemovedHandler() {
     let error_section = document.querySelector('section.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let report = JSON.parse(this.responseText);
   let element = document.querySelector('tr[data-id="' + report.id + '"]');
@@ -507,15 +529,27 @@ function switchReceiveEmailHandler() {
     let error_section = document.querySelector('section.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
 }
 
+function sendContactFormEmailHandler() {
+  let msg_section = document.querySelector('section.msg');
+  if (this.status == 200) {
+      msg_section.appendChild(createError("Email enviado com sucesso"));
+      return ;
+  }
+  else {
+      msg_section.appendChild(createError("Erro ao enviar email"));
+      return;
+  }
+}
 
+// -------------------- END OF HANDLERS ----------------------------
 
 
 function focusSearchInput() {
-  document.querySelector('input#search-input').focus(); 
+  document.querySelector('input#search-input').focus();
 }
 
 function focusAnswerInput() {
@@ -617,16 +651,16 @@ function formatDetails ( details ) {
   let birthdate = (data.birthdate != null) ? data.birthdate.substring(0, 10) : 'Não definido';
   let entry_year = (data.type != 'Student') ? '' : '<p><i class="fas fa-user-graduate me-2"></i>Ano de Ingresso: ' + data.entry_year + '</p>';
 
-  return  '<div class="row mt-4">' + 
-            '<div class="col-2">' + 
-              '<img src="' + img_src + '" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">' + 
-            '</div>' + 
-            '<div class="col-10">' + 
-              '<h5>Sobre mim</h5>' + 
+  return  '<div class="row mt-4">' +
+            '<div class="col-2">' +
+              '<img src="' + img_src + '" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">' +
+            '</div>' +
+            '<div class="col-10">' +
+              '<h5>Sobre mim</h5>' +
               '<div class="ms-3">' +
-                '<p>Apresentação: ' + about + '</p>' + 
+                '<p>Apresentação: ' + about + '</p>' +
                 '<p><i class="fas fa-birthday-cake me-2"></i>Aniversário: ' + birthdate + '</p>' +
-                entry_year + 
+                entry_year +
               '</div>' +
             '</div>' +
           '</div>';

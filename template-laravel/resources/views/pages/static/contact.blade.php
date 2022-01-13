@@ -31,9 +31,10 @@
       </div>
     </div>
 
-    <div class="col-md-6 mt-3">
+    <div class="col-md-6 mt-3 email-form">
+        <section class="msg"></section>
         <!-- TODO action -->
-        <form role="form" method="post" action="/contact" id="form-contact" name="form-contact" data-toggle="validator">
+        <form role="form" id="form-contact" name="form-contact" data-toggle="validator">
             <div class="mb-3">
             <label for="name" class="form-label">Nome</label>
             <input type="text" id="name" class="form-control" name="name" required data-error="Introduza o seu Nome">
@@ -53,7 +54,7 @@
 
             @csrf
 
-            <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+            <a class="btn btn-primary btn-block submit_email">Enviar</a>
         </form>
     </div>
   </div>
