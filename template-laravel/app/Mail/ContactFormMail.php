@@ -29,6 +29,8 @@ class ContactFormMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.static.contact-form');
+        return $this->from($this->data['email'], $this->data['name'])
+                    ->subject($this->data['subject'])
+                    ->markdown('emails.static.contact-form');
     }
 }

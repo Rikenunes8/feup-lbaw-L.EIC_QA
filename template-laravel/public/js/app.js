@@ -534,14 +534,16 @@ function switchReceiveEmailHandler() {
 }
 
 function sendContactFormEmailHandler() {
+  document.querySelector('#name').value = null;
+  document.querySelector('#email').value = null;
+  document.querySelector('#subject').value = null;
+  document.querySelector('#message').value = null;
   let msg_section = document.querySelector('section.msg');
   if (this.status == 200) {
-      msg_section.appendChild(createError("Email enviado com sucesso"));
-      return ;
+    msg_section.appendChild(createAlert('alert-success', "Email enviado com sucesso"));
   }
   else {
-      msg_section.appendChild(createError("Erro ao enviar email"));
-      return;
+    msg_section.appendChild(createAlert('alert-danger', "Erro ao enviar email"));
   }
 }
 
