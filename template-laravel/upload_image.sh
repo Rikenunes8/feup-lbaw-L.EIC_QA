@@ -10,5 +10,9 @@ composer install
 php artisan clear-compiled
 php artisan optimize
 
+php artisan migrate
+php artisan queue:work
+php artisan schedule:work
+
 docker build -t $IMAGE_NAME .
 docker push $IMAGE_NAME
