@@ -102,12 +102,14 @@ CREATE TABLE "notification" (
     id              SERIAL PRIMARY KEY,
     date            TIMESTAMP  NOT NULL DEFAULT now(),
     id_intervention INTEGER REFERENCES "intervention" ON DELETE CASCADE ON UPDATE CASCADE,
+    id_user         INTEGER REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
     status     type_status,
     validation type_validation,
     type       type_notification NOT NULL,
 
     CONSTRAINT date_smaller_now CHECK (date <= now()),
     CONSTRAINT intervention_NN  CHECK ((type<>'account_status' AND id_intervention IS NOT NULL) OR (type='account_status' AND id_intervention IS NULL)),
+    CONSTRAINT user_NN          CHECK (((type<>'account_status' AND type<>'report') AND id_user IS NULL) OR ((type='account_status' OR type='report') AND id_user IS NOT NULL)),
     CONSTRAINT status_NN        CHECK ((type='account_status' AND status IS NOT NULL) OR (type<>'account_status' AND status IS NULL)),
     CONSTRAINT validation_NN    CHECK ((type='validation' AND validation IS NOT NULL) OR (type<>'validation' AND validation IS NULL))
 );
@@ -441,7 +443,7 @@ BEGIN
         INSERT INTO "notification"(type, id_intervention, validation) VALUES ('validation', NEW.id_answer, 'rejection') RETURNING id INTO notificationId;
     END IF;
 
-    FOR author IN (SELECT id_author FROM intervention WHERE id=NEW.id_answer) LOOP
+    FOR author IN (SELECT id_author FROM "intervention" WHERE id=NEW.id_answer) LOOP
         INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, author);
     END LOOP;
 
@@ -454,6 +456,29 @@ CREATE TRIGGER generate_notification_validation
 AFTER INSERT OR UPDATE OF valid ON "validation"
 FOR EACH ROW
 EXECUTE PROCEDURE generate_notification_validation();
+
+-- TRIGGER15
+CREATE FUNCTION generate_notification_account_status() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+notificationId BIGINT;
+BEGIN
+    IF NEW.blocked = TRUE THEN
+        INSERT INTO "notification"(type, id_user, status) VALUES ('account_status', NEW.id, 'block') RETURNING id INTO notificationId;
+    ELSE
+        INSERT INTO "notification"(type, id_user, status) VALUES ('account_status', NEW.id, 'active') RETURNING id INTO notificationId;
+    END IF;
+
+    INSERT INTO "receive_not"(id_notification, id_user) VALUES (notificationId, NEW.id);
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER generate_notification_account_status
+AFTER UPDATE OF blocked ON "users"
+FOR EACH ROW
+EXECUTE PROCEDURE generate_notification_account_status();
 
 -----------------------------------------
 -- TRANSACTIONS
@@ -484,123 +509,123 @@ END TRANSACTION;
 
 -- Admin
 INSERT INTO "users" (email, username, password, type, score, blocked, registry_date, active) VALUES (
-    'jfcunha@fe.up.pt.LEIC.QA', 'admin', 
+    'jfcunha@fe.up.qa.pt', 'admin', 
     '$2y$10$dNMxm/osVRRpGG1.bHkkuOrXa.tlehIQf/p44koFsso5B1qrn/2Py', 
     'Admin', NULL, NULL, '2021-11-01', TRUE
 ); -- Password: U2e_PZwP
 INSERT INTO "users" (email, username, password, type, score, blocked, registry_date, active) VALUES (
-    'percurso.academico@fe.up.pt.LEIC.QA', 'secretaria', 
+    'percurso.academico@fe.up.qa.pt', 'secretaria', 
     '$2y$10$IS6jxuz2SSw.NYskLKONuuINIqKoxwuPxixdYr6fmqaY5lQSkH.xq', 
     'Admin', NULL, NULL, '2021-11-01', TRUE
 ); -- Password: rh!6@S53
 
 -- Teacher
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'mbb@fc.up.pt.LEIC.QA', 'mbb', 
+    'mbb@fc.up.qa.pt', 'mbb', 
     '$2y$10$y8NwYUvcvNwVb0YuaraMGu/KFzcRwUj8iwFOFp3SSIdS6SUWEd.em', 
     'Teacher', 'Manuel Bernardo Martins Barbosa', 'My research interests lie in Cryptography and Information Security and Formal Verification.', '2021-11-01', TRUE
 ); -- Password: #pX8-wMM
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'jpleal@fc.up.pt.LEIC.QA', 'jpleal', 
+    'jpleal@fc.up.qa.pt', 'jpleal', 
     '$2y$10$GFYFISulYkFofjdWMiOVGOTytZDGii3/GI6e84gZPvRhZFiaQOqRy', 
     'Teacher', 'José Paulo de Vilhena Geraldes Leal', 'Para além de professor, interesso-me por escrever livros pedagógicos.', '2021-11-01', TRUE
 ); -- Password: HR?W25xG
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active, photo) VALUES (
-    'ssn@fe.up.pt.LEIC.QA', 'ssn', 
+    'ssn@fe.up.qa.pt', 'ssn', 
     '$2y$10$NEqSfztbsCya3y9182wJn.fzw1CaPBOY2JhlGfbwvYELc9/Mr3z56', 
     'Teacher', 'Sérgio Sobral Nunes', 'I am an Assistant Professor at the Department of Informatics Engineering at the Faculty of Engineering of the University of Porto (FEUP), and a Senior Researcher at the Centre for Information Systems and Computer Graphics at INESC TEC.', '2021-11-01', TRUE, '5_1641229712_dl758KLoUU.png'
 ); -- Password: Z8K_?qjm
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'tbs@fe.up.pt.LEIC.QA', 'tbs', 
+    'tbs@fe.up.qa.pt', 'tbs', 
     '$2y$10$blELx.0yIxbREeej.54sDuQXyLcaP1yNtFQ1s9VB.NL/BOXvP1oU2', 
     'Teacher', 'Tiago Boldt Pereira de Sousa', 'Conclui o Mestrado em Mestrado Integrado em Engenharia Informática e Computação em 2011 pela Universidade do Porto Faculdade de Engenharia. Publiquei 5 artigos em revistas especializadas.', '2021-11-01', TRUE
 ); -- Password: Dfx3L$nA
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'amflorid@fc.up.pt.LEIC.QA', 'amflorid', 
+    'amflorid@fc.up.qa.pt', 'amflorid', 
     '$2y$10$feOxhu03znm2rTxjjMj6UeweSfLfrphvDphN2dtJktxfKD7l2xKl.', 
     'Teacher', 'António Mário da Silva Marcos Florido', 'Sou investigador e membro da direção do Laboratório de Inteligência Artificial e Ciência de Computadores (LIACC) da FCUP.', '2021-11-01', TRUE
 ); -- Password: dH&G2n2%
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'mricardo@fe.up.pt.LEIC.QA', 'mricardo', 
+    'mricardo@fe.up.qa.pt', 'mricardo', 
     '$2y$10$.C/dLep90O3hf34wkSWVLeO0.9CxF23zmaJNUolhM61hak1FtCgea', 
     'Teacher', 'Manuel Alberto Pereira Ricardo', 'Licenciado, Mestre e Doutor (2000) em Engenharia Eletrotécnica e de Computadores, ramo de Telecomunicações, pela Faculdade de Engenharia da Universidade do Porto (FEUP).', '2021-11-01', TRUE
 ); -- Password: M44&#q2C
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'pabranda@fc.up.pt.LEIC.QA', 'pabranda', 
+    'pabranda@fc.up.qa.pt', 'pabranda', 
     '$2y$10$dXotQ6O2M2L/AvHu4gVxNO4DQcfDmd0i2lusO2gUV250vuOZxx0sO', 
     'Teacher', 'Pedro Miguel Alves Brandão', 'Fiz o meu doutoramento no Computer Laboratory da Univ. de Cambridge sobre o tema de Body Sensor Networks. Obtive uma bolsa da Fundação para a Ciência e Tecnologia para suporte ao doutoramento.', '2021-11-01', TRUE
 ); -- Password: 9nDy&cjK
 
 -- Student
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, active, photo) VALUES (
-    'up201805455@fc.up.pt.LEIC.QA', 'up201805455', 
+    'up201805455@fc.up.qa.pt', 'up201805455', 
     '$2y$10$ZVT1VxJoxAsw3TbaRdyBbOyCz7WiNyIn6P1F.mXtLFd1LQ9fvigFC', 
     'Student', 'Alexandre Afonso', '2000-07-23 11:00:00', 2018, '2021-11-01', TRUE, '10_1641229580_vBEUWTuB0f.jpg'
 ); -- Password: hUdQ!Q6?
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, active, photo) VALUES (
-    'up201906852@fe.up.pt', 'up201906852', 
+    'up201906852@fe.up.qa.pt', 'up201906852', 
     '$2y$10$b31tgmi3H4ba/VcRMtkPWO2FWRKZMEnySNt.1JNywFGwcjRyYjpCu', 
     'Student', 'Henrique Nunes', '2001-02-08 13:00:00', 2019, '2021-11-01', TRUE, '11_1641229484_onzioN1AGD.png'
 ); -- Password: @K4Agr6a
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, active) VALUES (
-    'up201905427@fe.up.pt', 'up201905427', 
+    'up201905427@fe.up.qa.pt', 'up201905427', 
     '$2y$10$L2L6LcnHcwpUfPZZHe1Nc.azp0pUuMlUmBGGiMd/4EkmEBAsd0kBm', 
     'Student', 'Patrícia Oliveira', '2001-03-19 17:00:00', 2019, '2021-11-01', TRUE
 ); -- Password: cL@Az7HY
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, active) VALUES (
-    'up201805327@fc.up.pt.LEIC.QA', 'up201805327', 
+    'up201805327@fc.up.qa.pt', 'up201805327', 
     '$2y$10$fyDBC/Y9xLDeHnAgmwg5PeHELVH5ZPqy2ErdvhMo7KuWJdHT0AbhO', 
     'Student', 'Tiago Antunes', '2000-06-10 11:00:00', 2018, '2021-11-01', TRUE
 ); -- Password: GKhg6j&T
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, active, blocked, block_reason) VALUES (
-    'up201905046@fe.up.pt.LEIC.QA', 'up201905046', 
+    'up201905046@fe.up.qa.pt', 'up201905046', 
     '$2y$10$zWwDbkWxuqAl.L.re.tOlu3HW1cSGM/7/SH2eJJt/kX9adb.Nwu8G', 
     'Student', 'Margarida Ribeiro', '2001-06-10 11:00:00', 2019, '2021-11-01', TRUE, TRUE, 'Abuso de permissões'
 ); -- Password: X_Bd9Nw2
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, active, blocked, block_reason) VALUES (
-    'up201476549@fc.up.pt.LEIC.QA', 'up201476549', 
+    'up201476549@fc.up.qa.pt', 'up201476549', 
     '$2y$10$gRjYE55mXurh8zpGN8.yCu5NVqjjmGhtSFQ7YYgv/T/fdq.AEXaIq', 
     'Student', 'Francisco Mendes', '1996-11-07 11:00:00', 2014, '2021-11-01', TRUE, TRUE, 'Conteúdos impróprios'
 ); -- Password: %L2mxp3V
 INSERT INTO "users" (email, username, password, type, name, birthdate, entry_year, registry_date, active, blocked, block_reason) VALUES (
-    'up201823452@fe.up.pt.LEIC.QA', 'up201823452', 
+    'up201823452@fe.up.qa.pt', 'up201823452', 
     '$2y$10$4hUh29dBltUyWZPjhaR9Fe7oRdR2MdhDnx1SPXIyH9c4ZzVenLhJO', 
     'Student', 'Ana Martins', '2000-08-24 11:00:00', 2018, '2021-11-01', TRUE, TRUE, 'Conta foi hackeada'
 ); -- Password: H9V@Dvjh
 
 -- More Teachers
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'lpreis@fe.up.pt.LEIC.QA', 'lpreis', 
+    'lpreis@fe.up.qa.pt', 'lpreis', 
     '$2y$10$TqSHAioLbGX8pQasq.ZBHeYpmzoho/G8J7K6ufZIlQAscygIUagH6', 
     'Teacher', 'Luís Paulo Gonçalves dos Reis', 'Licenciado (1993), Mestre (1995) e Doutor (2003) em Engenharia Eletrotécnica e de Computadores (especializações em Informática e Sistemas, Informática Industrial, Inteligência Artificial/Robótica) pela Universidade do Porto.', '2021-11-01', TRUE
 ); -- Password: q?88U7QF
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'pfs@fe.up.pt.LEIC.QA', 'pfs', 
+    'pfs@fe.up.qa.pt', 'pfs', 
     '$2y$10$3nM5pRrAmzXvwQm1Cm7YTutdvjnKXnu2renXDacqO/KyHLnFKWqIW', 
     'Teacher', 'Pedro Alexandre Guimarães Lobo Ferreira Souto', 'Professor Auxiliar, Departamento de Engenharia Informática.', '2021-11-01', TRUE
 ); -- Password: k53A!p4A
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'jmpc@fe.up.pt.LEIC.QA', 'jmpc', 
+    'jmpc@fe.up.qa.pt', 'jmpc', 
     '$2y$10$zz1PARycK.6xIknR4I6tMOt2WBd8FR.5YStNWO0n1doAAXkN5Pb7i', 
     'Teacher', 'João Manuel Paiva Cardoso', 'Received a 5-year Electronics Engineering degree from the University of Aveiro in 1993. He has been involved in the organization of various international conferences.', '2021-11-01', TRUE
 ); -- Password: @q6QVmrZ
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'aaguiar@fe.up.pt.LEIC.QA', 'aaguiar', 
+    'aaguiar@fe.up.qa.pt', 'aaguiar', 
     '$2y$10$mpZimC.Nrap6QJgw5/Zd3ONWX1Q.h4AEje.fPk8j1xX2dvWLQFpl2', 
     'Teacher', 'Ademar Manuel Teixeira de Aguiar', 'Professor Associado na FEUP e investigador no INESC TEC, com mais de 30 anos de experiencia em desenvolvimento de software, especializou-se em arquitectura e design de software.', '2021-11-01', TRUE
 ); -- Password: vY&3Qu%U
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'jpf@fe.up.pt.LEIC.QA', 'jpf', 
+    'jpf@fe.up.qa.pt', 'jpf', 
     '$2y$10$JoTPzlthNAR8XQUj1TZBfOWIjcAVJTOJ2CZ19un3xlVXfbRb.o0Ji', 
     'Teacher', 'João Carlos Pascoal Faria', 'Doutoramento em Engenharia Electrotécnica e de Computadores pela FEUP em 1999, onde é atualmente Professor Associado no Departamento de Engenharia Informática e Diretor do Mestrado Integrado em Engenharia Informática e Computação.', '2021-11-01', TRUE
 ); -- Password: NyXEB7#u
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'villate@fe.up.pt.LEIC.QA', 'jev', 
+    'villate@fe.up.qa.pt', 'jev', 
     '$2y$10$F87pRSDz1luNCs04ZX5gLe5dtJZdwJrsU72JPf88jxga6OIwHnab.', 
     'Teacher', 'Jaime Enrique Villate Matiz', 'Licenciatura em Física, 1983, Universidade Nacional de Colômbia, Bogotá. Licenciatura em Engenharia de Sistemas (Informática), 1984, Universidade Distrital de Bogotá, Colômbia. Master of  Arts em Física, 1987 e Ph. D. em Física, 1990...', '2021-11-01', TRUE
 ); -- Password: Q9&wdJkS
 INSERT INTO "users" (email, username, password, type, name, about, registry_date, active) VALUES (
-    'jmcruz@fe.up.pt.LEIC.QA', 'mmc', 
+    'jmcruz@fe.up.qa.pt', 'mmc', 
     '$2y$10$jMgnjZFsJQgF7d.YY4Ks1OCBpty/LbyP//edm.rGbDzayKI15ejQ.', 
     'Teacher', 'José Manuel De Magalhães Cruz', 'Docente na FEUP', '2021-11-01', TRUE
 ); -- Password: _Pb7nXv2
@@ -776,7 +801,7 @@ INSERT INTO "validation" (id_answer, id_teacher, valid) VALUES (16, 8, FALSE);
 -- notification
 -----------------------------------------
 
-INSERT INTO "notification" (date, type, status) VALUES ('2021-11-10 15:00:00', 'account_status', 'active');
+INSERT INTO "notification" (date, type, id_user, status) VALUES ('2021-11-10 15:00:00', 'account_status', 9, 'active');
 
 -----------------------------------------
 -- receive_not

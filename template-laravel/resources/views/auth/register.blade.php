@@ -3,7 +3,10 @@
 @section('title', 'Registar Conta')
 
 @section('content')
-<h2 class="text-center">Registo</h2> 
+<h2 class="text-center">
+    Registo
+    @include('partials.help', ['placement' => 'right', 'content' => 'Escolha o seu tipo de conta e preencha os campos necessários! Vai ser necessário verificar o seu email e o Administrador ativar a sua conta para concluir o seu registo.'])
+</h2> 
 
 <form method="POST" action="{{ route('register') }}" id="form-register" class="row" enctype="multipart/form-data">
     {{ csrf_field() }}
@@ -42,7 +45,7 @@
     </div>
 
     <div class="mb-3 col-12 col-lg-6">
-      <label for="password-confirm" class="form-label required">Confirm Password</label>
+      <label for="password-confirm" class="form-label required">Confirme Password</label>
       <input type="password" id="password-confirm" class="form-control" name="password_confirmation" required>
     </div>
 

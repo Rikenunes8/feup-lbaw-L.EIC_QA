@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\DB;
 
 // ------------ LEIC Q&A ---------------
 
+
+
+
 // Home
 Route::get('/', function () { return view('pages.static.home'); });
 
@@ -24,6 +27,7 @@ Route::get('home'    , function () { return view('pages.static.home'    ); });
 Route::get('about'   , function () { return view('pages.static.about'   ); });
 Route::get('faq'     , function () { return view('pages.static.faq'     ); });
 Route::get('contact' , function () { return view('pages.static.contact' ); });
+Route::post('contact', 'ContactController@store');
 
 // Authentication
 Route::get('login'    , 'Auth\LoginController@showLoginForm')->name('login');
@@ -31,10 +35,21 @@ Route::post('login'   , 'Auth\LoginController@login');
 Route::get('logout'   , 'Auth\LoginController@logout')->name('logout');
 Route::get('register' , 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
-// Route::get('forgot-password'       , 'X@showForgotPasswordForm')->name('password.request');
-// Route::post('forgot-password'      , 'X@forgotPassowrd')->name('password.email');
+
+
+Route::get('forgot-password'        , 'Auth\ForgotPasswordController@showForgetPasswordForm')->middleware('guest')->name('password.request');
+Route::post('forgot-password'       , 'Auth\ForgotPasswordController@submitForgetPasswordForm')->middleware('guest')->name('password.email'); 
+Route::get('reset-password/{token}' , 'Auth\ForgotPasswordController@showResetPasswordForm')->middleware('guest')->name('password.reset');
+Route::post('reset-password'        , 'Auth\ForgotPasswordController@submitResetPasswordForm')->middleware('guest')->name('password.update');
+
+
+// Route::get('/activate/{email}/{code}', 'Auth\ForgotPasswordController@activate');
+// Route::get('forgot_password', 'Auth\ForgotPasswordController@forgot'); 
+// Route::post('forgot_password', 'Auth\ForgotPasswordController@password'); 
+//Route::post('forgot-password', 'Auth\ForgotPasswordController@ForgotPassword')->name('password.email');
 // Route::post('reset-password'       , 'X@resetPassowrd')->name('password.update');
 // Route::get('reset-password/{token}', 'X@showResetPasswordForm')->name('password.reset');
+
 
 
 // API
@@ -66,9 +81,9 @@ Route::post('comments/{id}/edit'          , 'InterventionController@updateCommen
 
 
 // Users
-Route::get('user' , function () { 
+Route::get('user' , function () {
   if (!Auth::check()) return redirect('/login');
-  return redirect('/users'.'/'.Auth::user()->id); 
+  return redirect('/users'.'/'.Auth::user()->id);
 });
 Route::get('users'       , 'UserController@list');
 Route::get('users/{id}'  , 'UserController@show');
@@ -84,12 +99,12 @@ Route::post('api/users/{user_id}/follow/{uc_id}', 'UserController@follow');
 
 
 // Notifications
-Route::get('notifications'               , 'NotificationController@list');
-Route::get('notifications/{id}'          , 'NotificationController@show');
-Route::post('notifications/{id}/read', 'NotificationController@read')->name('notifications.read');
-Route::post('api/notifications/{id}/read', 'NotificationController@apiRead');
-Route::post('api/notifications/{id}/remove', 'NotificationController@remove');
-Route::delete('api/notifications/{id}/delete', 'NotificationController@delete');
+Route::get('notifications'                    , 'NotificationController@list');
+Route::get('notifications/{id}'               , 'NotificationController@show');
+Route::get('notifications/{id}/read'          , 'NotificationController@read');
+Route::post('api/notifications/{id}/read'     , 'NotificationController@apiRead');
+Route::post('api/notifications/{id}/remove'   , 'NotificationController@remove');
+Route::delete('api/notifications/{id}/delete' , 'NotificationController@delete');
 
 
 
@@ -112,9 +127,9 @@ Route::get('search', 'InterventionController@searchList');
 
 
 // Admin
-Route::get('admin'                      , function () { 
-  if (!Auth::check()) return redirect('/login'); 
-  return redirect('/users'.'/'.Auth::user()->id); 
+Route::get('admin'                      , function () {
+  if (!Auth::check()) return redirect('/login');
+  return redirect('/users'.'/'.Auth::user()->id);
 });
 Route::get('admin/ucs/{id}'             , function ($id) { return redirect('/ucs'.'/'.$id); });
 
@@ -125,17 +140,17 @@ Route::get('admin/reports'              , 'AdminController@listReports');
 Route::get('admin/requests'             , 'AdminController@listRequests');
 
 Route::get('email', function(){
-  $delay = now()->addSeconds(10);
+  $delay = now();
   foreach(User::get() as $user) {
     if (!$user->receive_email) continue;
 
     $notifications = $user->notifications()->wherePivot('to_email', true)->wherePivot('read', false)->get();
     foreach($notifications as $notification) {
-      $delay = $delay->addSeconds(5);
+      $delay = $delay->addSeconds(7);
       $user->notify((new NotificationEmail($notification))->delay($delay));
     }
   }
   DB::table('receive_not')->where('to_email', true)->update(['to_email' => false]);
-  
+
   return redirect('/');
 });

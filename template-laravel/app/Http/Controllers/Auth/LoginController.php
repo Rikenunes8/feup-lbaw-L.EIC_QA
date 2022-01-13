@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Socialite;
 
 
 class LoginController extends Controller
@@ -31,6 +32,10 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/user';
+
+    protected $maxAttempts = 3;
+    protected $decayMinutes = 1;
+    
     
     /**
      * Create a new controller instance.

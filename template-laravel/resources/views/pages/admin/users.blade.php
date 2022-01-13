@@ -50,18 +50,18 @@
                   <section class="actions-buttons">
                     @if (!$user->isAdmin())
                       @if (is_null($user->block_reason))
-                        <button type="button" class="btn btn-info text-dark me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
+                        <button type="button" class="btn btn-info text-dark me-1 block-btn" data-toogle="tooltip" title="Bloquear" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
                           <i class="fas fa-lock"></i><span class="d-none">Lock</span>
                         </button>
                       @else 
-                        <button type="button" class="btn btn-dark text-white me-1 block-btn" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
+                        <button type="button" class="btn btn-dark text-white me-1 block-btn" data-toogle="tooltip" title="Desbloquear" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
                           <i class="fas fa-unlock"></i><span class="d-none">Unlock</span>
                         </button>
                       @endif
                     @endif
-                    <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-warning text-black me-1"><i class="far fa-edit"></i></a>
+                    <a href="{{ url('users/'.$user->id.'/edit') }}" class="btn btn-warning text-black me-1" data-toogle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
                     
-                    <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
+                    <button type="button" class="btn btn-danger text-white" data-toogle="tooltip" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
                       <i class="far fa-trash-alt"></i><span class="d-none">Eliminar</span>
                     </button>
                   </section>

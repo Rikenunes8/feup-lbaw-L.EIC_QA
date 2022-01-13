@@ -51,17 +51,22 @@ function addEventListeners() {
     voter.addEventListener('click', sendDownVoteInterventionRequest);
   });
 
-  let answerValidValidaters = document.querySelectorAll('.intervention-detail .question-card-icon a.validate-valid');
+  let answerValidValidaters = document.querySelectorAll('.intervention-detail .question-card-icon-validate a.validate-valid');
   [].forEach.call(answerValidValidaters, function(validater) {
     validater.addEventListener('click', sendValidAnswerRequest);
   });
-  let answerInvalidValidaters = document.querySelectorAll('.intervention-detail .question-card-icon a.validate-invalid');
+  let answerInvalidValidaters = document.querySelectorAll('.intervention-detail .question-card-icon-validate a.validate-invalid');
   [].forEach.call(answerInvalidValidaters, function(validater) {
     validater.addEventListener('click', sendInvalidAnswerRequest);
   });
-  let answerNoneValidaters = document.querySelectorAll('.intervention-detail .question-card-icon a.invalidate');
+  let answerNoneValidaters = document.querySelectorAll('.intervention-detail .question-card-icon-validate a.invalidate');
   [].forEach.call(answerNoneValidaters, function(validater) {
     validater.addEventListener('click', sendNoneAnswerRequest);
+  });
+
+  let interventionReporters = document.querySelectorAll('#question-page .intervention-detail a.question-page-report');
+  [].forEach.call(interventionReporters, function(reporter) {
+    reporter.addEventListener('click', sendInterventionReportRequest);
   });
 
   let notificationReadMarkers = document.querySelectorAll('.notification-card .notifications-page-actions a.notifications-page-envelope');
@@ -73,11 +78,29 @@ function addEventListeners() {
     removers.addEventListener('click', sendRemoveNotificationRequest);
   });
 
+  let reportRemovers = document.querySelectorAll('td.admin-table-reports-actions a.reports-page-remove');
+  [].forEach.call(reportRemovers, function(deleter) {
+    deleter.addEventListener('click', sendRemoveReportRequest);
+  });
+
   let receiveEmailsSwitcher = document.querySelectorAll('#user-profile-page div.form-switch input');
   [].forEach.call(receiveEmailsSwitcher, function(switcher) {
     switcher.addEventListener('click', switchReceiveEmailRequest);
   });
+
+  let contactFormEmailSender = document.querySelectorAll('#contact-page div.email-form a.submit_email');
+  [].forEach.call(contactFormEmailSender, function(sender) {
+    sender.addEventListener('click', sendContactFormEmailRequest);
+  });
+
+  let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl);
+  });
+  
+
 }
+
 
 function encodeForAjax(data) {
   if (data == null) return null;
@@ -96,17 +119,21 @@ function sendAjaxRequest(method, url, data, handler) {
   request.send(encodeForAjax(data));
 }
 
+
+
+// ----------------------- REQUESTS ---------------------------
+
 function sendFollowUcRequest() {
   let user_id = this.closest('section#ucs-page, section#uc-page, div.user-profile').getAttribute('data-id');
   let uc_id = this.closest('div.uc-card').getAttribute('data-id');
   let element = document.querySelector('div.uc-card[data-id="' + uc_id + '"] a.uc-card-icon-follow i');
-  
+
   sendAjaxRequest('post', '/api/users/' + user_id + '/follow/' + uc_id, {follow: element.classList.contains('far')}, ucFollowHandler);
 }
 
 function sendDeleteUcRequest() {
   let id = this.closest('tr').getAttribute('data-id');
-  
+
   sendAjaxRequest('delete', '/api/ucs/' + id + '/delete', null, ucDeletedHandler)
 }
 
@@ -126,7 +153,7 @@ function sendAddUcTeacherRequest() {
 
 function sendDeleteUserRequest() {
   let id = this.closest('tr').getAttribute('data-id');
-  
+
   sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
 }
 
@@ -139,7 +166,7 @@ function sendBlockUserRequest(event) {
       sendAjaxRequest('post', '/api/users/' + id + '/block', {block_reason: reason}, userBlockedHandler);
   } else {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Não é possível bloquear um utilizador sem uma razão."));
+    error_section.appendChild(createAlert('alert-danger', "Não é possível bloquear um utilizador sem uma razão."));
   }
 
   event.preventDefault();
@@ -184,6 +211,12 @@ function sendNoneAnswerRequest() {
   sendAjaxRequest('post', '/api/interventions/' + id + '/validate', {valid: null}, answerValidatedHandler);
 }
 
+function sendInterventionReportRequest() {
+  let id = this.closest('section').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/interventions/' + id + '/report', {valid: null}, interventionReportHandler);
+}
+
 function sendMarkReadNotificationRequest() {
   let card = this.closest('div.notification-card');
   let id = card.getAttribute('data-id');
@@ -197,6 +230,11 @@ function sendRemoveNotificationRequest() {
   sendAjaxRequest('post', '/api/notifications/' + id + '/remove', null, notificationRemoveHandler);
 }
 
+function sendRemoveReportRequest() {
+  let id = this.closest('tr').getAttribute('data-id');
+
+  sendAjaxRequest('post', '/api/notifications/' + id + '/remove', null, reportRemovedHandler);
+}
 
 function switchReceiveEmailRequest() {
   let id = this.closest('div.user-profile').getAttribute('data-id');
@@ -204,19 +242,30 @@ function switchReceiveEmailRequest() {
   sendAjaxRequest('post', '/api/users/' + id + '/email', null, switchReceiveEmailHandler);
 }
 
+function sendContactFormEmailRequest() {
+  let name = document.querySelector('#name').value;
+  let email = document.querySelector('#email').value;
+  let subject = document.querySelector('#subject').value;
+  let message = document.querySelector('#message').value;
+  sendAjaxRequest('post', '/contact', {'name':name, 'email':email, 'subject':subject, 'message':message}, sendContactFormEmailHandler)
+}
+// ------------------- END OF REQUESTS ---------------------
+
+// ---------------------- HANDLERS -------------------------
+
 function ucFollowHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let uc = JSON.parse(this.responseText);
   let element = document.querySelector('div.uc-card[data-id="' + uc.id + '"] a.uc-card-icon-follow i');
 
   if (element.classList.contains('fas'))
     element.classList.replace('fas', 'far');
-  else 
+  else
     element.classList.replace('far', 'fas');
 }
 
@@ -237,7 +286,8 @@ function ucTeacherRemovedHandler() {
 
   let new_a = document.createElement('a');
   new_a.classList.add('btn','btn-primary','text-white', 'admin-table-add');
-  new_a.setAttribute('href', '#');
+  new_a.setAttribute('data-toogle', 'tooltip');
+  new_a.setAttribute('title', 'Associar Docente');
   new_a.innerHTML = `<i class="fas fa-plus"></i> <span class="d-none">Adicionar</span>`;
   new_a.addEventListener('click', sendAddUcTeacherRequest);
 
@@ -256,7 +306,8 @@ function ucTeacherAddedHandler() {
 
   let new_a = document.createElement('a');
   new_a.classList.add('btn','btn-danger','text-white', 'admin-table-remove');
-  new_a.setAttribute('href', '#');
+  new_a.setAttribute('data-toogle', 'tooltip');
+  new_a.setAttribute('title', 'Desassociar Docente');
   new_a.innerHTML = `<i class="fas fa-minus"></i> <span class="d-none">Remover</span>`;
   new_a.addEventListener('click', sendRemoveUcTeacherRequest);
 
@@ -280,11 +331,11 @@ function userBlockedHandler() {
   if (this.status != 200) window.location = '/';
   let user = JSON.parse(this.responseText);
   let input = document.querySelector('tr[data-id="' + user.id + '"] input[name=reason]');
-  
+
   input.disabled = user.blocked;
   if (!user.blocked)
     input.value = '';
-  
+
   let element = document.querySelector('tr[data-id="' + user.id + '"] td.admin-table-user-actions button.block-btn');
   let icon = element.querySelector('i');
   let span = element.querySelector('span');
@@ -308,15 +359,18 @@ function userActivatedHandler() {
   let element = document.querySelector('tr[data-id="' + user.id + '"]');
   element.remove();
 
+  let error_section = document.querySelector('section.error-msg');
+  error_section.appendChild(createAlert('alert-success', "Conta '" + user.email + "' ativada com sucesso!"));
+
   admin_table.row(element).remove().draw(false);
 }
 
 function interventionDeletedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Eliminação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Eliminação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
   let element = document.querySelector('section.intervention-detail[data-id="' + intervention.id + '"]');
@@ -336,9 +390,9 @@ function interventionDeletedHandler() {
 function interventionVotedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Votação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Votação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let intervention = JSON.parse(this.responseText);
 
@@ -349,54 +403,73 @@ function interventionVotedHandler() {
 function answerValidatedHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Validação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Validação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let ret = JSON.parse(this.responseText);
 
   let intervention = ret[0];
   let valid = ret[1];
 
-  let cardIcon = document.querySelector('.answer-detail[data-id="' + intervention.id + '"] div.question-card-icon');
+  let cardIcon = document.querySelector('.answer-detail[data-id="' + intervention.id + '"] div.question-card-icon-validate');
   cardIcon.innerHTML = '';
 
-  let a1 = document.createElement('a');
-  a1.setAttribute('href', "#");
-  a1.setAttribute('class', "btn btn-success text-white me-1");
-  a1.innerHTML = '<i class="fas fa-check"></i>'
+  let a_validate_valid = document.createElement('a');
+  a_validate_valid.setAttribute('class', "btn btn-outline-success text-success me-1 validate-valid");
+  a_validate_valid.setAttribute('data-toogle', "tooltip");
+  a_validate_valid.setAttribute('title', "Validar");
+  a_validate_valid.innerHTML = '<i class="fas fa-check"></i>';
+  a_validate_valid.addEventListener('click', sendValidAnswerRequest);
 
-  let a2 = document.createElement('a');
-  a2.setAttribute('href', "#");
-  a2.setAttribute('class', "btn btn-danger text-white me-1");
-  a2.innerHTML = '<i class="fas fa-times"></i>'
-  
+  let a_validate_invalid = document.createElement('a');
+  a_validate_invalid.setAttribute('class', "btn btn-outline-danger text-danger me-1 validate-invalid");
+  a_validate_invalid.setAttribute('data-toogle', "tooltip");
+  a_validate_invalid.setAttribute('title', "Invalidar");
+  a_validate_invalid.innerHTML = '<i class="fas fa-times"></i>';
+  a_validate_invalid.addEventListener('click', sendInvalidAnswerRequest);
+
+  let a_invalidate = document.createElement('a');
+  a_invalidate.setAttribute('class', "btn text-white invalidate me-1");
+  a_invalidate.setAttribute('data-toogle', "tooltip");
+  a_invalidate.innerHTML = '<i class="fas ' + (valid ? 'fa-check' : 'fa-times')+ '"></i>';
+  a_invalidate.addEventListener('click', sendNoneAnswerRequest);
+
   if (valid == null) {
-    a1.classList.add("validate-valid");
-    a1.addEventListener('click', sendValidAnswerRequest);
-    cardIcon.appendChild(a1);
-    a2.classList.add("validate-invalid");
-    a2.addEventListener('click', sendInvalidAnswerRequest);
-    cardIcon.appendChild(a2);
+    cardIcon.appendChild(a_validate_valid);
+    cardIcon.appendChild(a_validate_invalid);
   }
   else if (valid) {
-    a1.classList.add("invalidate");
-    a1.addEventListener('click', sendNoneAnswerRequest);
-    cardIcon.appendChild(a1);
+    a_invalidate.classList.add("btn-success");
+    a_invalidate.setAttribute('title', "Remover Validação");
+    cardIcon.appendChild(a_invalidate);
+    cardIcon.appendChild(a_validate_invalid);
   }
   else {
-    a2.classList.add("invalidate");
-    a2.addEventListener('click', sendNoneAnswerRequest);
-    cardIcon.appendChild(a2);
+    cardIcon.appendChild(a_validate_valid);
+    a_invalidate.classList.add("btn-danger");
+    a_invalidate.setAttribute('title', "Remover Invalidação");
+    cardIcon.appendChild(a_invalidate);
   }
+}
+
+function interventionReportHandler() {
+  let error_section = document.querySelector('section.error-msg');
+  if (this.status == 403) {
+    error_section.appendChild(createAlert('alert-danger', "Denúncia não autorizada"));
+    return;
+  }
+  if (this.status != 200) window.location = '/';
+  let intervention = JSON.parse(this.responseText);
+  error_section.appendChild(createAlert('alert-success', "Denúncia realizada com sucesso!"));
 }
 
 function notificationMarkReadHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let notification = JSON.parse(this.responseText);
   let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
@@ -420,13 +493,12 @@ function notificationMarkReadHandler() {
 
 }
 
-
 function notificationRemoveHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
   let notification = JSON.parse(this.responseText);
   let card = document.querySelector('div.notification-card[data-id="' + notification.id + '"]');
@@ -438,18 +510,48 @@ function notificationRemoveHandler() {
   element.remove();
 }
 
+function reportRemovedHandler() {
+  if (this.status == 403) {
+    let error_section = document.querySelector('section.error-msg');
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
+    return;
+  }
+  if (this.status != 200) window.location = '/';
+  let report = JSON.parse(this.responseText);
+  let element = document.querySelector('tr[data-id="' + report.id + '"]');
+  element.remove();
+
+  admin_table.row(element).remove().draw(false);
+}
+
 function switchReceiveEmailHandler() {
   if (this.status == 403) {
     let error_section = document.querySelector('section.error-msg');
-    error_section.appendChild(createError("Ação não autorizada"));
+    error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
-  } 
+  }
   if (this.status != 200) window.location = '/';
 }
 
+function sendContactFormEmailHandler() {
+  document.querySelector('#name').value = null;
+  document.querySelector('#email').value = null;
+  document.querySelector('#subject').value = null;
+  document.querySelector('#message').value = null;
+  let msg_section = document.querySelector('section.msg');
+  if (this.status == 200) {
+    msg_section.appendChild(createAlert('alert-success', "Email enviado com sucesso"));
+  }
+  else {
+    msg_section.appendChild(createAlert('alert-danger', "Erro ao enviar email"));
+  }
+}
+
+// -------------------- END OF HANDLERS ----------------------------
+
 
 function focusSearchInput() {
-  document.querySelector('input#search-input').focus(); 
+  document.querySelector('input#search-input').focus();
 }
 
 function focusAnswerInput() {
@@ -516,9 +618,9 @@ function showFilterForm() {
   }
 }
 
-function createError(msg) {
+function createAlert(type, msg) {
   let error_div = document.createElement('div');
-  error_div.classList.add('mt-1', 'py-2', 'alert', 'alert-danger', 'alert-dismissible', 'fade', 'show');
+  error_div.classList.add('mt-1', 'py-2', 'alert', type, 'alert-dismissible', 'fade', 'show');
 
   let close_btn = document.createElement('button');
   close_btn.setAttribute('type', 'button');
@@ -533,6 +635,14 @@ function createError(msg) {
   return error_div;
 }
 
+function getUrlVars() {
+  var vars = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+      vars[key] = value;
+  });
+  return vars;
+}
+
 addEventListeners();
 
 function formatDetails ( details ) {
@@ -543,16 +653,16 @@ function formatDetails ( details ) {
   let birthdate = (data.birthdate != null) ? data.birthdate.substring(0, 10) : 'Não definido';
   let entry_year = (data.type != 'Student') ? '' : '<p><i class="fas fa-user-graduate me-2"></i>Ano de Ingresso: ' + data.entry_year + '</p>';
 
-  return  '<div class="row mt-4">' + 
-            '<div class="col-2">' + 
-              '<img src="' + img_src + '" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">' + 
-            '</div>' + 
-            '<div class="col-10">' + 
-              '<h5>Sobre mim</h5>' + 
+  return  '<div class="row mt-4">' +
+            '<div class="col-2">' +
+              '<img src="' + img_src + '" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">' +
+            '</div>' +
+            '<div class="col-10">' +
+              '<h5>Sobre mim</h5>' +
               '<div class="ms-3">' +
-                '<p>Apresentação: ' + about + '</p>' + 
+                '<p>Apresentação: ' + about + '</p>' +
                 '<p><i class="fas fa-birthday-cake me-2"></i>Aniversário: ' + birthdate + '</p>' +
-                entry_year + 
+                entry_year +
               '</div>' +
             '</div>' +
           '</div>';
@@ -563,6 +673,10 @@ $(document).ready(function () {
   admin_table = $('#admin-table').DataTable({
     "page": 1,
     "pagingType": "simple_numbers",
+    "initComplete" : function() {
+      if (typeof getUrlVars()['searchDt'] !== 'undefined') 
+        this.api().search(decodeURI(getUrlVars()['searchDt'])).draw();   
+    },
   });
   $('.dataTables_length').addClass('bs-select');
 
@@ -585,7 +699,32 @@ $(document).ready(function () {
     }
   });
 
-  tinymce.init({selector:'textarea.text-editor'});
+  tinymce.init({
+    selector:'textarea.text-editor',
+    menubar: false,
+    toolbar_sticky: true,
+    toolbar: 'undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | table codesample link | fullscreen',
+    plugins: 'autolink link codesample advlist lists table fullscreen',
+    style_formats: [
+      { title: 'Headings', items: [
+        { title: 'Heading 1', format: 'h1' },
+        { title: 'Heading 2', format: 'h2' },
+        { title: 'Heading 3', format: 'h3' },
+        { title: 'Heading 4', format: 'h4' },
+        { title: 'Heading 5', format: 'h5' },
+        { title: 'Heading 6', format: 'h6' }
+      ]},
+      { title: 'Inline', items: [
+        { title: 'Superscript', format: 'superscript' },
+        { title: 'Subscript', format: 'subscript' },
+        { title: 'Code', format: 'code' }
+      ]},
+      { title: 'Blocks', items: [
+        { title: 'Paragraph', format: 'p' },
+        { title: 'Blockquote', format: 'blockquote' }
+      ]}
+    ]
+  });
   showRegisterFormFields();
 });
 

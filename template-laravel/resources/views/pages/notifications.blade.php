@@ -8,7 +8,10 @@
 
   <div class="row">
     <div class="col-12">
-      <h2>Notificações</h2>
+      <h2>
+        Notificações
+        @include('partials.help', ['placement' => 'right', 'content' => 'As notificações são lidas quando se visita a intervenção a que diz respeito ou através do botao para a marcar como lida. Existe sempre a possibilidade de reverter esta operação marcando-a como não lida novamente.'])
+      </h2>
     </div>
   </div>
 

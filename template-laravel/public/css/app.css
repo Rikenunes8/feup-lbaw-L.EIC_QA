@@ -40,17 +40,30 @@ section#faq-page .accordion-button:not(.collapsed) {
 .about-icons-icon i {
   font-size: 4rem;
 }
+.contextual-help {
+  font-size: large;
+  vertical-align: middle;
+}
+form .contextual-help {
+  font-size: medium;
+}
 .user-action-add {
   display: flex;
   justify-content: space-between;
 }
-.question-card .question-card-score,
+.question-card .question-card-score, 
 .notification-card .notification-card-read-mark {
-  display: flex;
   align-items: center;
-  justify-content: center;
   text-align: center;
   background-color: rgb(255,255,255)!important;
+}
+.question-card .question-card-score {
+  display: grid!important;
+  align-content: center;
+}
+.notification-card .notification-card-read-mark {
+  display: flex;
+  justify-content: center;
 }
 .question-card span.text-muted, 
 .user-profile span.text-muted,
@@ -64,6 +77,11 @@ section#faq-page .accordion-button:not(.collapsed) {
   justify-content: space-between;
   text-align: end;
 }
+.question-valid-icon, 
+.question-invalid-icon {
+  font-size: x-large;
+  margin-top: .5rem;
+}
 .question-valid-icon {
   color: #00b74a;
 }
@@ -75,16 +93,26 @@ section#faq-page .accordion-button:not(.collapsed) {
 }
 #question-page .answer-detail > .row {
   margin-right: 0;
-  width: 94%;
+  width: 100%;
 }
 #question-page .comment-detail > .row {
   margin-right: 0;
-  width: 88%;
+  width: 85%;
+}
+#question-page .question-details-validation-icon {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0;
+}
+#question-page .question-details-validation-icon i {
+  font-size: xx-large;
+  margin-top: 2.5rem;
 }
 #question-page .intervention-votes {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 #question-page .question-detail .question-page-actions,
 #question-page .answer-detail .question-page-actions,
@@ -103,7 +131,7 @@ section#faq-page .accordion-button:not(.collapsed) {
 }
 #question-page .card-body > p:first-of-type,
 #notifications-page .card-body >p:first-of-type {
-  margin-right: 8rem;
+  /*margin-right: 8rem;*/
   margin-bottom: 1rem;
 }
 #question-page .comment-detail .card {
@@ -122,6 +150,22 @@ section#faq-page .accordion-button:not(.collapsed) {
   top: 0;
   right: 0;
 }
+.question-card-icon-validate {
+  float: right;
+}
+.card-body img {
+  max-width: 100%;
+  height: auto;
+}
+.card-body table, .card-body td, .card-body th {
+  border: 1px solid #554f4f;
+}
+.card-body pre {
+  padding: 12px;
+  border-radius: 5px;
+  overflow: auto;
+  background-color: #f6f6f6;
+}
 #notifications-page .notification-unread .card-body {
   border-left: 5px solid blue;
 }
@@ -137,7 +181,8 @@ div.admin-action-add a {
   top: 0;
 }
 td.admin-table-uc-actions section.actions-buttons, 
-td.admin-table-user-actions section.actions-buttons {
+td.admin-table-user-actions section.actions-buttons,
+td.admin-table-reports-actions section.actions-buttons {
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -179,7 +224,8 @@ footer > p {
   }
 }
 @media (max-width: 767px) {
-  #form-login, #form-uc-create, #form-uc-edit {
+  #form-login, #form-uc-create, #form-uc-edit,
+  #form-forgot-password, #form-reset-password {
     width: 100%!important;
   }
 

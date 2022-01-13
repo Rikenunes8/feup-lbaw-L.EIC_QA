@@ -16,6 +16,7 @@
           <div class="form-check form-switch mt-3">
             <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" {{ $user->receive_email? 'checked':''}}>
             <label class="form-check-label" for="flexSwitchCheckDefault">Receber Emails?</label>
+            @include('partials.help', ['placement' => 'bottom', 'content' => 'Quando ativo receberá também as suas notificações no seu email. Esta ação só se aplicará a notificações novas.'])
           </div>
           
           @include('partials.modal', ['id' => 'deleteUserModal', 
@@ -31,7 +32,7 @@
       <h2 class="me-4">{{ $user->name }}</h2> 
       
       <section>
-        <div class="row mt-4">
+        <div class="row {{ Auth::check() && (Auth::user()->id == $user->id || Auth::user()->isAdmin()) ? 'mt-5' : 'mt-4' }} ">
           <div class="col-md-4 mb-2">
             @if ( Auth::check() && !is_null($user->photo) && file_exists( public_path('images/users/'.$user->photo) ) )
             <img src="{{ asset('images/users/'.$user->photo) }}" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">
@@ -39,7 +40,10 @@
             <img src="{{ asset('images/users/default.jpg') }}" alt="profile-photo-big" id="profile-photo-big" class="d-block w-100">
             @endif
             @if (!$user->isAdmin())
-            <p class="h6 text-center m-0 py-2 bg-light">Pontuação: {{$user->score}}</p>
+            <p class="h6 text-center m-0 py-2 bg-light">
+              @include('partials.help', ['placement' => 'top', 'content' => 'A pontução de um Utilizador reflete a soma dos votos de todas as suas intervenções. Quanto maior a sua Pontuação, mais reconhecido se tornará na plataforma!'])  
+              Pontuação: {{$user->score}}
+            </p>
             @endif
           </div>
           <div class="col-md-8 mb-2">
@@ -83,6 +87,8 @@
       <hr>
 
       @if (!$user->isAdmin())
+      <h4>Outras Informações</h4>
+      
       <div id="user-profile-sections">
         <ul id="user-profile-tabs" class="nav nav-tabs border-bottom" role="tablist">
           <li class="nav-item">
@@ -97,7 +103,7 @@
           </li>
           @endif
           <li class="nav-item">
-            <a class="nav-link {{ ($active == 'ucs')?'active':'' }}" data-toggle="tab" href="#section-associated-ucs"  role="tab">Ucs</a>
+            <a class="nav-link {{ ($active == 'ucs')?'active':'' }}" data-toggle="tab" href="#section-associated-ucs"  role="tab">Unidades Curriculares</a>
           </li>
         </ul>
 	
@@ -108,7 +114,13 @@
                 <div>
                   <div class="float-end d-inline-flex">
                     <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                      <input type="search" id="search-user-questions-input" class="form-control" placeholder="Questão..." aria-label="Search Question" name="searchQuestions">
+                      <div class="input-group mb-0">
+                        <input type="search" id="search-user-questions-input" class="form-control" placeholder="Pesquisar Questão..." aria-label="Search Question" name="searchQuestions">
+                    
+                        <span class="input-group-text">
+                          @include('partials.help', ['placement' => 'top', 'content' => 'Pesquise por uma Questão sua em específico através do seu Título!'])
+                        </span>
+                      </div>
                     </form>
                     <a href="{{ url('questions/create') }}" class="btn btn-primary text-white ms-2">Nova Questão <i class="fas fa-plus ms-2"></i></a>
                   </div>
@@ -117,7 +129,13 @@
               @else
                 <div class="float-end">
                   <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                    <input type="search" id="search-user-questions-input" class="form-control" placeholder="Questão..." aria-label="Search Question" name="searchQuestions">
+                    <div class="input-group mb-0">
+                      <input type="search" id="search-user-questions-input" class="form-control" placeholder="Pesquisar Questão..." aria-label="Search Question" name="searchQuestions">
+                    
+                      <span class="input-group-text">
+                        @include('partials.help', ['placement' => 'top', 'content' => 'Pesquise por uma Questão deste utilizador em específico através do seu Título!'])
+                      </span>
+                    </div>
                   </form>
                 </div>
                 <h5 class="me-4">Questões</h5> 
@@ -144,7 +162,13 @@
             <section class="mt-4">
               <div class="float-end">
                 <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                  <input type="search" id="search-user-answers-input" class="form-control" placeholder="Resposta..." aria-label="Search Answer" name="searchAnswers">
+                  <div class="input-group mb-0">
+                    <input type="search" id="search-user-answers-input" class="form-control" placeholder="Pesquisar Resposta..." aria-label="Search Answer" name="searchAnswers">
+                  
+                    <span class="input-group-text">
+                      @include('partials.help', ['placement' => 'top', 'content' => 'Pesquise por uma Resposta em específico através do seu Texto!'])
+                    </span>
+                  </div>
                 </form>
               </div>
               @if ( Auth::check() && Auth::user()->id == $user->id )
@@ -175,7 +199,13 @@
             <section class="mt-4">
               <div class="float-end">
                 <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                  <input type="search" id="search-user-validated-answers-input" class="form-control" placeholder="Resposta..." aria-label="Search Validated Answer" name="searchValidatedAnswers">
+                  <div class="input-group mb-0">
+                    <input type="search" id="search-user-validated-answers-input" class="form-control" placeholder="Pesquisar Resposta..." aria-label="Search Validated Answer" name="searchValidatedAnswers">
+                
+                    <span class="input-group-text">
+                      @include('partials.help', ['placement' => 'top', 'content' => 'Pesquise por uma Resposta Validada em específico através do seu Texto!'])
+                    </span>
+                  </div>
                 </form>
               </div>
               @if ( Auth::check() && Auth::user()->id == $user->id )
@@ -206,7 +236,13 @@
             <section class="mt-4">
               <div class="float-end">
                 <form method="GET" action="{{ url('/users/'.$user->id) }}">
-                  <input type="search" id="search-user-ucs-input" class="form-control" placeholder="UC..." aria-label="Search UC" name="searchUcs">
+                  <div class="input-group mb-0">
+                    <input type="search" id="search-user-ucs-input" class="form-control" placeholder="Pesquisar UC..." aria-label="Search UC" name="searchUcs">
+                
+                    <span class="input-group-text">
+                      @include('partials.help', ['placement' => 'top', 'content' => 'Pesquise por uma Unidade Curricular em específico através do seu Nome!'])
+                    </span>
+                  </div>
                 </form>
               </div>
               @if ($user->isStudent()) 
