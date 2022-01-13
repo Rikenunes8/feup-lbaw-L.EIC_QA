@@ -11,8 +11,8 @@ php artisan clear-compiled
 php artisan optimize
 
 php artisan migrate
-php artisan queue:work
-php artisan schedule:work
+nohup php artisan queue:work --daemon > /dev/null 2>&1 &
+nohup php artisan schedule:work --daemon > /dev/null 2>&1 &
 
 docker build -t $IMAGE_NAME .
 docker push $IMAGE_NAME
