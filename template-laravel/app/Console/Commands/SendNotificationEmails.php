@@ -46,7 +46,7 @@ class SendNotificationEmails extends Command
 
             $notifications = $user->notifications()->wherePivot('to_email', true)->wherePivot('read', false)->get();
             foreach($notifications as $notification) {
-            $delay = $delay->addSeconds(5);
+            $delay = $delay->addSeconds(8);
             $user->notify((new NotificationEmail($notification))->delay($delay));
             }
         }
