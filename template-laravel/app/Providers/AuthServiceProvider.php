@@ -28,6 +28,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $allowedDomains = [
+      'edu.fe.up.pt',
+      'edu.fc.up.pt',
+      'fe.up.pt',
+      'fc.up.pt',
+      'up.pt',
       'fe.up.qa.pt',
       'fc.up.qa.pt',
       'up.qa.pt',
@@ -45,6 +50,6 @@ class AuthServiceProvider extends ServiceProvider
 
         Validator::extend('allowed_domain', function($attribute, $value, $parameters, $validator) {
           return in_array(explode('@', $value)[1], $this->allowedDomains);
-        }, 'Domain not valid for registration. Valid Domains: @fe.up.qa.pt, @fc.up.qa.pt, @up.qa.pt, @g.uporto.pt.');
+        }, 'Domain not valid for registration. Valid Domains: @fe.up.pt, @fc.up.pt, @up.pt, @g.uporto.pt.');
     }
 }

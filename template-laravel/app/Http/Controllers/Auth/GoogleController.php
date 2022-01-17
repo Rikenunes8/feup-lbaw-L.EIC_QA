@@ -7,8 +7,11 @@ use Laravel\Socialite\Facades\Socialite;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class GoogleController extends Controller
@@ -27,29 +30,55 @@ class GoogleController extends Controller
             $is_user = User::where('email', $user->getEmail())->first();
 
             if(!$is_user){
-
-                $saveUser = User::updateOrCreate([
-                    'name' => $user->getName(),
-                    'email' => $user->getEmail(),
-                    'username' => $user->getName(),
-                    'password' => Hash::make($user->getName().'@'.$user->getId()),
-                    'photo' => $user->getAvatar(),
-                    'type' => 'Student',
-                    'entry_year' => 2018,
-                    'google_id' => $user->getId()
+                $data = array('email' => $user->getEmail());
+                Validator::make($data, [
+                    'email' => 'required|string|email|allowed_domain|max:255|unique:users,email',
                 ]);
-            }
+                // $file = $user->getAvatar();
+                // $filename = '_'.time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
+                // $file->storeAs('users', $filename, 'images_uploads');
 
+                $filename = 'default.jpg';
+                if (substr_compare($user->getEmail(), 'up', 0, 2) == 0) {       
+                    $saveUser = User::create([
+                        'email' => $user->getEmail(), 
+                        'username' => $user->getEmail(),
+                        'password' => Hash::make($user->getName().'@'.$user->getId()),
+                        'name' => $user->getName(),
+                        'photo' => $filename,
+                        'type' => 'Student',
+                        'entry_year' => substr($user->getEmail(), 2, 4),
+                        'google_id' => $user->getId()
+                    ]);
+                }
+                else {
+                    $saveUser = User::create([
+                        'email' => $user->getEmail(), 
+                        'username' => $user->getEmail(),
+                        'password' => Hash::make($user->getName().'@'.$user->getId()),
+                        'name' => $user->getName(),
+                        'photo' => $filename,
+                        'type' => 'Teacher',
+                        'google_id' => $user->getId()
+                    ]);
+                }
+
+            }
             else{
                 $saveUser = User::where('email',  $user->getEmail())->update([
                     'google_id' => $user->getId(),
                 ]);
                 $saveUser = User::where('email', $user->getEmail())->first();
+                if ($saveUser->active == 1) {
+                    Auth::loginUsingId($saveUser->id);
+                }
+                else {
+                    $errors = ['email' => trans('auth.notactivated')];
+                    return redirect('/login')->withErrors($errors);
+                }
             }
-
-            Auth::loginUsingId($saveUser->id);
-            return redirect('/home');
-
+            
+            return redirect('/user');
         } catch (\Throwable $th) {
             throw $th;
         }
