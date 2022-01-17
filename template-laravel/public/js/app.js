@@ -196,7 +196,7 @@ function sendActiveAllUserRequest() {
       let id = request.getAttribute('data-id');
       sendAjaxRequest('post', '/api/users/' + id + '/active', null, userActivatedHandler);
     }
-  }); 
+  });
 }
 
 function sendRejectAllUserRequest() {
@@ -207,7 +207,7 @@ function sendRejectAllUserRequest() {
       let id = request.getAttribute('data-id'); 
       sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
     }
-  }); 
+  });
 }
 
 function sendDeleteInterventionRequest() {
@@ -252,7 +252,7 @@ function sendInterventionReportRequest() {
 function sendMarkReadNotificationRequest() {
   let card = this.closest('div.notification-card');
   let id = card.getAttribute('data-id');
-  console.log(card.classList.contains('notification-read'));
+
   sendAjaxRequest('post', '/api/notifications/' + id + '/read', {read: card.classList.contains('notification-read')}, notificationMarkReadHandler);
 }
 

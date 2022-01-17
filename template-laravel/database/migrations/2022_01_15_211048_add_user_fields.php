@@ -15,7 +15,7 @@ class AddUserFields extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('remember_token');
+            $table->rememberToken();
         });
     }
 
