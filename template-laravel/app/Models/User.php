@@ -22,7 +22,7 @@ class User extends Authenticatable implements CanResetPasswordContract, MustVeri
      */
     protected $fillable = [
       'name', 'email', 'password', 'active', 'username', 'about', 'birthdate', 'photo', 
-      'score', 'blocked', 'type', 'entry_year', 'token', 'created_at'
+      'score', 'blocked', 'type', 'entry_year', 'token', 'created_at', 'google_id'
     ];
 
     /**
@@ -111,7 +111,7 @@ class User extends Authenticatable implements CanResetPasswordContract, MustVeri
     public function scopeAdmins($query) {
         return $query->whereType('Admin');
     }
- 
+
     /**
      * Filter query by Teacher type.
      */

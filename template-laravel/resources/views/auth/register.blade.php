@@ -27,7 +27,7 @@
             @include('layouts.error', ['error' => $errors->first('email')])
         @endif
     </div>
-    
+
     <div class="mb-3 col-12 col-lg-6">
         <label for="username" class="form-label required">Username</label>
         <input type="text" id="username" class="form-control" name="username" value="{{ old('username') }}" required>
@@ -50,7 +50,7 @@
     </div>
 
     <!-- TYPE -->
-    <!-- Admin: só isto 
+    <!-- Admin: só isto
         (js)
         div.teacher-student-extra-fields display none
         not required name
@@ -58,7 +58,7 @@
         (score = NULL)
         (blocked = NULL)
         (type='Admin')-->
-    <!-- Techer: name, [photo, about, birthdate], 
+    <!-- Techer: name, [photo, about, birthdate],
         (js)
           div.teacher-student-extra-fields display
           div.student-extra-fields display none
@@ -115,7 +115,7 @@
           </div>
       </div>
     </div>
-  
+
     <div class="mb-3 col-12 col-lg-6 teacher-student-extra-fields">
         <label for="about" class="form-label">Sobre mim</label>
         <textarea rows="11" id="about" class="form-control" name="about">{{ old('about') }}</textarea>
@@ -128,8 +128,15 @@
         <button type="submit" class="btn btn-primary btn-block">Registar Conta</button>
     </div>
 
+    <div class ="col-12" style="padding-top:5px;">
+        <a href="{{ route('google.login') }}" class="btn btn-google btn-user btn-block">
+            <i class="fab fa-google fa-fw"></i> Registar com Google
+        </a>
+    </div>
+
     <div class="col-12 d-flex justify-content-center mt-3">
         Receberá um email de confirmação após a submissão deste formulário.
     </div>
+
 </form>
 @endsection

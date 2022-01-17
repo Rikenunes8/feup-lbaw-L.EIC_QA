@@ -42,6 +42,12 @@ Route::post('forgot-password'       , 'Auth\ForgotPasswordController@submitForge
 Route::get('reset-password/{token}' , 'Auth\ForgotPasswordController@showResetPasswordForm')->middleware('guest')->name('password.reset');
 Route::post('reset-password'        , 'Auth\ForgotPasswordController@submitResetPasswordForm')->middleware('guest')->name('password.update');
 
+// Google Authentication
+Route::prefix('google')->name('google.')->group( function(){
+    Route::get('login', 'Auth\GoogleController@loginWithGoogle')->name('login');
+    Route::any('callback', 'Auth\GoogleController@callbackFromGoogle')->name('callback');
+});
+
 
 // Interventions - API
 Route::group(['middleware' => ['verified']], function() {
