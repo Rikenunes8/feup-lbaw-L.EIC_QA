@@ -32,6 +32,23 @@ Route::get('register' , 'Auth\RegisterController@showRegistrationForm')->name('r
 Route::post('register', 'Auth\RegisterController@register');
 
 
+use App\Http\Controllers\EmailVerificationController;
+
+// Authentication - verify email on register
+Route::get('/verify-email', [EmailVerificationController::class, 'show'])
+    ->middleware('auth')
+    ->name('verification.notice'); // <-- don't change the route name
+
+Route::post('/verify-email/request', [EmailVerificationController::class, 'request'])
+    ->middleware('auth')
+    ->name('verification.request');
+
+Route::get('/verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['auth', 'signed']) // <-- don't remove "signed"
+    ->name('verification.verify'); // <-- don't change the route name
+
+
+
 Route::get('forgot-password'        , 'Auth\ForgotPasswordController@showForgetPasswordForm')->middleware('guest')->name('password.request');
 Route::post('forgot-password'       , 'Auth\ForgotPasswordController@submitForgetPasswordForm')->middleware('guest')->name('password.email'); 
 Route::get('reset-password/{token}' , 'Auth\ForgotPasswordController@showResetPasswordForm')->middleware('guest')->name('password.reset');
@@ -39,12 +56,6 @@ Route::post('reset-password'        , 'Auth\ForgotPasswordController@submitReset
 
 
 // Route::get('/activate/{email}/{code}', 'Auth\ForgotPasswordController@activate');
-// Route::get('forgot_password', 'Auth\ForgotPasswordController@forgot'); 
-// Route::post('forgot_password', 'Auth\ForgotPasswordController@password'); 
-//Route::post('forgot-password', 'Auth\ForgotPasswordController@ForgotPassword')->name('password.email');
-// Route::post('reset-password'       , 'X@resetPassowrd')->name('password.update');
-// Route::get('reset-password/{token}', 'X@showResetPasswordForm')->name('password.reset');
-
 
 
 // API
@@ -56,7 +67,7 @@ Route::post('api/interventions/{id}/report'   , 'InterventionController@report')
 
 // Interventions - Questions
 Route::get('questions'                , 'InterventionController@list');
-Route::get('questions/create'         , 'InterventionController@showCreateQuestionForm');
+Route::get('questions/create'         , 'InterventionController@showCreateQuestionForm')->middleware('verified'); // TODO TRY HERE
 Route::post('questions/create'        , 'InterventionController@createQuestion')->name('questions.create');
 Route::get('questions/{id}'           , 'InterventionController@show');
 Route::get('questions/{id}/edit'      , 'InterventionController@showEditQuestionForm');

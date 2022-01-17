@@ -31,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/login';
+    protected $redirectTo = '/verify-email';
 
     /**
      * Create a new controller instance.
@@ -41,7 +41,6 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
-        // TODO middleware vai ser o "email verification"
     }
 
     /**
@@ -73,13 +72,13 @@ class RegisterController extends Controller
 
         if ($data['usertype'] == "Admin") {
             return Validator::make($data, [
-                'email' => 'required|string|email|max:255|unique:users,email',
+                'email' => 'required|string|email|allowed_domain|max:255|unique:users,email',
                 'username' => 'required|string|alpha_dash|max:20|unique:users,username',
                 'password' => 'required|string|min:6|confirmed',
             ]);
         } else if ($data['usertype'] == "Teacher") {
             return Validator::make($data, [
-                'email' => 'required|string|email|max:255|unique:users,email',
+                'email' => 'required|string|email|allowed_domain|max:255|unique:users,email',
                 'username' => 'required|string|alpha_dash|max:20|unique:users,username',
                 'password' => 'required|string|min:6|confirmed',
                 'name' => 'required|string|max:255',
@@ -89,7 +88,7 @@ class RegisterController extends Controller
             ]);
         } else { // ($data['usertype'] == "Student")
             return Validator::make($data, [
-                'email' => 'required|string|email|max:255|unique:users,email',
+                'email' => 'required|string|email|allowed_domain|max:255|unique:users,email',
                 'username' => 'required|string|alpha_dash|max:20|unique:users,username',
                 'password' => 'required|string|min:6|confirmed',
                 'name' => 'required|string|max:255',

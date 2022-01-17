@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class User extends Authenticatable implements CanResetPasswordContract
+class User extends Authenticatable implements CanResetPasswordContract, MustVerifyEmail
 {
     use Notifiable;
 
@@ -30,7 +31,7 @@ class User extends Authenticatable implements CanResetPasswordContract
      * @var array
      */
     protected $hidden = [
-      'password',
+      'password', 'remember_token',
     ];
 
     /*
@@ -38,7 +39,7 @@ class User extends Authenticatable implements CanResetPasswordContract
       return User::orWhere('email', $identifier)->where('active', 1)->first();
     }
     */
-    
+
     public function isAdmin() {
       return $this->type == 'Admin';
     }
@@ -101,7 +102,7 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function notifications() {
       return $this->belongsToMany('App\Models\Notification', 'receive_not', 'id_user', 'id_notification')
                   ->withPivot('read')->withPivot('to_email');
-    }    
+    }
 
 
     /**
@@ -117,8 +118,7 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function scopeTeachers($query) {
         return $query->whereType('Teacher');
     }
-    
-    
+
     /**
      * Filter query by Student type.
      */

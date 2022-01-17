@@ -4,6 +4,14 @@
 
 @section('content')
 <section id="home-page">
+  
+  @if (Session::has('success'))
+    <div class="my-3 py-2  alert alert-success alert-dismissible fade show" role="alert">
+      <button type="button" class="h-auto btn-close btn-sm" data-bs-dismiss="alert"></button>  
+      {{ Session::get('success') }}
+    </div>
+  @endif
+
   <h2>L.EIC Q&A</h2> 
 
   <div class="bg-image">
