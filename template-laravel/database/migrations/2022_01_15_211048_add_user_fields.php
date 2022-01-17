@@ -18,13 +18,8 @@ class AddUserFields extends Migration
             $table->rememberToken();
         });
 
-        // UPDATE ROWS ALREADY IN TABLE - NOT SURE IF IT IS THE BEST WAY
-        $rows = DB::table('users')->get(['id']);
-        foreach ($rows as $row) {
-            DB::table('users')
-                ->where('id', $row->id)
-                ->update(['email_verified_at' => now(), 'remember_token' => Str::random(10)]);
-        }
+        // UPDATE ROWS ALREADY IN TABLE
+        $rows = DB::table('users')->update(['email_verified_at' => now()]);
     }
 
     /**
