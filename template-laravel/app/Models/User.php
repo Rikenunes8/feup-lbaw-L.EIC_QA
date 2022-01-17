@@ -125,4 +125,11 @@ class User extends Authenticatable implements CanResetPasswordContract, MustVeri
     public function scopeStudents($query) {
         return $query->whereType('Student');
     }
+
+    /**
+     * Filter query by unverified.
+     */
+    public function scopeUnverified($query) {
+      return $query->whereNull('email_verified_at');
+    }
 }

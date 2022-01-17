@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('send:notification_emails')->everyFiveMinutes();
         $schedule->command('reset_password:clean')->everyFiveMinutes();
+        $schedule->command('users:clean_unverified')->monthly();
 
     }
 
