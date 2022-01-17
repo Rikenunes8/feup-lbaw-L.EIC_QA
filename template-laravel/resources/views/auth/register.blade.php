@@ -127,5 +127,9 @@
     <div class="col-12">
         <button type="submit" class="btn btn-primary btn-block">Registar Conta</button>
     </div>
+
+    <div class="col-12 d-flex justify-content-center mt-3">
+        Receberá um email de confirmação após a submissão deste formulário.
+    </div>
 </form>
 @endsection

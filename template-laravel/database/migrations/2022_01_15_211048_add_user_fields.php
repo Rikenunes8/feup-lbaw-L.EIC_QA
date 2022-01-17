@@ -15,8 +15,11 @@ class AddUserFields extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('remember_token');
+            $table->rememberToken();
         });
+
+        // UPDATE ROWS ALREADY IN TABLE
+        $rows = DB::table('users')->update(['email_verified_at' => now()]);
     }
 
     /**
