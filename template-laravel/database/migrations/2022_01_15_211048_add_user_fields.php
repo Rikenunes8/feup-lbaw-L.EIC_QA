@@ -14,12 +14,12 @@ class AddUserFields extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->string('google_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
         });
 
-        // UPDATE ROWS ALREADY IN TABLE
-        $rows = DB::table('users')->update(['email_verified_at' => now()]);
+        DB::table('users')->update(['email_verified_at' => now()]);
     }
 
     /**
@@ -30,6 +30,7 @@ class AddUserFields extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('google_id');
             $table->dropColumn('email_verified_at');
             $table->dropColumn('remember_token');
         });

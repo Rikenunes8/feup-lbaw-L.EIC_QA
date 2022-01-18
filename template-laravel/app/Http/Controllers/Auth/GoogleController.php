@@ -29,7 +29,8 @@ class GoogleController extends Controller
             // Check Users Email If Already There
             $is_user = User::where('email', $user->getEmail())->first();
 
-            if(!$is_user){
+
+            if(is_null($is_user)){
                 $data = array('email' => $user->getEmail());
                 Validator::make($data, [
                     'email' => 'required|string|email|allowed_domain|max:255|unique:users,email',
@@ -46,9 +47,10 @@ class GoogleController extends Controller
                         'password' => Hash::make($user->getName().'@'.$user->getId()),
                         'name' => $user->getName(),
                         'photo' => $filename,
-                        'type' => 'Student',
+                        'google_id' => $user->getId(),
+                        'active' => true,
                         'entry_year' => substr($user->getEmail(), 2, 4),
-                        'google_id' => $user->getId()
+                        'type' => 'Student'
                     ]);
                 }
                 else {
@@ -58,26 +60,20 @@ class GoogleController extends Controller
                         'password' => Hash::make($user->getName().'@'.$user->getId()),
                         'name' => $user->getName(),
                         'photo' => $filename,
-                        'type' => 'Teacher',
-                        'google_id' => $user->getId()
+                        'google_id' => $user->getId(),
+                        'active' => true,
+                        'type' => 'Teacher'
                     ]);
                 }
-
+                $ownUser = User::where('email', $user->getEmail())->update(['email_verified_at' => now()]);
             }
-            else{
-                $saveUser = User::where('email',  $user->getEmail())->update([
-                    'google_id' => $user->getId(),
-                ]);
-                $saveUser = User::where('email', $user->getEmail())->first();
-                if ($saveUser->active == 1) {
-                    Auth::loginUsingId($saveUser->id);
-                }
-                else {
-                    $errors = ['email' => trans('auth.notactivated')];
-                    return redirect('/login')->withErrors($errors);
-                }
+            else {
+                $ownUser = User::where('email', $user->getEmail());
+                $ownUser->update(['google_id' => $user->getId()]);
+                $saveUser = $ownUser->first();
             }
             
+            Auth::loginUsingId($saveUser->id);
             return redirect('/user');
         } catch (\Throwable $th) {
             throw $th;
