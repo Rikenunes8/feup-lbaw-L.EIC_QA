@@ -12,6 +12,32 @@
   <div class="row mt-3 mb-4">
     <div class="col-12">
       <small class="text-mutted">Gestão de pedidos para ativação de contas</small>
+      <div class="d-inline float-end">
+        <button type="button" class="btn btn-success text-white me-1" data-bs-toggle="modal" data-bs-target="#activeAllUsersModal">
+          Ativar Todos
+        </button>
+        <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#rejectAllUsersModal">
+          Rejeitar Todos
+        </button>
+      </div>
+
+      <section class="actions-modals">
+        @include('partials.modal', ['id' => 'activeAllUsersModal', 
+                                    'title' => 'Activar Todas as Contas', 
+                                    'body' => 'Tem a certeza que quer aceitar TODOS os pedidos para ativação de conta?',
+                                    'href' => '#',
+                                    'action' => 'admin-table-active-all',
+                                    'cancel' => 'Cancelar',
+                                    'confirm' => 'Sim'])
+
+        @include('partials.modal', ['id' => 'rejectAllUsersModal', 
+                                    'title' => 'Rejeitar Todos os Pedidos', 
+                                    'body' => 'Tem a certeza que quer recusar permanentemente TODOS os pedidos para ativação de conta?',
+                                    'href' => '#',
+                                    'action' => 'admin-table-reject-all',
+                                    'cancel' => 'Cancelar',
+                                    'confirm' => 'Sim'])
+      </section>
     </div>
   </div>
 

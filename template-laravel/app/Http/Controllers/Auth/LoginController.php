@@ -35,8 +35,8 @@ class LoginController extends Controller
 
     protected $maxAttempts = 3;
     protected $decayMinutes = 1;
-    
-    
+
+
     /**
      * Create a new controller instance.
      *

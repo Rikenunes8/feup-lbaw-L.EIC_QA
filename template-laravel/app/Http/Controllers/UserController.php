@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App;
 use App\Models\Uc;
 use App\Models\User;
+use App\Mail\AccountActivationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -167,6 +169,8 @@ class UserController extends Controller
         $user->active = TRUE;
         $user->save();
 
+        Mail::to($user->email)->send(new AccountActivationMail(['active' => true]));
+
         return $user;
     }
 
@@ -213,6 +217,8 @@ class UserController extends Controller
         if (Auth::user()->id == $id) $self = true;
 
         $user->delete();
+
+        Mail::to($user->email)->send(new AccountActivationMail(['active' => false]));
         
         $url = $request->path();
         

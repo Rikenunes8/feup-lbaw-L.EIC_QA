@@ -36,6 +36,16 @@ function addEventListeners() {
     activater.addEventListener('click', sendActiveUserRequest);
   });
 
+  let allUsersActivaters = document.querySelectorAll('section#admin-requests-page a.admin-table-active-all');
+  [].forEach.call(allUsersActivaters, function(activater) {
+    activater.addEventListener('click', sendActiveAllUserRequest);
+  });
+
+  let allUsersRejectors = document.querySelectorAll('section#admin-requests-page a.admin-table-reject-all');
+  [].forEach.call(allUsersRejectors, function(rejector) {
+    rejector.addEventListener('click', sendRejectAllUserRequest);
+  });
+
   let interventionDeleters = document.querySelectorAll('.intervention-detail div.question-page-actions-modals a.question-page-delete');
   [].forEach.call(interventionDeleters, function(deleter) {
     deleter.addEventListener('click', sendDeleteInterventionRequest);
@@ -178,6 +188,28 @@ function sendActiveUserRequest() {
   sendAjaxRequest('post', '/api/users/' + id + '/active', null, userActivatedHandler);
 }
 
+function sendActiveAllUserRequest() {
+  let all_requests = document.querySelectorAll('table#admin-table tbody tr');
+
+  all_requests.forEach(request => {
+    if (request.hasAttribute('data-id')) {
+      let id = request.getAttribute('data-id');
+      sendAjaxRequest('post', '/api/users/' + id + '/active', null, userActivatedHandler);
+    }
+  });
+}
+
+function sendRejectAllUserRequest() {
+  let all_requests = document.querySelectorAll('table#admin-table tbody tr');
+
+  all_requests.forEach(request => {
+    if (request.hasAttribute('data-id')) {
+      let id = request.getAttribute('data-id'); 
+      sendAjaxRequest('delete', '/api/users/' + id + '/delete', null, userDeletedHandler);
+    }
+  });
+}
+
 function sendDeleteInterventionRequest() {
   let id = this.closest('section').getAttribute('data-id');
 
@@ -220,7 +252,7 @@ function sendInterventionReportRequest() {
 function sendMarkReadNotificationRequest() {
   let card = this.closest('div.notification-card');
   let id = card.getAttribute('data-id');
-  console.log(card.classList.contains('notification-read'));
+
   sendAjaxRequest('post', '/api/notifications/' + id + '/read', {read: card.classList.contains('notification-read')}, notificationMarkReadHandler);
 }
 

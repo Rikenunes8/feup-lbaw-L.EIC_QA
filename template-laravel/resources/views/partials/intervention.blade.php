@@ -69,7 +69,9 @@
             @if ( Auth::user()->id == $intervention->id_author )
             <a href="{{ url($intervention->type.'s/'.$intervention->id.'/edit') }}" class="btn btn-warning text-black me-1" data-toogle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
             @endif
-            <a class="btn btn-dark text-white question-page-report me-1" data-toogle="tooltip" title="Denunciar"><i class="fas fa-exclamation-triangle"></i></a>
+            <button type="button" class="btn btn-dark text-white me-1" data-toogle="tooltip" title="Denunciar" data-bs-toggle="modal" data-bs-target="#reportIntervention{{ $intervention->id }}Modal">
+              <i class="fas fa-exclamation-triangle"></i>
+            </button>
             @if ( Auth::user()->id == $intervention->id_author || Auth::user()->isAdmin() ) 
             <button type="button" class="btn btn-danger text-white me-1" data-toogle="tooltip" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteIntervention{{ $intervention->id }}Modal">
               <i class="far fa-trash-alt"></i>
@@ -77,8 +79,16 @@
             @endif
           </div>
 
-          @if ( Auth::user()->id == $intervention->id_author || Auth::user()->isAdmin() ) 
-            <div class="question-page-actions-modals">
+          <div class="question-page-actions-modals">
+            @include('partials.modal', ['id' => 'reportIntervention'.$intervention->id.'Modal', 
+                                        'title' => 'Denunciar '.$intervention->title , 
+                                        'body' => 'Tem a certeza que quer denunciar esta Intervenção?',
+                                        'href' => '#',
+                                        'action' => 'question-page-report',
+                                        'cancel' => 'Cancelar',
+                                        'confirm' => 'Sim'])
+
+            @if ( Auth::user()->id == $intervention->id_author || Auth::user()->isAdmin() ) 
               @include('partials.modal', ['id' => 'deleteIntervention'.$intervention->id.'Modal', 
                                           'title' => 'Eliminar '.$intervention->title , 
                                           'body' => 'Tem a certeza que quer eliminar permanentemente esta Intervenção?',
@@ -86,8 +96,8 @@
                                           'action' => 'question-page-delete',
                                           'cancel' => 'Cancelar',
                                           'confirm' => 'Sim'])
-            </div> 
-          @endif
+            @endif
+          </div> 
 
         @endif
       </div>  
