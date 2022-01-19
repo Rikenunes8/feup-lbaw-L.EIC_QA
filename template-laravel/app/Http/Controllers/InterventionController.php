@@ -194,6 +194,7 @@ class InterventionController extends Controller
 
         $question->title = $request->input('title');
         $question->text = $request->input('text');
+        $question->edit_date = now();
         $question->save();
 
         return redirect('questions/'.$question->id);
@@ -266,6 +267,7 @@ class InterventionController extends Controller
         ]);
 
         $answer->text = $request['text'];
+        $answer->edit_date = now();
         $answer->save();
 
         return redirect('questions/'.$answer->id_intervention);
@@ -340,6 +342,7 @@ class InterventionController extends Controller
 
         $answer = $comment->parent()->first();
         $comment->text = $request['text'];
+        $comment->edit_date = now();
         $comment->save(); 
 
         return redirect('questions/'.$answer->id_intervention);

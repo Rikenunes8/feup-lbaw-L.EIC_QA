@@ -17,7 +17,9 @@
           <h6 class="card-subtitle mt-1 mb-2"><span class="badge {{ $user->isTeacher()?'bg-warning':'bg-info' }} text-dark">{{ $user->type }}</span></h6>
           <p class="card-text">
             Pontuação: <b>{{ $user->score }}</b><br>
+            @auth
             Email: <b>{{ $user->email }}</b>
+            @endauth
           </p>
         </div>
       </div>

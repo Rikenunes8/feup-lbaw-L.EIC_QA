@@ -73,6 +73,7 @@ CREATE TABLE "intervention" (
     id_author       INTEGER REFERENCES "users" ON DELETE SET NULL ON UPDATE CASCADE,
     text            TEXT NOT NULL,
     date            TIMESTAMP NOT NULL DEFAULT now(),
+    edit_date       TIMESTAMP,
     votes           INTEGER NOT NULL DEFAULT 0,
     title           TEXT,
     category        INTEGER REFERENCES "uc" ON DELETE CASCADE ON UPDATE CASCADE,

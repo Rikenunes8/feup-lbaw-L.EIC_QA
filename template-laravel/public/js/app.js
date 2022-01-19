@@ -731,6 +731,8 @@ $(document).ready(function () {
     }
   });
 
+  $('.filter-ucs-multiple').select2();
+
   tinymce.init({
     selector:'textarea.text-editor',
     menubar: false,
@@ -757,13 +759,8 @@ $(document).ready(function () {
       ]}
     ]
   });
-  showRegisterFormFields();
-});
 
-$('.dropdown.dropdown-keep-open').on('hide.bs.dropdown', function (e) {
-  if (!e.clickEvent) { return true; }
-  var target = $(e.clickEvent.target);
-  return !(target.hasClass('dropdown-keep-open') || target.parents('.dropdown-keep-open').length);
+  showRegisterFormFields();
 });
 
 $('#deleteUserModal a').on('click', function (event) {

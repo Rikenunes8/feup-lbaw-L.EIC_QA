@@ -10,7 +10,7 @@
 
     <div class="mb-3 col-12">
         <label for="text" class="form-label required">Texto</label>
-        <textarea rows="20" class="form-control text-editor" name="text">{{ $comment->text }}</textarea>
+        <textarea rows="5" class="form-control" name="text">{{ $comment->text }}</textarea>
         @if ($errors->has('text'))
             @include('layouts.error', ['error' => $errors->first('text')])
         @endif

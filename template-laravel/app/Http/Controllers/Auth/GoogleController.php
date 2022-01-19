@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
+use File;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -35,15 +36,15 @@ class GoogleController extends Controller
                 Validator::make($data, [
                     'email' => 'required|string|email|allowed_domain|max:255|unique:users,email',
                 ]);
-                // $file = $user->getAvatar();
-                // $filename = '_'.time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
-                // $file->storeAs('users', $filename, 'images_uploads');
 
-                $filename = 'default.jpg';
+                $fileContents = file_get_contents($user->getAvatar());
+                $filename = '_'.time().'_'.Str::random(10).'.jpg';
+                File::put(public_path().'/images/users/'.$filename, $fileContents);
+
                 if (substr_compare($user->getEmail(), 'up', 0, 2) == 0) {       
                     $saveUser = User::create([
                         'email' => $user->getEmail(), 
-                        'username' => $user->getEmail(),
+                        'username' => 'g_'.(explode('@', $user->getEmail())[0]),
                         'password' => Hash::make($user->getName().'@'.$user->getId()),
                         'name' => $user->getName(),
                         'photo' => $filename,
@@ -55,8 +56,8 @@ class GoogleController extends Controller
                 }
                 else {
                     $saveUser = User::create([
-                        'email' => $user->getEmail(), 
-                        'username' => $user->getEmail(),
+                        'email' => $user->getEmail(),
+                        'username' => 'g_'.(explode('@', $user->getEmail())[0]),
                         'password' => Hash::make($user->getName().'@'.$user->getId()),
                         'name' => $user->getName(),
                         'photo' => $filename,
@@ -65,7 +66,7 @@ class GoogleController extends Controller
                         'type' => 'Teacher'
                     ]);
                 }
-                $ownUser = User::where('email', $user->getEmail())->update(['email_verified_at' => now()]);
+                $saveUser->markEmailAsVerified();
             }
             else {
                 $ownUser = User::where('email', $user->getEmail());
