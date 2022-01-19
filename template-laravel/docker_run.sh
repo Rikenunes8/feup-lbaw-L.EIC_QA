@@ -14,6 +14,8 @@ rm cronfile
 
 env >> /var/www/.env
 php-fpm8.0 -D
+
+php artisan queue:work &
 # Start cron
 cron
 nginx -g "daemon off;"
