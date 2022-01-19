@@ -4,7 +4,7 @@
     {{ csrf_field() }}
 
     <div class="mb-3 col-12">
-        <textarea rows="5" class="form-control text-editor" name="text"></textarea>
+        <textarea rows="2" class="form-control" name="text"></textarea>
         @if ($errors->has('text'))
             @include('layouts.error', ['error' => $errors->first('text')])
         @endif
