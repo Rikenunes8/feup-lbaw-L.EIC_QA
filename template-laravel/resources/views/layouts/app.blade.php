@@ -38,6 +38,11 @@
       href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css"
       rel="stylesheet"
     />
+    <!-- Select2 -->
+    <link 
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" 
+      rel="stylesheet" ~
+    />
     
     <!-- App CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -54,6 +59,8 @@
     <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
     <!-- Text Editor -->
     <script src="https://cdn.tiny.cloud/1/l963coctjgncao7e2p2fv27rcx394sxc74mhd0srm6vgldn3/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- App JS -->
     <script type="text/javascript" src="{{ asset('js/app.js') }}" defer></script>

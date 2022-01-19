@@ -199,6 +199,9 @@ td.admin-table-reports-actions section.actions-buttons {
 .filter-form .filter-parameter {
   width:fit-content;
 }
+span.select2-container {
+  width: 100%!important;
+}
 .dropdown-keep-open .dropdown-menu {
   overflow: hidden;
   overflow-y: auto;
