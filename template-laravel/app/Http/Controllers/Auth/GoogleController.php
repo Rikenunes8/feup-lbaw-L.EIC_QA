@@ -44,7 +44,7 @@ class GoogleController extends Controller
                 if (substr_compare($user->getEmail(), 'up', 0, 2) == 0) {       
                     $saveUser = User::create([
                         'email' => $user->getEmail(), 
-                        'username' => $user->getEmail(),
+                        'username' => 'g_'.(explode('@', $user->getEmail())[0]),
                         'password' => Hash::make($user->getName().'@'.$user->getId()),
                         'name' => $user->getName(),
                         'photo' => $filename,
@@ -56,8 +56,8 @@ class GoogleController extends Controller
                 }
                 else {
                     $saveUser = User::create([
-                        'email' => $user->getEmail(), 
-                        'username' => $user->getEmail(),
+                        'email' => $user->getEmail(),
+                        'username' => 'g_'.(explode('@', $user->getEmail())[0]),
                         'password' => Hash::make($user->getName().'@'.$user->getId()),
                         'name' => $user->getName(),
                         'photo' => $filename,
