@@ -47,7 +47,11 @@
 
         <p>{!! $intervention->text !!}</p>
         @if (!$intervention->isQuestion())
-        <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($intervention->date)); }}, por 
+        <p class="text-muted mb-0">{{ date('d/m/Y H:i', strtotime($intervention->date)); }}
+          @if (!is_null($intervention->edit_date))
+            (<b>editado</b> em {{ date('d/m/Y H:i', strtotime($intervention->edit_date)); }})
+          @endif
+          , por 
           @if (is_null($intervention->author))
             Anónimo
           @else
