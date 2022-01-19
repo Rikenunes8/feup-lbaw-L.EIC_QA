@@ -7,7 +7,7 @@
 <section id="admin-reports-page">
   <h2>Denúncias</h2> 
 
-  <div class="row mt-3 mb-5">
+  <div class="row mt-3 mb-4">
     <div class="col-12">
       <small class="text-mutted">Gestão de Intervenções Reportadas</small>
     </div>
@@ -67,10 +67,10 @@
                 <a href="{{ url('/users/'.$report->user->id) }}" class="app-link" data-toogle="tooltip" title="Visitar Perfil">{{ $report->user->username }}</a>
               </td>
               <td class="text-center admin-table-reports-actions">
-                <section class="actions-buttons">
+                <div class="actions-buttons">
                   <a href="{{ url('/questions/'.$question->id.'#'.$intervention->id) }}" class="btn btn-info text-black me-1" data-toogle="tooltip" title="Visitar Intervenção"><i class="fas fa-search	"></i></a>
                   <a class="btn btn-danger text-white reports-page-remove me-1" data-toogle="tooltip" title="Descartar Denúncia"><i class="far fa-trash-alt"></i></a>
-                </section>
+                </div>
               </td>
             </tr>
             @endforeach

@@ -149,7 +149,10 @@ class UserController extends Controller
         }
         $user->save();
 
-        return redirect("/users/$user->id"); 
+        if (Auth::user()->id == $id)
+            return redirect("/users/$user->id"); 
+        else
+            return redirect("/admin/users");
     }
 
     /**

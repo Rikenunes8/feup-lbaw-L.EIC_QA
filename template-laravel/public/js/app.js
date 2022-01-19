@@ -664,6 +664,12 @@ function createAlert(type, msg) {
   error_div.appendChild(close_btn);
   error_div.appendChild(error_txt);
 
+  window.setTimeout(function() {
+    $(error_div).fadeTo(500, 0).slideUp(500, function() {
+      this.remove();
+    });
+  }, 4000);
+
   return error_div;
 }
 
@@ -776,3 +782,9 @@ $("#user-profile-tabs.nav .nav-link").on("click", function() {
   $("#user-profile-tabs.nav").find(".active").removeClass("active");
   $(this).addClass("active");
 });
+
+window.setTimeout(function() {
+  $(".alert").fadeTo(500, 0).slideUp(500, function() {
+    this.remove();
+  });
+}, 4000);

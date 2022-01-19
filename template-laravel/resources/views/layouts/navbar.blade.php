@@ -1,4 +1,4 @@
-<nav class="navbar shadow-none">
+<nav id="sidebar" class="navbar shadow-none">
   <div class="container-fluid">
     <ul class="navbar-nav w-100">
       <li class="nav-item">
