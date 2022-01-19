@@ -32,8 +32,8 @@
     </div>
 
     <div class="col-md-6 mt-3 email-form">
-        <section class="msg"></section>
-        <form role="form" id="form-contact" name="form-contact" data-toggle="validator">
+        <div class="error-msg"></div>
+        <form id="form-contact" name="form-contact" data-toggle="validator">
           <div class="mb-3">
             <label for="name" class="form-label required">Nome</label>
             <input type="text" id="name" class="form-control" name="name" required data-error="Introduza o seu Nome">

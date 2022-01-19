@@ -41,16 +41,12 @@
     <!-- Select2 -->
     <link 
       href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" 
-      rel="stylesheet" ~
+      rel="stylesheet" 
     />
     
     <!-- App CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    <script type="text/javascript">
-        // Fix for Firefox autofocus CSS bug
-        // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
-    </script>
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -63,7 +59,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- App JS -->
-    <script type="text/javascript" src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
   </head>
   <body>
     <main>
@@ -72,15 +68,11 @@
       <div class="container-fluid px-0">
         <div id="navbar-content-container" class="d-grid gap-0">
           <div class="border-end" id="navbar-column">
-            <section id="navbar">
-              @include('layouts.navbar')
-            </section>
+            @include('layouts.navbar')
           </div>
           <div class="container py-3 px-4" id="content-column">
             @include('layouts.breadcrumbs')
-            <section id="content">
-              @yield('content')
-            </section>
+            @yield('content')
           </div>
         </div>
       </div>

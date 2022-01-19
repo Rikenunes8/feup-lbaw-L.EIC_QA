@@ -6,7 +6,7 @@
 
 <section id="uc-page" data-id="{{ Auth::check()?Auth::user()->id:''}}">
   <div class="row uc-card" data-id="{{ $uc->id }}"> 
-    <section class="error-msg"></section>
+    <div class="error-msg"></div>
 
     <div class="col-12 position-relative">
       <h2 class="me-4">

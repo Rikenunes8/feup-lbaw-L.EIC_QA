@@ -5,7 +5,7 @@
 @section('content')
 
 <section id="admin-requests-page">
-  <section class="error-msg"></section>
+  <div class="error-msg"></div>
 
   <h2>Pedidos de Ativação de Contas</h2> 
 
