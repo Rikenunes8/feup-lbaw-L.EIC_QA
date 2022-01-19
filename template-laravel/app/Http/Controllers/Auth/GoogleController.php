@@ -65,7 +65,7 @@ class GoogleController extends Controller
                         'type' => 'Teacher'
                     ]);
                 }
-                $ownUser = User::where('email', $user->getEmail())->update(['email_verified_at' => now()]);
+                $saveUser->markEmailAsVerified();
             }
             else {
                 $ownUser = User::where('email', $user->getEmail());

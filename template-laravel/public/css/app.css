@@ -65,6 +65,9 @@ form .contextual-help {
   display: flex;
   justify-content: center;
 }
+a.intervention-vote {
+  cursor: pointer;
+}
 .question-card span.text-muted, 
 .user-profile span.text-muted,
 #question-page .question-card p.text-muted,
