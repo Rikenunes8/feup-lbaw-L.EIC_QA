@@ -36,7 +36,7 @@
             <button type="button" class="btn-close btn-sm float-end" onclick="showFilterForm(this)"></button>
 
             <div class="row">
-              <div class="col-12 col-sm-6 col-md-3 text-center">
+              <div class="col-12 col-sm-4 text-center">
                   <div class="text-start mx-auto mt-3 filter-parameter">
                     <p>Filtrar por:</p>
                     <div>
@@ -61,8 +61,8 @@
                     </div>
                   </div>
               </div>
-           
-              <div class="col-12 col-sm-6 col-md-3 text-center">
+            
+              <div class="col-12 col-sm-4 text-center">
                 <div class="text-start mx-auto mt-3 filter-parameter">
                   <p>Ordenar por:</p>
                   <div>
@@ -76,7 +76,7 @@
                 </div>
               </div>
 
-              <div class="col-12 col-sm-6 col-md-3 text-center">
+              <div class="col-12 col-sm-4 text-center">
                 <div class="text-start mx-auto mt-3 filter-parameter">
                   <p>Ordem:</p>
                   <div>
@@ -89,21 +89,17 @@
                   </div>
                 </div>
               </div>
-              
-              <div class="col-12 col-sm-6 col-md-3 text-center">
-                <div class="text-start mx-auto mt-3 filter-parameter">
+            </div>
+           
+            <div class="row">
+              <div class="col-12">
+                <div class="text-start my-3">
                   <p>Escolher UCs:</p>
-                  <div class="dropdown dropdown-keep-open">
-                    <button class="btn btn-white dropdown-toggle" type="button" id="dropdownTags" data-bs-toggle="dropdown">UCs</button>
-                    <ul class="dropdown-menu">
-                      @foreach ( $ucs as $uc )
-                        <li class="dropdown-item">
-                          <input type="checkbox" id="uc-{{ $uc->id }}" name="tags[]" class="mx-2" value="{{ $uc->id }}">
-                          <label for="uc-{{ $uc->id }}" class="w-100">{{ $uc->name }}</label>
-                        </li>
-                      @endforeach
-                    </ul>
-                  </div>
+                  <select class="filter-ucs-multiple form-control" name="tags[]" multiple="multiple">
+                    @foreach ( $ucs as $uc )
+                      <option value="{{ $uc->id }}">{{ $uc->name }}</option>
+                    @endforeach
+                  </select>
                 </div>
               </div>
             </div>
