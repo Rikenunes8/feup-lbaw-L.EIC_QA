@@ -18,7 +18,7 @@
       <span class="badge bg-info text-dark mt-1 mb-2">{{ $uc->code }}</span>
       
       <p>{{ $uc->description }}</p>
-
+      @auth
       <div class="table-responsive">
       <table class="table table-striped table-bordered caption-top">
         <caption>Docentes da Unidade Curricular</caption>
@@ -47,7 +47,7 @@
         </tbody>
       </table>
       </div>
-
+      @endauth
       @php 
         $questions = $uc->interventions()->whereType('question')->orderBy('votes', 'DESC')->take(5)->get();
       @endphp

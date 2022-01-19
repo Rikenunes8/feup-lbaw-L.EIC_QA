@@ -75,11 +75,13 @@
               @endif 
             </div>
             @endif
-
+            
+            @auth
             <h5 class="mt-4">Contactos</h5> 
             <div class="ms-3">
               <p>Email: {{ $user->email }}</p>
             </div>
+            @endauth
           </div>
         </div>
       </section>
