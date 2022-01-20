@@ -52,7 +52,7 @@
         <div class="mb-3 row">
             <div class="col-12">
                 <label for="photo" class="form-label">Foto</label>
-                <input type="file" id="photo" class="form-control" name="photo" value='{{ $user->photo }}'>
+                <input type="file" id="photo" class="form-control" name="photo">
                 @if ($errors->has('photo'))
                     @include('layouts.error', ['error' => $errors->first('photo')])
                 @endif

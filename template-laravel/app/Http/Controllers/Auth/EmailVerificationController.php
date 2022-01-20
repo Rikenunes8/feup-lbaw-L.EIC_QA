@@ -34,13 +34,13 @@ class EmailVerificationController extends Controller
         $request->user()->sendEmailVerificationNotification();
 
         return redirect()->back()
-            ->with('success', 'Verification link sent!');
+            ->with('success', trans('auth.verification_sent'));
     }
 
     public function verify(EmailVerificationRequest $request)
     {
         $request->fulfill();
         return redirect()->to('/home')
-            ->with('success', 'Email Verified with sucess!');
+            ->with('success', trans('auth.verification_check'));
     }
 }

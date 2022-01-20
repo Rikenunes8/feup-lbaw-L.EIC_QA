@@ -5,7 +5,7 @@
 @section('content')
 
 <section id="admin-users-page">
-  <section class="error-msg"></section>
+  <div class="error-msg"></div>
 
   <h2>Utilizadores</h2> 
 
@@ -47,7 +47,7 @@
                   @endif
                 </td>
                 <td class="text-center admin-table-user-actions">
-                  <section class="actions-buttons">
+                  <div class="actions-buttons">
                     @if (!$user->isAdmin())
                       @if (is_null($user->block_reason))
                         <button type="button" class="btn btn-info text-dark me-1 block-btn" data-toogle="tooltip" title="Bloquear" data-bs-toggle="modal" data-bs-target="#blockUser{{ $user->id }}Modal">
@@ -64,7 +64,7 @@
                     <button type="button" class="btn btn-danger text-white" data-toogle="tooltip" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
                       <i class="far fa-trash-alt"></i><span class="d-none">Eliminar</span>
                     </button>
-                  </section>
+</div>
                   
                   <section class="actions-modals">
                     @include('partials.modal', ['id' => 'blockUser'.$user->id.'Modal', 

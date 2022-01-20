@@ -13,7 +13,7 @@
 
     <div class="mb-3 col-12">
         <label for="usertype" class="form-label required">Tipo de Conta</label>
-        <select id="usertype" class="form-select" name="usertype" value="{{ old('usertype') }}" onchange="showRegisterFormFields()" aria-label="usertype">
+        <select id="usertype" class="form-select" name="usertype" onchange="showRegisterFormFields()" aria-label="usertype">
             <option value="Student" {{ ( is_null(old('usertype')) )?'selected':'' }}>Estudante</option>
             <option value="Teacher" {{ ( old('usertype') == "Teacher" )?'selected':'' }}>Docente</option>
             <option value="Admin" {{ ( old('usertype') == "Admin" )?'selected':'' }}>Administrador</option>
@@ -49,31 +49,6 @@
       <input type="password" id="password-confirm" class="form-control" name="password_confirmation" required>
     </div>
 
-    <!-- TYPE -->
-    <!-- Admin: só isto
-        (js)
-        div.teacher-student-extra-fields display none
-        not required name
-        not required entry_year
-        (score = NULL)
-        (blocked = NULL)
-        (type='Admin')-->
-    <!-- Techer: name, [photo, about, birthdate],
-        (js)
-          div.teacher-student-extra-fields display
-          div.student-extra-fields display none
-          required name
-          not required entry_year
-          about rows = 8
-        (type='Teacher')-->
-    <!-- Student: name, [photo, about, birthdate], entry_year
-          (js)
-          div.teacher-student-extra-fields display
-          required name
-          required entry_year
-          about rows = 11
-        (type='Student')-->
-
     <div class="col-12 col-lg-6 teacher-student-extra-fields">
       <div class="mb-3 row">
           <div class="col-12">
@@ -88,7 +63,7 @@
       <div class="mb-3 row">
           <div class="col-12">
               <label for="photo" class="form-label">Foto</label>
-              <input type="file" id="photo" class="form-control" name="photo" value="{{ old('photo') }}">
+              <input type="file" id="photo" class="form-control" name="photo">
               @if ($errors->has('photo'))
                   @include('layouts.error', ['error' => $errors->first('photo')])
               @endif

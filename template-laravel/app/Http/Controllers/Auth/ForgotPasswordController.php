@@ -80,8 +80,6 @@ class ForgotPasswordController extends Controller
                 $user->forceFill([
                     'password' => Hash::make($password)
                 ]);
-                // ->setRememberToken(Str::random(60)) 
-                // TODO ADD WHEN USER AS FIELD REMEMBER_TOKEN
     
                 $user->save();
     

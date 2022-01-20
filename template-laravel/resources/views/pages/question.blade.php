@@ -6,7 +6,7 @@
 
 <section id="question-page">
   <div class="row question-card" data-id="{{ $question->id }}"> 
-    <section class="error-msg"></section>
+    <div class="error-msg"></div>
 
     <div class="col-12 position-relative">
       @if ( Auth::check() && !Auth::user()->isAdmin())

@@ -9,6 +9,10 @@
 #header-notification-icon span{
   font-size: 0.75rem;
 }
+nav#sidebar {
+  position: sticky;
+  top: 54px;
+}
 .navbar-nav {
   min-height: calc(100vh - 110px);
 }
@@ -183,9 +187,9 @@ div.admin-action-add a {
   right: 0.75rem;
   top: 0;
 }
-td.admin-table-uc-actions section.actions-buttons, 
-td.admin-table-user-actions section.actions-buttons,
-td.admin-table-reports-actions section.actions-buttons {
+td.admin-table-uc-actions div.actions-buttons, 
+td.admin-table-user-actions div.actions-buttons,
+td.admin-table-reports-actions div.actions-buttons {
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -201,11 +205,6 @@ td.admin-table-reports-actions section.actions-buttons {
 }
 span.select2-container {
   width: 100%!important;
-}
-.dropdown-keep-open .dropdown-menu {
-  overflow: hidden;
-  overflow-y: auto;
-  max-height: 450px;
 }
 footer > p {
   font-size: small;

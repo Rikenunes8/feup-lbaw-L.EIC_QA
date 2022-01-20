@@ -50,6 +50,6 @@ class AuthServiceProvider extends ServiceProvider
 
         Validator::extend('allowed_domain', function($attribute, $value, $parameters, $validator) {
           return in_array(explode('@', $value)[1], $this->allowedDomains);
-        }, 'Domain not valid for registration. Valid Domains: @fe.up.pt, @fc.up.pt, @up.pt, @g.uporto.pt.');
+        }, trans('auth.notallowed_domain'));
     }
 }

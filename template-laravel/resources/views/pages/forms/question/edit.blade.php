@@ -18,7 +18,7 @@
 
     <div class="mb-3 col-12">
         <label for="text" class="form-label required">Texto</label>
-        <textarea rows="15" class="form-control text-editor" name="text">{{ is_null(old('text'))?$question->text:old('text') }}</textarea>
+        <textarea id="text" rows="15" class="form-control text-editor" name="text">{{ is_null(old('text'))?$question->text:old('text') }}</textarea>
         @if ($errors->has('text'))
             @include('layouts.error', ['error' => $errors->first('text')])
         @endif

@@ -5,7 +5,7 @@
 @section('content')
 
 <section id="admin-requests-page">
-  <section class="error-msg"></section>
+  <div class="error-msg"></div>
 
   <h2>Pedidos de Ativação de Contas</h2> 
 
@@ -73,14 +73,14 @@
                 <td>{{ $user->username }}</td>
                 <td>{{ date('d/m/Y H:i', strtotime($user->registry_date)) }}</td>
                 <td class="text-center admin-table-user-actions">
-                  <section class="actions-buttons">
+                  <div class="actions-buttons">
                     <button type="button" class="btn btn-success text-white me-1 block-btn" data-toogle="tooltip" title="Ativar Conta" data-bs-toggle="modal" data-bs-target="#activeUser{{ $user->id }}Modal">
                       <i class="fas fa-check"></i>
                     </button>
                     <button type="button" class="btn btn-danger text-white" data-toogle="tooltip" title="Rejeitar Pedido" data-bs-toggle="modal" data-bs-target="#deleteUser{{ $user->id }}Modal">
                       <i class="fas fa-times"></i>
                     </button>
-                  </section>
+                  </div>
                   
                   <section class="actions-modals">
                     @include('partials.modal', ['id' => 'activeUser'.$user->id.'Modal', 

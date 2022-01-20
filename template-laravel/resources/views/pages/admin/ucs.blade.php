@@ -43,14 +43,14 @@
                 @endif
               </td>
               <td class="text-center admin-table-uc-actions">
-                <section class="actions-buttons">
+                <div class="actions-buttons">
                   <a href="{{ url('admin/ucs/'.$uc->id.'/teachers') }}" class="btn btn-info text-black me-1" data-toogle="tooltip" title="Gerir os seus docentes"><i class="far fa-address-card"></i></a>
                   <a href="{{ url('ucs/'.$uc->id.'/edit') }}" class="btn btn-warning text-black me-1" data-toogle="tooltip" title="Editar"><i class="far fa-edit"></i></a>
                   
                   <button type="button" class="btn btn-danger text-white" data-toogle="tooltip" title="Eliminar" data-bs-toggle="modal" data-bs-target="#deleteUc{{ $uc->id }}Modal">
                     <i class="far fa-trash-alt"></i>
                   </button>
-                </section>
+                </div>
                   
                 <section class="actions-modals">
                   @include('partials.modal', ['id' => 'deleteUc'.$uc->id.'Modal', 

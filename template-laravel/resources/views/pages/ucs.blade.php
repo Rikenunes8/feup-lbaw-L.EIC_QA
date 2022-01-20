@@ -25,7 +25,7 @@
     @endif
   </h2> 
 
-  <section class="error-msg"></section>
+  <div class="error-msg"></div>
 
   @if (count($ucs) != 0)
   <div class="row"> 

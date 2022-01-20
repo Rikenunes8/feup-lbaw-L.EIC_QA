@@ -175,7 +175,7 @@ function sendBlockUserRequest(event) {
   if (reason != '') {
       sendAjaxRequest('post', '/api/users/' + id + '/block', {block_reason: reason}, userBlockedHandler);
   } else {
-    let error_section = document.querySelector('section.error-msg');
+    let error_section = document.querySelector('div.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Não é possível bloquear um utilizador sem uma razão."));
   }
 
@@ -287,7 +287,7 @@ function sendContactFormEmailRequest() {
 
 function ucFollowHandler() {
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
+    let error_section = document.querySelector('div.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   }
@@ -391,7 +391,7 @@ function userActivatedHandler() {
   let element = document.querySelector('tr[data-id="' + user.id + '"]');
   element.remove();
 
-  let error_section = document.querySelector('section.error-msg');
+  let error_section = document.querySelector('div.error-msg');
   error_section.appendChild(createAlert('alert-success', "Conta '" + user.email + "' ativada com sucesso!"));
 
   admin_table.row(element).remove().draw(false);
@@ -399,7 +399,7 @@ function userActivatedHandler() {
 
 function interventionDeletedHandler() {
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
+    let error_section = document.querySelector('div.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Eliminação não autorizada"));
     return;
   }
@@ -421,7 +421,7 @@ function interventionDeletedHandler() {
 
 function interventionVotedHandler() {
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
+    let error_section = document.querySelector('div.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Votação não autorizada"));
     return;
   }
@@ -434,7 +434,7 @@ function interventionVotedHandler() {
 
 function answerValidatedHandler() {
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
+    let error_section = document.querySelector('div.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Validação não autorizada"));
     return;
   }
@@ -486,7 +486,7 @@ function answerValidatedHandler() {
 }
 
 function interventionReportHandler() {
-  let error_section = document.querySelector('section.error-msg');
+  let error_section = document.querySelector('div.error-msg');
   if (this.status == 403) {
     error_section.appendChild(createAlert('alert-danger', "Denúncia não autorizada"));
     return;
@@ -498,7 +498,7 @@ function interventionReportHandler() {
 
 function notificationMarkReadHandler() {
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
+    let error_section = document.querySelector('div.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   }
@@ -527,7 +527,7 @@ function notificationMarkReadHandler() {
 
 function notificationRemoveHandler() {
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
+    let error_section = document.querySelector('div.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   }
@@ -544,7 +544,7 @@ function notificationRemoveHandler() {
 
 function reportRemovedHandler() {
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
+    let error_section = document.querySelector('div.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   }
@@ -558,7 +558,7 @@ function reportRemovedHandler() {
 
 function switchReceiveEmailHandler() {
   if (this.status == 403) {
-    let error_section = document.querySelector('section.error-msg');
+    let error_section = document.querySelector('div.error-msg');
     error_section.appendChild(createAlert('alert-danger', "Ação não autorizada"));
     return;
   }
@@ -570,7 +570,7 @@ function sendContactFormEmailHandler() {
   document.querySelector('#email').value = null;
   document.querySelector('#subject').value = null;
   document.querySelector('#message').value = null;
-  let msg_section = document.querySelector('section.msg');
+  let msg_section = document.querySelector('div.error-msg');
   if (this.status == 200) {
     msg_section.appendChild(createAlert('alert-success', "Email enviado com sucesso"));
   }
@@ -663,6 +663,12 @@ function createAlert(type, msg) {
 
   error_div.appendChild(close_btn);
   error_div.appendChild(error_txt);
+
+  window.setTimeout(function() {
+    $(error_div).fadeTo(500, 0).slideUp(500, function() {
+      this.remove();
+    });
+  }, 4000);
 
   return error_div;
 }
@@ -776,3 +782,9 @@ $("#user-profile-tabs.nav .nav-link").on("click", function() {
   $("#user-profile-tabs.nav").find(".active").removeClass("active");
   $(this).addClass("active");
 });
+
+window.setTimeout(function() {
+  $(".alert").fadeTo(500, 0).slideUp(500, function() {
+    this.remove();
+  });
+}, 4000);
