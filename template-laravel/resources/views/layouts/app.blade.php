@@ -45,7 +45,7 @@
     />
     
     <!-- App CSS -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.min.css') }}" rel="stylesheet">
 
 
     <!-- JQuery -->
@@ -59,7 +59,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- App JS -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.min.js') }}" defer></script>
   </head>
   <body>
     <main>

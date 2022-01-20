@@ -34,7 +34,7 @@
     </div>
   </div>
   @else 
-  <p>Não existem Questões</p>
+  <p>Não foram encontrados resultados</p>
   @endif
   
 </section>

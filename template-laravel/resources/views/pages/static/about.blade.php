@@ -17,7 +17,7 @@
         por unidade curricular.</p>
     </div>
     <div class="col-lg-4 mb-3">
-      <img src="{{ asset('images/about.png') }}" class="img-fluid" alt="HomePage Q&A">
+      <img src="{{ asset('images/about.png') }}" class="img-fluid" alt="About Page Q&A">
     </div>
   </div>
 
