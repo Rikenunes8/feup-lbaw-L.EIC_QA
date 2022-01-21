@@ -3,7 +3,7 @@ function addEventListeners() {
   // LEIC Q&A
   let ucFollowers = document.querySelectorAll('div.uc-card p.uc-card-icon a.uc-card-icon-follow');
   [].forEach.call(ucFollowers, function(follower) {
-    follower.addEventListener('click', sendFollowUcRequest);
+    folSlower.addEventListener('click', sendFollowUcRequest);
   });
 
   let ucDeleters = document.querySelectorAll('td.admin-table-uc-actions a.admin-table-delete');
@@ -96,11 +96,6 @@ function addEventListeners() {
   let receiveEmailsSwitcher = document.querySelectorAll('#user-profile-page div.form-switch input');
   [].forEach.call(receiveEmailsSwitcher, function(switcher) {
     switcher.addEventListener('click', switchReceiveEmailRequest);
-  });
-
-  let contactFormEmailSender = document.querySelectorAll('#contact-page div.email-form a.submit_email');
-  [].forEach.call(contactFormEmailSender, function(sender) {
-    sender.addEventListener('click', sendContactFormEmailRequest);
   });
 
   let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -273,14 +268,6 @@ function switchReceiveEmailRequest() {
 
   sendAjaxRequest('post', '/api/users/' + id + '/email', null, switchReceiveEmailHandler);
 }
-
-function sendContactFormEmailRequest() {
-  let name = document.querySelector('#name').value;
-  let email = document.querySelector('#email').value;
-  let subject = document.querySelector('#subject').value;
-  let message = document.querySelector('#message').value;
-  sendAjaxRequest('post', '/contact', {'name':name, 'email':email, 'subject':subject, 'message':message}, sendContactFormEmailHandler)
-}
 // ------------------- END OF REQUESTS ---------------------
 
 // ---------------------- HANDLERS -------------------------
@@ -324,10 +311,6 @@ function ucTeacherRemovedHandler() {
   new_a.addEventListener('click', sendAddUcTeacherRequest);
 
   element.appendChild(new_a);
-
-  // Try to reload sort - this works but send us back to the first page..
-  // $('#admin-table').DataTable().destroy();
-  // $('#admin-table').DataTable().draw(false);
 }
 
 function ucTeacherAddedHandler() {
@@ -344,10 +327,6 @@ function ucTeacherAddedHandler() {
   new_a.addEventListener('click', sendRemoveUcTeacherRequest);
 
   element.appendChild(new_a);
-
-  // Try to reload sort - this works but send us back to the first page..
-  // $('#admin-table').DataTable().destroy();
-  // $('#admin-table').DataTable().draw(false);
 }
 
 function userDeletedHandler() {
@@ -563,20 +542,6 @@ function switchReceiveEmailHandler() {
     return;
   }
   if (this.status != 200) window.location = '/';
-}
-
-function sendContactFormEmailHandler() {
-  document.querySelector('#name').value = null;
-  document.querySelector('#email').value = null;
-  document.querySelector('#subject').value = null;
-  document.querySelector('#message').value = null;
-  let msg_section = document.querySelector('div.error-msg');
-  if (this.status == 200) {
-    msg_section.appendChild(createAlert('alert-success', "Email enviado com sucesso"));
-  }
-  else {
-    msg_section.appendChild(createAlert('alert-danger', "Erro ao enviar email"));
-  }
 }
 
 // -------------------- END OF HANDLERS ----------------------------

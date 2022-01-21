@@ -32,29 +32,53 @@
     </div>
 
     <div class="col-md-6 mt-3 email-form">
-        <div class="error-msg"></div>
-        <form id="form-contact" name="form-contact" data-toggle="validator">
-          <div class="mb-3">
-            <label for="name" class="form-label required">Nome</label>
-            <input type="text" id="name" class="form-control" name="name" required data-error="Introduza o seu Nome">
-          </div>
-          <div class="mb-3">
-            <label for="email" class="form-label required">E-mail</label>
-            <input type="email" id="email" class="form-control" name="email" required data-error="Introduza o seu E-mail">
-          </div>
-          <div class="mb-3">
-            <label for="subject" class="form-label required">Assunto</label>
-            <input type="text" id="subject" class="form-control" name="subject" required data-error="Introduza o Assunto da sua mensagem">
-          </div>
-          <div class="mb-3">
-            <label for="message" class="form-label required">Mensagem</label>
-            <textarea rows="3" id="message" class="form-control" name="message" required data-error="Introduza a sua mensagem"></textarea>
-          </div>
 
-          @csrf
+      @if (Session::has('success'))
+      <div class="my-3 py-2 alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="h-auto btn-close btn-sm" data-bs-dismiss="alert"></button>  
+        {{ Session::get('success') }}
+      </div>
+      @endif
 
-          <a class="btn btn-primary btn-block submit_email">Enviar</a>
-        </form>
+      <form method="POST" action="{{ route('send-contact') }}" id="form-contact" name="form-contact" data-toggle="validator">
+        @csrf
+
+        <div class="mb-3">
+          <label for="name" class="form-label required">Nome</label>
+          <input type="text" id="name" class="form-control" name="name" required data-error="Introduza o seu Nome">
+          @if ($errors->has('name'))
+              @include('layouts.error', ['error' => $errors->first('name')])
+          @endif
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label required">E-mail</label>
+          <input type="email" id="email" class="form-control" name="email" required data-error="Introduza o seu E-mail">
+          @if ($errors->has('email'))
+              @include('layouts.error', ['error' => $errors->first('email')])
+          @endif
+        </div>
+
+        <div class="mb-3">
+          <label for="subject" class="form-label required">Assunto</label>
+          <input type="text" id="subject" class="form-control" name="subject" required data-error="Introduza o Assunto da sua mensagem">
+          @if ($errors->has('subject'))
+              @include('layouts.error', ['error' => $errors->first('subject')])
+          @endif
+        </div>
+
+        <div class="mb-3">
+          <label for="message" class="form-label required">Mensagem</label>
+          <textarea rows="3" id="message" class="form-control" name="message" required data-error="Introduza a sua mensagem"></textarea>
+          @if ($errors->has('message'))
+              @include('layouts.error', ['error' => $errors->first('message')])
+          @endif
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+        </div>
+      </form>
     </div>
   </div>
 
