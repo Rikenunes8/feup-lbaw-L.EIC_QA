@@ -22,7 +22,7 @@ Route::get('home'    , function () { return view('pages.static.home'    ); });
 Route::get('about'   , function () { return view('pages.static.about'   ); });
 Route::get('faq'     , function () { return view('pages.static.faq'     ); });
 Route::get('contact' , function () { return view('pages.static.contact' ); });
-Route::post('contact', 'ContactController@store');
+Route::post('contact', 'ContactController@send')->name('send-contact');
 
 // Authentication - Basic Operations
 Route::get('login'    , 'Auth\LoginController@showLoginForm')->name('login');

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
-    public function store()
+    public function send()
     {
         $data = request()->validate([
             'name' => 'required',
@@ -19,7 +19,8 @@ class ContactController extends Controller
 
         // Send an Email
         Mail::to('leic.qa@fe.up.qa.pt')->send(new ContactFormMail($data));
-
-        return;
+        
+        return redirect()->back()
+            ->with('success', 'Email enviado com sucesso');
     }
 }
