@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('send:notification_emails')->everyFiveMinutes();
-        $schedule->command('reset_password:clean')->everyFiveMinutes();
+        $schedule->command('reset_password:clean')->everyFifteenMinutes();
         $schedule->command('users:clean_unverified')->monthly();
 
     }

@@ -1,45 +1,8 @@
 # Docker command
 
-## Run Locally
+Docker command to start the image from GitLab Container Registry:
 
-`docker-compose up`
-
-`php artisan db:seed` - Reset database
-
-`php artisan migrate` - Establish migration
-
-`php artisan queue:work` - Starts queue work
-
-`php artisan schedule:work` - Starts calling schedule function regularly
-
-`php artisan serve` - Init server
-
-
-## docker_run.sh
-
-~~~bash
-#!/bin/bash
-set -e
-
-cd /var/www; php artisan config:cache
-
-# Add cron job into cronfile
-echo "* * * * * cd /var/www && php artisan schedule:run >> /dev/null 2>&1" >> cronfile
-
-# Install cron job
-crontab cronfile
-
-# Remove temporary file
-rm cronfile
-
-env >> /var/www/.env
-php-fpm8.0 -D
-
-php artisan queue:work &
-# Start cron
-cron
-nginx -g "daemon off;"
-~~~
+`docker run -it -p 8000:80 --name=lbaw2185 -e DB_DATABASE="lbaw2185" -e DB_SCHEMA="lbaw2185" -e DB_USERNAME="lbaw2185" -e DB_PASSWORD="XwMvGMlJ" git.fe.up.pt:5050/lbaw/lbaw2122/lbaw2185`
 
 
 # Final URL
