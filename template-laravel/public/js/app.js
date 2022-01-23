@@ -3,7 +3,7 @@ function addEventListeners() {
   // LEIC Q&A
   let ucFollowers = document.querySelectorAll('div.uc-card p.uc-card-icon a.uc-card-icon-follow');
   [].forEach.call(ucFollowers, function(follower) {
-    folSlower.addEventListener('click', sendFollowUcRequest);
+    follower.addEventListener('click', sendFollowUcRequest);
   });
 
   let ucDeleters = document.querySelectorAll('td.admin-table-uc-actions a.admin-table-delete');
