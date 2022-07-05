@@ -1,6 +1,6 @@
 # LBAW 2021/2022
 
-Proposed project solution for the Databases and Web Applications Laboratory course @ FEUP
+Project for the Databases and Web Applications Laboratory course @ FEUP
 
 ## L.EIC Q&A 
 
